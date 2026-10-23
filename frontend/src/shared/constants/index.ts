@@ -97,8 +97,8 @@ export const INITIAL_WEBSITE_PACKAGES: SeedPackage[] = [
     name: 'Business Website',
     description: 'Corporate presence designed to build authority, explain services, and generate qualified B2B/B2C leads.',
     pricingMode: 'fixed',
-    standardPricePaise: 1499900, // ₹14,999
-    offerPricePaise: 899900,     // ₹8,999
+    standardPricePaise: 1899900, // ₹18,999
+    offerPricePaise: 1049900,    // ₹10,499 (Save ₹8,500)
     billingFrequency: 'one_time',
     features: [
       '1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)',
@@ -122,11 +122,12 @@ export const INITIAL_WEBSITE_PACKAGES: SeedPackage[] = [
     name: 'Blog / News Website',
     description: 'Content-driven publishing platform with categories, author profiles, ad monetization, and reader engagement.',
     pricingMode: 'fixed',
-    standardPricePaise: 1399900, // ₹13,999
-    offerPricePaise: 799900,     // ₹7,999
+    standardPricePaise: 1799900, // ₹17,999
+    offerPricePaise: 999900,     // ₹9,999 (Save ₹8,000)
     billingFrequency: 'one_time',
     features: [
       '1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)',
+      '1st Year High-Speed SSD Cloud Hosting Included (Renewal applicable from 2nd year)',
       'Modern Editorial Content & Article Layout',
       'Dynamic Categories, Tags & Search Archive',
       'Author Profiles & Social Media Sharing',
@@ -146,8 +147,8 @@ export const INITIAL_WEBSITE_PACKAGES: SeedPackage[] = [
     name: 'Booking Website',
     description: 'Direct appointment scheduling, calendar synchronization, and service bookings for clinics, consultants, and studios.',
     pricingMode: 'fixed',
-    standardPricePaise: 2299900, // ₹22,999
-    offerPricePaise: 1299900,    // ₹12,999
+    standardPricePaise: 2699900, // ₹26,999
+    offerPricePaise: 1499900,    // ₹14,999 (Save ₹12,000)
     billingFrequency: 'one_time',
     features: [
       '1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)',
@@ -171,8 +172,8 @@ export const INITIAL_WEBSITE_PACKAGES: SeedPackage[] = [
     name: 'E-commerce Store',
     description: 'Feature-rich online store with catalog, shopping cart, checkout, payment gateway, inventory, and order notifications.',
     pricingMode: 'fixed',
-    standardPricePaise: 2999900, // ₹29,999
-    offerPricePaise: 1699900,    // ₹16,999
+    standardPricePaise: 3499900, // ₹34,999
+    offerPricePaise: 1899900,    // ₹18,999 (Save ₹16,000)
     billingFrequency: 'one_time',
     features: [
       '1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)',
@@ -198,8 +199,8 @@ export const INITIAL_WEBSITE_PACKAGES: SeedPackage[] = [
     name: 'Course / LMS Website',
     description: 'Learning management system with video lectures, student enrollment, lesson progress, and completion certificates.',
     pricingMode: 'fixed',
-    standardPricePaise: 3999900, // ₹39,999
-    offerPricePaise: 2299900,    // ₹22,999
+    standardPricePaise: 4499900, // ₹44,999
+    offerPricePaise: 2499900,    // ₹24,999 (Save ₹20,000)
     billingFrequency: 'one_time',
     features: [
       '1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)',
@@ -225,8 +226,8 @@ export const INITIAL_WEBSITE_PACKAGES: SeedPackage[] = [
     name: 'Custom Web App',
     description: 'Bespoke web application with custom business logic, dashboards, relational databases, and third-party APIs.',
     pricingMode: 'starting_price',
-    standardPricePaise: 4999900, // ₹49,999
-    offerPricePaise: 2999900,    // ₹29,999
+    standardPricePaise: 5499900, // ₹54,999
+    offerPricePaise: 3199900,    // ₹31,999 (Save ₹23,000)
     billingFrequency: 'one_time',
     features: [
       '1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)',

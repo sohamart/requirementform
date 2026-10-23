@@ -26,6 +26,7 @@ import { publicApi } from '../services/api.js';
 import { PackageDTO, AddonDTO } from '@shared/types/index.js';
 import { formatINR } from '@shared/utils/currency.js';
 import { DomainFinderSection } from '../components/domain/DomainFinderSection.js';
+import { PackageDetailsModal } from '../components/common/PackageDetailsModal.js';
 
 interface LandingPageProps {
   onOpenProjectSelector: () => void;
@@ -43,15 +44,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
   // Package category filter state
   const [packageCategory, setPackageCategory] = useState<'all' | 'starter' | 'pro'>('all');
 
-  // Track expanded "View more benefits" for package cards
-  const [expandedPackages, setExpandedPackages] = useState<Record<string, boolean>>({});
-
-  const togglePackageExpand = (idOrSlug: string) => {
-    setExpandedPackages((prev) => ({
-      ...prev,
-      [idOrSlug]: !prev[idOrSlug],
-    }));
-  };
+  // Selected package for details popup modal
+  const [selectedPackageForModal, setSelectedPackageForModal] = useState<PackageDTO | null>(null);
 
   useEffect(() => {
     Promise.all([publicApi.getPackages('website'), publicApi.getAddons()])
@@ -541,11 +535,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
               const hasDiscount = pkg.standardPricePaise > pkg.offerPricePaise;
               const savings = hasDiscount ? pkg.standardPricePaise - pkg.offerPricePaise : 0;
               const isFeatured = idx === 1; // Highlight second tier as most popular
-              const pkgKey = pkg.id || pkg.slug;
-              const isExpanded = !!expandedPackages[pkgKey];
-              const INITIAL_VISIBLE_COUNT = 4;
-              const visibleFeatures = isExpanded ? pkg.features : pkg.features.slice(0, INITIAL_VISIBLE_COUNT);
-              const remainingCount = pkg.features.length - INITIAL_VISIBLE_COUNT;
               const hasDomainOrHosting = pkg.features.some(
                 (f) =>
                   f.toLowerCase().includes('1st year') ||
@@ -556,73 +545,69 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
               return (
                 <div
                   key={pkg.id || pkg.slug}
-                  className={`flex flex-col rounded-3xl glass-card p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
+                  className={`flex flex-col justify-between rounded-3xl glass-card p-5 sm:p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
                     isFeatured
-                      ? 'border-brand-500 dark:border-brand-500 ring-2 ring-brand-500/20'
-                      : 'border-slate-200/90 dark:border-charcoal-750/90'
+                      ? 'border-brand-500/80 dark:border-brand-500/80 ring-1 ring-brand-500/30 shadow-md'
+                      : 'border-slate-200/80 dark:border-charcoal-750/80'
                   }`}
                 >
-                  {/* Featured Badge */}
-                  {isFeatured && (
-                    <div className="absolute top-0 right-0 bg-gradient-to-l from-brand-500 to-orange-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-bl-xl shadow-sm">
-                      Most Popular
-                    </div>
-                  )}
-
-                  {/* Savings Badge */}
-                  {!isFeatured && hasDiscount && (
-                    <span className="absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                      Save {formatINR(savings)}
-                    </span>
-                  )}
-
-                  <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                    {pkg.name}
-                  </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 min-h-[36px] line-clamp-2 mb-3">
-                    {pkg.description}
-                  </p>
-
-                  {/* 1st Year Domain & Hosting Included Banner */}
-                  {hasDomainOrHosting && (
-                    <div className="mb-3 p-2.5 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-brand-500/10 border border-emerald-500/30 text-left animate-in fade-in duration-200">
-                      <div className="flex items-center gap-1.5 text-xs font-extrabold text-emerald-700 dark:text-emerald-300">
-                        <Globe className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                        <span>1st Year Domain & Hosting Included</span>
-                      </div>
-                      <p className="mt-0.5 text-[10px] text-slate-600 dark:text-slate-400 leading-tight">
-                        Free for 1st Year. Standard renewal applicable from 2nd year onwards for domain & hosting.
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Pricing Display */}
-                  <div className="my-2 p-3.5 rounded-2xl bg-slate-50/80 dark:bg-charcoal-900/80 border border-slate-100 dark:border-charcoal-750">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-black text-brand-500">
-                        {formatINR(pkg.offerPricePaise)}
+                  {/* Top Minimal Tag Row (Guarantees exact same card height) */}
+                  <div className="flex items-center justify-between gap-1.5 h-6 mb-3">
+                    {hasDomainOrHosting ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
+                        <Globe className="w-3 h-3 text-emerald-500 shrink-0" />
+                        <span>1st Yr Domain & Host Included</span>
                       </span>
-                      {hasDiscount && (
-                        <span className="text-xs text-slate-400 line-through">
-                          {formatINR(pkg.standardPricePaise)}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[10px] text-slate-400 block mt-0.5 font-medium">
-                      {pkg.billingFrequency === 'monthly' ? 'Billed monthly' : 'One-time investment'}
-                    </span>
+                    ) : isFeatured ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/25">
+                        <Sparkles className="w-3 h-3" />
+                        <span>Popular Choice</span>
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        {pkg.category === 'app' ? 'Mobile App' : 'Website Tier'}
+                      </span>
+                    )}
+
+                    {hasDiscount && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        Save {formatINR(savings)}
+                      </span>
+                    )}
                   </div>
 
-                  {/* Features / Benefits List */}
-                  <div className="my-3 flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-charcoal-600">
-                        Included Scope ({pkg.features.length}):
-                      </p>
+                  {/* Header & Description */}
+                  <div>
+                    <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">
+                      {pkg.name}
+                    </h4>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2 h-9 leading-relaxed">
+                      {pkg.description}
+                    </p>
+
+                    {/* Minimal Price Box */}
+                    <div className="my-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-charcoal-850/80 border border-slate-100 dark:border-charcoal-750 flex items-baseline justify-between">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-black text-brand-500">
+                          {formatINR(pkg.offerPricePaise)}
+                        </span>
+                        {hasDiscount && (
+                          <span className="text-xs text-slate-400 line-through">
+                            {formatINR(pkg.standardPricePaise)}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        {pkg.billingFrequency === 'monthly' ? '/month' : 'one-time'}
+                      </span>
                     </div>
+                  </div>
+
+                  {/* Key Features (Exact 4 items for uniform card height) */}
+                  <div className="flex-1 my-1">
                     <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-                      {visibleFeatures.map((feat, i) => {
-                        const isSpecialHighlight =
+                      {pkg.features.slice(0, 4).map((feat, i) => {
+                        const isSpecial =
                           feat.toLowerCase().includes('1st year') ||
                           feat.toLowerCase().includes('domain') ||
                           feat.toLowerCase().includes('hosting');
@@ -630,61 +615,60 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
                         return (
                           <li
                             key={i}
-                            className={`flex items-start gap-2 ${
-                              isSpecialHighlight
-                                ? 'font-semibold text-emerald-700 dark:text-emerald-300'
-                                : ''
+                            className={`flex items-start gap-2 line-clamp-1 ${
+                              isSpecial ? 'font-medium text-emerald-600 dark:text-emerald-400' : ''
                             }`}
                           >
-                            <CheckCircle
+                            <CheckCircle2
                               className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${
-                                isSpecialHighlight ? 'text-emerald-500' : 'text-brand-500'
+                                isSpecial ? 'text-emerald-500' : 'text-brand-500'
                               }`}
                             />
-                            <span>{feat}</span>
+                            <span className="truncate">{feat}</span>
                           </li>
                         );
                       })}
                     </ul>
 
-                    {/* Expandable "Show More Benefits" Button */}
-                    {remainingCount > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => togglePackageExpand(pkgKey)}
-                        className="mt-3 w-full py-1.5 px-3 rounded-xl text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 hover:bg-brand-500/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-brand-500/25 bg-brand-500/5 app-press"
-                      >
-                        {isExpanded ? (
-                          <>
-                            <span>Show less</span>
-                            <ChevronUp className="w-3.5 h-3.5" />
-                          </>
-                        ) : (
-                          <>
-                            <span>+{remainingCount} more benefits & features</span>
-                            <ChevronDown className="w-3.5 h-3.5" />
-                          </>
-                        )}
-                      </button>
-                    )}
+                    {/* "View all benefits" trigger that opens the popup modal */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPackageForModal(pkg)}
+                      className="mt-3.5 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 flex items-center gap-1 group/btn cursor-pointer py-0.5"
+                    >
+                      <span>View all {pkg.features.length} benefits & details</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
                   </div>
 
                   {/* Action CTA */}
-                  <button
-                    onClick={() => navigate(`/requirements/website?package=${pkg.slug}`)}
-                    className={`w-full mt-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-center app-press ${
-                      isFeatured
-                        ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-glow-sm'
-                        : 'bg-slate-900 dark:bg-charcoal-800 hover:bg-brand-500 dark:hover:bg-brand-500 text-white'
-                    }`}
-                  >
-                    Select & Customize
-                  </button>
+                  <div className="pt-3 border-t border-slate-100 dark:border-charcoal-750/70 mt-2">
+                    <button
+                      onClick={() => navigate(`/requirements/website?package=${pkg.slug}`)}
+                      className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-center app-press ${
+                        isFeatured
+                          ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-glow-sm'
+                          : 'bg-slate-900 dark:bg-charcoal-800 hover:bg-brand-500 dark:hover:bg-brand-500 text-white'
+                      }`}
+                    >
+                      Select & Customize
+                    </button>
+                  </div>
                 </div>
               );
             })}
           </div>
         )}
+
+        {/* Package Details Popup Modal */}
+        <PackageDetailsModal
+          packageItem={selectedPackageForModal}
+          onClose={() => setSelectedPackageForModal(null)}
+          onSelect={(selectedPkg) => {
+            setSelectedPackageForModal(null);
+            navigate(`/requirements/website?package=${selectedPkg.slug}`);
+          }}
+        />
       </section>
 
       {/* ========================================================
