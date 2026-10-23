@@ -41,7 +41,7 @@ export class DomainFinderController {
       const verificationMap = await DomainFinderService.verifyAvailability(validated.domains);
       const godaddyStatus = await DomainFinderService.getGoDaddyStatus();
 
-      const results = validated.domains.map((d) => {
+      const results = (validated.domains as string[]).map((d: string) => {
         const v = verificationMap.get(d.toLowerCase()) || {
           status: 'unverified',
           available: undefined,

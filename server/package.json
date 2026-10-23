@@ -5,7 +5,8 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "prebuild": "node prebuild.cjs",
+    "build": "node prebuild.cjs && tsc",
     "start": "tsx src/server.ts",
     "seed": "tsx src/seed/seed.ts",
     "fresh": "tsx src/seed/freshData.ts",
