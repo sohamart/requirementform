@@ -10,6 +10,14 @@ describe('Authentication & Session Management with Revocation', () => {
   });
 
   afterAll(async () => {
+    try {
+      const testUsers = await User.find({ email: { $regex: /@test\.com$/i } });
+      const testUserIds = testUsers.map((u) => u._id);
+      await Session.deleteMany({ userId: { $in: testUserIds } });
+      await User.deleteMany({ email: { $regex: /@test\.com$/i } });
+    } catch (err) {
+      console.error('Failed to cleanup test users:', err);
+    }
     await disconnectDB();
   });
 
