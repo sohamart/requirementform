@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import {
   Globe,
   Smartphone,
+  Monitor,
   ArrowRight,
   ArrowLeft,
   CheckCircle,
@@ -32,7 +33,7 @@ import { FormDefinitionDTO, FormStep, FormQuestion, ClientSubmissionDTO } from '
 import { useAuth } from '../context/AuthContext.js';
 
 export const RequirementFormPage: React.FC = () => {
-  const { category = 'website' } = useParams<{ category: 'website' | 'app' }>();
+  const { category = 'website' } = useParams<{ category: 'website' | 'app' | 'desktop' }>();
   const navigate = useNavigate();
   const location = useLocation();
   const prefilledDomain = (location.state as any)?.prefilledDomain;
@@ -56,7 +57,7 @@ export const RequirementFormPage: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     publicApi
-      .getPublishedForm(category as 'website' | 'app')
+      .getPublishedForm(category as 'website' | 'app' | 'desktop')
       .then((res) => {
         if (res.data.success && res.data.form) {
           setFormDef(res.data.form);
@@ -352,7 +353,13 @@ export const RequirementFormPage: React.FC = () => {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-500 flex items-center justify-center">
-              {category === 'website' ? <Globe className="w-4 h-4" /> : <Smartphone className="w-4 h-4" />}
+              {category === 'website' ? (
+                <Globe className="w-4 h-4" />
+              ) : category === 'desktop' ? (
+                <Monitor className="w-4 h-4" />
+              ) : (
+                <Smartphone className="w-4 h-4" />
+              )}
             </div>
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">

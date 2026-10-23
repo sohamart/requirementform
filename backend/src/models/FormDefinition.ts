@@ -5,7 +5,7 @@ export interface IFormDefinition extends Document {
   slug: string;
   title: string;
   description: string;
-  category: 'website' | 'app';
+  category: 'website' | 'app' | 'desktop';
   version: number;
   status: 'draft' | 'published' | 'archived';
   steps: FormStep[];
@@ -70,7 +70,7 @@ const FormDefinitionSchema = new Schema<IFormDefinition>(
     },
     category: {
       type: String,
-      enum: ['website', 'app'],
+      enum: ['website', 'app', 'desktop'],
       required: true,
       index: true,
     },

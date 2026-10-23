@@ -7,6 +7,7 @@ import { formatINR, toPaise, toRupees } from '@shared/utils/currency.js';
 export const AdminPackagesPage: React.FC = () => {
   const [packages, setPackages] = useState<PackageDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'website' | 'app' | 'desktop'>('all');
 
   // Edit / Add modal
   const [showModal, setShowModal] = useState(false);
@@ -118,11 +119,57 @@ export const AdminPackagesPage: React.FC = () => {
         </button>
       </div>
 
+      {/* Category Filter Pills */}
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => setCategoryFilter('all')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            categoryFilter === 'all'
+              ? 'bg-brand-500 text-white shadow-sm'
+              : 'bg-white dark:bg-charcoal-850 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50'
+          }`}
+        >
+          All Packages ({packages.length})
+        </button>
+        <button
+          onClick={() => setCategoryFilter('website')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            categoryFilter === 'website'
+              ? 'bg-brand-500 text-white shadow-sm'
+              : 'bg-white dark:bg-charcoal-850 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50'
+          }`}
+        >
+          Websites ({packages.filter((p) => p.category === 'website').length})
+        </button>
+        <button
+          onClick={() => setCategoryFilter('app')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            categoryFilter === 'app'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-white dark:bg-charcoal-850 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50'
+          }`}
+        >
+          Mobile Apps ({packages.filter((p) => p.category === 'app').length})
+        </button>
+        <button
+          onClick={() => setCategoryFilter('desktop')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            categoryFilter === 'desktop'
+              ? 'bg-purple-600 text-white shadow-sm'
+              : 'bg-white dark:bg-charcoal-850 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50'
+          }`}
+        >
+          Desktop Apps ({packages.filter((p) => p.category === 'desktop').length})
+        </button>
+      </div>
+
       {loading ? (
         <div className="py-20 text-center text-slate-400 text-sm">Loading packages...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {packages.map((pkg) => (
+          {packages
+            .filter((p) => categoryFilter === 'all' || p.category === categoryFilter)
+            .map((pkg) => (
             <div
               key={pkg.id}
               className="p-6 rounded-3xl glass-card flex flex-col justify-between relative group"
@@ -268,7 +315,8 @@ export const AdminPackagesPage: React.FC = () => {
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-charcoal-750 bg-slate-50 dark:bg-charcoal-850 text-xs"
                   >
                     <option value="website">Website</option>
-                    <option value="app">App</option>
+                    <option value="app">Mobile App</option>
+                    <option value="desktop">Desktop Software</option>
                   </select>
                 </div>
               </div>

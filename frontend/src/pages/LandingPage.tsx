@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Globe,
   Smartphone,
+  Monitor,
   Sparkles,
   ArrowRight,
   CheckCircle,
@@ -38,23 +39,41 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
   const [addons, setAddons] = useState<AddonDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Hero interactive engine preview state ('website' | 'app' | 'domains')
-  const [activeEngine, setActiveEngine] = useState<'website' | 'app' | 'domains'>('website');
+  // Hero interactive engine preview state ('website' | 'app' | 'desktop' | 'domains')
+  const [activeEngine, setActiveEngine] = useState<'website' | 'app' | 'desktop' | 'domains'>('website');
 
-  // Package category filter state
+  // Package category toggle (Websites default open first, app, desktop)
+  const [projectCategory, setProjectCategory] = useState<'website' | 'app' | 'desktop'>('website');
+
+  // Package sub-tier filter state
   const [packageCategory, setPackageCategory] = useState<'all' | 'starter' | 'pro'>('all');
+
+  // Addon category filter state
+  const [addonCategoryFilter, setAddonCategoryFilter] = useState<'all' | 'website' | 'app' | 'desktop'>('all');
 
   // Selected package for details popup modal
   const [selectedPackageForModal, setSelectedPackageForModal] = useState<PackageDTO | null>(null);
 
+  // Load packages whenever projectCategory changes (default: website)
   useEffect(() => {
-    Promise.all([publicApi.getPackages('website'), publicApi.getAddons()])
-      .then(([packRes, addonRes]) => {
+    setLoading(true);
+    publicApi
+      .getPackages(projectCategory)
+      .then((packRes) => {
         if (packRes.data.success) setPackages(packRes.data.packages);
+      })
+      .catch((err) => console.error('Failed to load packages:', err))
+      .finally(() => setLoading(false));
+  }, [projectCategory]);
+
+  // Load all modular add-ons once
+  useEffect(() => {
+    publicApi
+      .getAddons()
+      .then((addonRes) => {
         if (addonRes.data.success) setAddons(addonRes.data.addons);
       })
-      .catch((err) => console.error('Failed to load catalog:', err))
-      .finally(() => setLoading(false));
+      .catch((err) => console.error('Failed to load add-ons:', err));
   }, []);
 
   // Filtered packages
@@ -62,6 +81,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
     if (packageCategory === 'starter') return pkg.offerPricePaise <= 1500000; // <= ₹15,000
     if (packageCategory === 'pro') return pkg.offerPricePaise > 1500000;
     return true;
+  });
+
+  // Filtered addons
+  const filteredAddons = addons.filter((a) => {
+    if (addonCategoryFilter === 'all') return true;
+    return a.category === addonCategoryFilter || a.category === 'both' || a.category === 'all';
   });
 
   return (
@@ -164,6 +189,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
                 >
                   <Smartphone className="w-3.5 h-3.5" />
                   <span>Mobile App Engine</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveEngine('desktop')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    activeEngine === 'desktop'
+                      ? 'bg-purple-600 text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <Monitor className="w-3.5 h-3.5" />
+                  <span>Desktop Software</span>
                 </button>
 
                 <button
@@ -334,6 +372,82 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
               </div>
             )}
 
+            {activeEngine === 'desktop' && (
+              <div className="pt-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div className="md:col-span-7 space-y-4">
+                  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs font-bold">
+                    <Monitor className="w-3.5 h-3.5" />
+                    <span>8-Step Desktop Software Specification</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                    Offline-First Desktop & Enterprise Suite
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Custom billing software, POS systems, inventory management, offline encrypted databases, and multi-platform native desktop suites.
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs font-medium text-slate-600 dark:text-slate-300 pt-1">
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                      <span>Windows, macOS & Linux</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                      <span>Hardware & Thermal Printer Ready</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                      <span>Local Encrypted SQLite / PostgreSQL</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                      <span>Code-Signed Installer (.exe / .msi)</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      onClick={() => navigate('/requirements/desktop')}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-glow-sm transition-all app-press cursor-pointer"
+                    >
+                      <span>Launch Desktop Form</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="md:col-span-5 bg-slate-50 dark:bg-charcoal-950 p-5 rounded-2xl border border-slate-200/80 dark:border-charcoal-750/80 space-y-3">
+                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-charcoal-800">
+                    <span className="text-slate-500">Starting Investment</span>
+                    <span className="font-extrabold text-purple-500 text-base">₹14,999</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-charcoal-800">
+                    <span className="text-slate-500">Average Turnaround</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200">7 – 20 Days</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-charcoal-800">
+                    <span className="text-slate-500">Offline Functionality</span>
+                    <span className="font-bold text-emerald-500">Zero Internet Required</span>
+                  </div>
+                  <div className="pt-1">
+                    <div className="text-[11px] font-mono text-slate-400 dark:text-slate-500 mb-1">
+                      DESKTOP STACK SUPPORT
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {['Electron', 'Tauri', 'C# / WPF', 'C++', 'Python / Qt', 'SQLite'].map((t) => (
+                        <span
+                          key={t}
+                          className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-white dark:bg-charcoal-800 border border-slate-200 dark:border-charcoal-700 text-purple-600 dark:text-purple-400"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeEngine === 'domains' && (
               <div className="pt-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                 <div className="md:col-span-7 space-y-4">
@@ -489,8 +603,50 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
             Transparent scope, guaranteed delivery turnaround, and clear revision guidelines. Select any tier to pre-configure your requirement form.
           </p>
 
-          {/* Category Filter Pills */}
-          <div className="mt-6 inline-flex p-1 rounded-xl bg-slate-100 dark:bg-charcoal-900 border border-slate-200 dark:border-charcoal-750">
+          {/* Primary 3-Way Project Category Toggle (Websites Default Open First) */}
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => setProjectCategory('website')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm ${
+                projectCategory === 'website'
+                  ? 'bg-brand-500 text-white shadow-glow-sm ring-2 ring-brand-500/20'
+                  : 'bg-white dark:bg-charcoal-850 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50 dark:hover:bg-charcoal-800'
+              }`}
+            >
+              <Globe className="w-4 h-4" />
+              <span>Websites & Portals</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setProjectCategory('app')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm ${
+                projectCategory === 'app'
+                  ? 'bg-blue-600 text-white shadow-glow-sm ring-2 ring-blue-500/20'
+                  : 'bg-white dark:bg-charcoal-850 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50 dark:hover:bg-charcoal-800'
+              }`}
+            >
+              <Smartphone className="w-4 h-4" />
+              <span>Mobile Apps</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setProjectCategory('desktop')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm ${
+                projectCategory === 'desktop'
+                  ? 'bg-purple-600 text-white shadow-glow-sm ring-2 ring-purple-500/20'
+                  : 'bg-white dark:bg-charcoal-850 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50 dark:hover:bg-charcoal-800'
+              }`}
+            >
+              <Monitor className="w-4 h-4" />
+              <span>Desktop Software</span>
+            </button>
+          </div>
+
+          {/* Sub-tier Filter Pills */}
+          <div className="mt-4 inline-flex p-1 rounded-xl bg-slate-100 dark:bg-charcoal-900 border border-slate-200 dark:border-charcoal-750">
             <button
               onClick={() => setPackageCategory('all')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
@@ -577,8 +733,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-slate-100/90 dark:bg-charcoal-800/90 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-charcoal-750 shadow-2xs whitespace-nowrap">
-                        <Layers className="w-3 h-3 text-slate-400 dark:text-slate-500 shrink-0" />
-                        <span>{pkg.category === 'app' ? 'Mobile App' : 'Website Tier'}</span>
+                        <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+                        <span>
+                          {pkg.category === 'desktop'
+                            ? 'Desktop Software'
+                            : pkg.category === 'app'
+                            ? 'Mobile App'
+                            : 'Website Tier'}
+                        </span>
                       </span>
                     )}
 
@@ -659,7 +821,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
                   {/* Action CTA */}
                   <div className="pt-3 border-t border-slate-100 dark:border-charcoal-750/70 mt-2">
                     <button
-                      onClick={() => navigate(`/requirements/website?package=${pkg.slug}`)}
+                      onClick={() => navigate(`/requirements/${pkg.category || projectCategory}?package=${pkg.slug}`)}
                       className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-center app-press ${
                         isFeatured
                           ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-glow-sm'
@@ -681,7 +843,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
           onClose={() => setSelectedPackageForModal(null)}
           onSelect={(selectedPkg) => {
             setSelectedPackageForModal(null);
-            navigate(`/requirements/website?package=${selectedPkg.slug}`);
+            navigate(`/requirements/${selectedPkg.category || projectCategory}?package=${selectedPkg.slug}`);
           }}
         />
       </section>
@@ -690,21 +852,65 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
           4. MODULAR ADD-ONS & ENHANCEMENTS
           ======================================================== */}
       <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-200/80 dark:border-charcoal-750/80 bg-slate-50/40 dark:bg-charcoal-900/30">
-        <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 mb-3">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Modular Enhancements</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-            Optional Add-on Services
+            Optional Add-on Services & Upgrades
           </h2>
           <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-400">
-            Tailor your digital deliverable with dedicated SEO, content writing, domain setups, maintenance contracts, and accelerated development sprints.
+            Tailor your digital deliverable with dedicated SEO, thermal printer drivers, code signing, domain setups, and accelerated delivery.
           </p>
+
+          {/* Add-on Category Filter Pills */}
+          <div className="mt-6 inline-flex p-1 rounded-xl bg-slate-100 dark:bg-charcoal-900 border border-slate-200 dark:border-charcoal-750">
+            <button
+              onClick={() => setAddonCategoryFilter('all')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                addonCategoryFilter === 'all'
+                  ? 'bg-brand-500 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              All Add-ons ({addons.length})
+            </button>
+            <button
+              onClick={() => setAddonCategoryFilter('website')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                addonCategoryFilter === 'website'
+                  ? 'bg-brand-500 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Web Solutions
+            </button>
+            <button
+              onClick={() => setAddonCategoryFilter('app')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                addonCategoryFilter === 'app'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Mobile Apps
+            </button>
+            <button
+              onClick={() => setAddonCategoryFilter('desktop')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                addonCategoryFilter === 'desktop'
+                  ? 'bg-purple-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Desktop Software
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {addons.map((addon) => (
+          {filteredAddons.map((addon) => (
             <div
               key={addon.id}
               className="p-6 rounded-3xl glass-card flex flex-col justify-between hover:border-brand-500/50 transition-all duration-200 shadow-sm"
@@ -730,9 +936,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
               </div>
 
               <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-charcoal-750 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                <span className="capitalize font-mono text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-charcoal-800 text-slate-600 dark:text-slate-300">
-                  {addon.billingType.replace('_', ' ')}
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="capitalize font-mono text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-charcoal-800 text-slate-600 dark:text-slate-300">
+                    {addon.billingType.replace('_', ' ')}
+                  </span>
+                  <span className="capitalize font-mono text-[10px] px-2 py-0.5 rounded bg-brand-500/10 text-brand-600 dark:text-brand-400">
+                    {addon.category}
+                  </span>
+                </div>
                 <span className="text-emerald-500 font-semibold flex items-center gap-1 text-[11px]">
                   <CheckCircle className="w-3.5 h-3.5" /> Toggle in Form
                 </span>

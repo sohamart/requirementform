@@ -379,6 +379,208 @@ var INITIAL_WEBSITE_PACKAGES = [
     order: 8
   }
 ];
+var INITIAL_APP_PACKAGES = [
+  {
+    slug: "starter-mobile-app",
+    category: "app",
+    name: "Starter Mobile App (Android/iOS)",
+    description: "MVP mobile app with core interactive screens, user authentication, and Firebase cloud backend integration.",
+    pricingMode: "fixed",
+    standardPricePaise: 2499900,
+    // ₹24,999
+    offerPricePaise: 1499900,
+    // ₹14,999
+    billingFrequency: "one_time",
+    features: [
+      "Up to 5 Custom Mobile Screens",
+      "Cross-Platform Flutter / React Native Build",
+      "User Authentication (Email & Google Sign-In)",
+      "Firebase Cloud Firestore & Storage Setup",
+      "Automated Push Notifications via FCM",
+      "Production APK & iOS IPA Build Export",
+      "100% Full Source Code & Handover"
+    ],
+    maxRevisions: 2,
+    isActive: true,
+    order: 1
+  },
+  {
+    slug: "business-mobile-app",
+    category: "app",
+    name: "Business Mobile App",
+    description: "Commercial business application with catalog, customer booking, profile management, and payment gateway.",
+    pricingMode: "fixed",
+    standardPricePaise: 3999900,
+    // ₹39,999
+    offerPricePaise: 2499900,
+    // ₹24,999
+    billingFrequency: "one_time",
+    features: [
+      "Up to 12 Interactive Custom Screens",
+      "Direct WhatsApp & Phone Click-to-Call Actions",
+      "Indian Payment Gateway (Razorpay/UPI Integration)",
+      "In-App Push Notifications & Customer Alerts",
+      "Customer Profile, Favorites & Order History",
+      "Google Maps & Location Store Locator",
+      "App Store & Google Play Upload Assistance",
+      "Full Source Code & 100% IP Ownership"
+    ],
+    maxRevisions: 3,
+    isActive: true,
+    order: 2
+  },
+  {
+    slug: "ecommerce-mobile-app",
+    category: "app",
+    name: "E-commerce Mobile App",
+    description: "High-converting mobile shopping app with product catalog, cart, coupons, orders, and real-time order tracking.",
+    pricingMode: "fixed",
+    standardPricePaise: 5999900,
+    // ₹59,999
+    offerPricePaise: 3899900,
+    // ₹38,999
+    billingFrequency: "one_time",
+    features: [
+      "Multi-Category Product Catalog & Fast Search",
+      "Shopping Cart & One-Click Razorpay/Stripe Checkout",
+      "Real-Time Live Order Status & Delivery Tracking",
+      "Discount Coupons, Promo Codes & Sale Banners",
+      "Customer Wishlist & Multi-Address Book",
+      "Dedicated Admin Dashboard & Sales Analytics",
+      "Automated Push Notification Marketing Campaigns",
+      "100% Full Source Code Handover"
+    ],
+    maxRevisions: 3,
+    isActive: true,
+    order: 3
+  },
+  {
+    slug: "custom-enterprise-app",
+    category: "app",
+    name: "Custom Enterprise Mobile App",
+    description: "Mission-critical enterprise mobile app with offline synchronization, role-based workflows, and ERP backend integration.",
+    pricingMode: "starting_price",
+    standardPricePaise: 8999900,
+    // ₹89,999
+    offerPricePaise: 5999900,
+    // ₹59,999
+    billingFrequency: "one_time",
+    features: [
+      "Complex Custom Business Logic & Multi-Role RBAC",
+      "Real-Time WebSockets & Offline Data Synchronization",
+      "Biometric Authentication (FaceID & Fingerprint)",
+      "Custom Node.js / Express REST & GraphQL Backend",
+      "Enterprise Cloud Architecture (AWS / GCP / Docker)",
+      "Automated CI/CD Fastlane Build & Release Pipeline",
+      "Comprehensive Technical Architecture Documentation",
+      "100% Lifetime Source Code & Full IP Ownership"
+    ],
+    maxRevisions: 4,
+    isActive: true,
+    order: 4
+  }
+];
+var INITIAL_DESKTOP_PACKAGES = [
+  {
+    slug: "desktop-utility-tool",
+    category: "desktop",
+    name: "Desktop Utility & Tool App",
+    description: "Fast standalone desktop application for Windows & macOS with local file processing, offline utility, and modern UI.",
+    pricingMode: "fixed",
+    standardPricePaise: 1999900,
+    // ₹19,999
+    offerPricePaise: 1299900,
+    // ₹12,999
+    billingFrequency: "one_time",
+    features: [
+      "Cross-Platform Windows (.exe/MSI) & macOS (.dmg) Build",
+      "High-Speed Electron / Tauri Architecture",
+      "Local File System Access & Document Processing",
+      "100% Offline Operation (Zero Cloud Dependency)",
+      "Modern Dark & Light Mode Glassmorphism Interface",
+      "Auto-Updater Configuration for Smooth Releases",
+      "100% Full Source Code & Project Handover"
+    ],
+    maxRevisions: 2,
+    isActive: true,
+    order: 1
+  },
+  {
+    slug: "desktop-business-pos",
+    category: "desktop",
+    name: "Business POS & Billing Desktop App",
+    description: "Offline-first Point-of-Sale billing software with barcode scanning, thermal receipt printing, and local SQLite database.",
+    pricingMode: "fixed",
+    standardPricePaise: 3699900,
+    // ₹36,999
+    offerPricePaise: 2299900,
+    // ₹22,999
+    billingFrequency: "one_time",
+    features: [
+      "Fast POS Billing & Quick Cash Counter Keyboard Shortcuts",
+      'ESC/POS Thermal Receipt Printer Integration (2" & 3")',
+      "USB & Bluetooth Barcode / QR Scanner Compatibility",
+      "Offline SQLite Encrypted Database (SQLCipher Security)",
+      "Daily Sales, Tax Summary & Stock Depletion Reports",
+      "Customer Credit Ledger & Udhar Khata Management",
+      "Automated Daily Local Database Backups",
+      "100% Source Code Ownership & Desktop Setup Support"
+    ],
+    maxRevisions: 3,
+    isActive: true,
+    order: 2
+  },
+  {
+    slug: "desktop-enterprise-erp",
+    category: "desktop",
+    name: "Enterprise Desktop ERP Software",
+    description: "Comprehensive desktop management system with local network multi-terminal sync, accounting, and cloud hybrid backup.",
+    pricingMode: "fixed",
+    standardPricePaise: 6499900,
+    // ₹64,999
+    offerPricePaise: 3999900,
+    // ₹39,999
+    billingFrequency: "one_time",
+    features: [
+      "Multi-Terminal Local Network (LAN) Real-Time Data Sync",
+      "Comprehensive Inventory, Billing, GST & Multi-Store Accounting",
+      "Role-Based Employee Access (Admin, Cashier, Manager)",
+      "One-Click Excel / PDF Bulk Report Generator & Exports",
+      "Hybrid Local SQLite & Encrypted Cloud Backup Sync",
+      "Custom Shortcut Hotkeys for High-Speed Typing",
+      "Dedicated Windows & macOS Desktop Installer Wizard",
+      "Lifetime Source Code & Full IP Ownership Handover"
+    ],
+    maxRevisions: 3,
+    isActive: true,
+    order: 3
+  },
+  {
+    slug: "desktop-custom-app",
+    category: "desktop",
+    name: "Custom Native Desktop Software",
+    description: "Bespoke high-performance native desktop application with hardware acceleration, background daemon workers, and custom device integration.",
+    pricingMode: "starting_price",
+    standardPricePaise: 8999900,
+    // ₹89,999
+    offerPricePaise: 5499900,
+    // ₹54,999
+    billingFrequency: "one_time",
+    features: [
+      "C# / .NET / Rust / Tauri Native High-Performance Build",
+      "Serial Port, COM Port & Custom Hardware Device Drivers",
+      "Background Service / Daemon Worker Capabilities",
+      "Hardware-Locked License Key & DRM Protection System",
+      "Ultra-Low RAM Footprint & Rapid Sub-Second Startup",
+      "Automated Windows / Mac Code Signing & Installer Generation",
+      "Enterprise Source Code & Architectural Documentation",
+      "100% IP & Copyright Handover"
+    ],
+    maxRevisions: 4,
+    isActive: true,
+    order: 4
+  }
+];
 var INITIAL_ADDONS = [
   {
     slug: "content-assistance",
@@ -393,7 +595,7 @@ var INITIAL_ADDONS = [
   },
   {
     slug: "enhanced-seo",
-    category: "both",
+    category: "website",
     name: "Enhanced SEO",
     description: "Deep meta optimization, schema markup, OpenGraph tags, sitemap submission, and indexing setup.",
     billingType: "one_time",
@@ -415,8 +617,8 @@ var INITIAL_ADDONS = [
   },
   {
     slug: "monthly-maintenance",
-    category: "both",
-    name: "Monthly Maintenance",
+    category: "all",
+    name: "Monthly Maintenance & Support",
     description: "Continuous uptime monitoring, security patching, monthly backups, and minor text/image updates.",
     billingType: "monthly",
     unitPricePaise: 99900,
@@ -426,8 +628,8 @@ var INITIAL_ADDONS = [
   },
   {
     slug: "priority-delivery",
-    category: "both",
-    name: "Priority Delivery",
+    category: "all",
+    name: "Priority Fast-Track Delivery",
     description: "Accelerated development sprint delivering the completed initial build in record turnaround time.",
     billingType: "one_time",
     unitPricePaise: 2e5,
@@ -438,7 +640,7 @@ var INITIAL_ADDONS = [
   {
     slug: "extra-standard-page",
     category: "website",
-    name: "Extra Standard Page",
+    name: "Extra Standard Web Page",
     description: "Additional structured standard page with customized styling, responsive layout, and content placement.",
     billingType: "per_unit",
     unitPricePaise: 5e4,
@@ -458,6 +660,50 @@ var INITIAL_ADDONS = [
     unitLabel: "screens",
     isActive: true,
     order: 7
+  },
+  {
+    slug: "code-signing-certificate",
+    category: "desktop",
+    name: "Code Signing Certificate & Windows SmartScreen Setup",
+    description: 'Configures EV / OV Code Signing certificates to prevent "Unknown Publisher" security warnings during desktop app installation.',
+    billingType: "one_time",
+    unitPricePaise: 35e4,
+    // ₹3,500
+    isActive: true,
+    order: 8
+  },
+  {
+    slug: "thermal-printer-driver",
+    category: "desktop",
+    name: "Thermal Receipt Printer Driver Integration",
+    description: 'Direct ESC/POS hardware integration for thermal receipt printers (2" and 3" roll formats).',
+    billingType: "one_time",
+    unitPricePaise: 25e4,
+    // ₹2,500
+    isActive: true,
+    order: 9
+  },
+  {
+    slug: "sqlite-encrypted-db",
+    category: "desktop",
+    name: "SQLCipher Encrypted Local Database Module",
+    description: "256-bit AES encryption on the local desktop database to prevent unauthorized access or data theft.",
+    billingType: "one_time",
+    unitPricePaise: 2e5,
+    // ₹2,000
+    isActive: true,
+    order: 10
+  },
+  {
+    slug: "app-store-publishing",
+    category: "app",
+    name: "Apple App Store & Google Play Publishing Assistance",
+    description: "Complete hands-on assistance preparing screenshots, store metadata, privacy policy compliance, and review submission.",
+    billingType: "one_time",
+    unitPricePaise: 3e5,
+    // ₹3,000
+    isActive: true,
+    order: 11
   }
 ];
 var INITIAL_BRANDS = [
@@ -638,6 +884,23 @@ function requireAdmin(req, res, next) {
     res.status(403).json({
       success: false,
       error: "Access denied: Administrator privileges required."
+    });
+    return;
+  }
+  next();
+}
+function requireSuperAdmin(req, res, next) {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      error: "Authentication required. Please log in."
+    });
+    return;
+  }
+  if (req.user.role !== "superadmin") {
+    res.status(403).json({
+      success: false,
+      error: "Access denied: Superadministrator privileges required."
     });
     return;
   }
@@ -1455,7 +1718,7 @@ var FormDefinitionSchema2 = new Schema4(
     },
     category: {
       type: String,
-      enum: ["website", "app"],
+      enum: ["website", "app", "desktop"],
       required: true,
       index: true
     },
@@ -1613,7 +1876,7 @@ var PackageSchema2 = new Schema6(
     },
     category: {
       type: String,
-      enum: ["website", "app"],
+      enum: ["website", "app", "desktop"],
       required: true,
       index: true
     },
@@ -1682,7 +1945,7 @@ var AddonSchema2 = new Schema7(
     },
     category: {
       type: String,
-      enum: ["website", "app", "both"],
+      enum: ["website", "app", "desktop", "both", "all"],
       required: true,
       index: true
     },
@@ -1798,8 +2061,8 @@ var PublicController = class {
   static async getPublishedForm(req, res, next) {
     try {
       const category = req.params.category;
-      if (category !== "website" && category !== "app") {
-        res.status(400).json({ success: false, error: "Category must be website or app" });
+      if (category !== "website" && category !== "app" && category !== "desktop") {
+        res.status(400).json({ success: false, error: "Category must be website, app, or desktop" });
         return;
       }
       const form = await FormService.getPublishedForm(category);
@@ -1828,7 +2091,7 @@ var PublicController = class {
     try {
       const category = req.query.category;
       const filter = { isActive: true };
-      if (category === "website" || category === "app") {
+      if (category === "website" || category === "app" || category === "desktop") {
         filter.category = category;
       }
       const packages = await Package.find(filter).sort({ order: 1 });
@@ -1857,8 +2120,8 @@ var PublicController = class {
     try {
       const category = req.query.category;
       const filter = { isActive: true };
-      if (category === "website" || category === "app") {
-        filter.category = { $in: [category, "both"] };
+      if (category === "website" || category === "app" || category === "desktop") {
+        filter.category = { $in: [category, "both", "all"] };
       }
       const addons = await Addon.find(filter).sort({ order: 1 });
       res.status(200).json({
@@ -1961,7 +2224,7 @@ var SubmissionSchema = new Schema9(
     },
     projectCategory: {
       type: String,
-      enum: ["website", "app"],
+      enum: ["website", "app", "desktop"],
       required: true,
       index: true
     },
@@ -3973,6 +4236,11 @@ var FinancialService = class {
     let totalActualDirectCostPaise = 0;
     let projectsBelowTargetMarginCount = 0;
     let projectsWithMissingCostsCount = 0;
+    const catMetrics = {
+      website: { revenue: 0, cost: 0, count: 0 },
+      app: { revenue: 0, cost: 0, count: 0 },
+      desktop: { revenue: 0, cost: 0, count: 0 }
+    };
     const projectDTOs = [];
     for (const fin of allFinancials) {
       const sub = subMap.get(fin.submissionId.toString());
@@ -3982,6 +4250,13 @@ var FinancialService = class {
       totalCollectedRevenuePaise += fin.collectedRevenuePaise;
       totalEstimatedDirectCostPaise += fin.estimatedDirectCostPaise;
       totalActualDirectCostPaise += fin.actualDirectCostPaise;
+      const projRev = fin.approvedRevenuePaise > 0 ? fin.approvedRevenuePaise : fin.quotedRevenuePaise;
+      const cat = sub.projectCategory || "website";
+      if (catMetrics[cat]) {
+        catMetrics[cat].revenue += projRev;
+        catMetrics[cat].cost += fin.actualDirectCostPaise;
+        catMetrics[cat].count += 1;
+      }
       const isBelowTarget = fin.grossMarginPercent !== null && fin.grossMarginPercent < fin.targetMarginPercent;
       const hasMissingCosts = fin.actualDirectCostPaise === 0 && fin.estimatedDirectCostPaise === 0;
       if (isBelowTarget) projectsBelowTargetMarginCount++;
@@ -4011,6 +4286,29 @@ var FinancialService = class {
       effectiveTotalRevenue,
       totalActualDirectCostPaise
     );
+    const categoryBreakdown = {
+      website: {
+        totalRevenuePaise: catMetrics.website.revenue,
+        totalCostPaise: catMetrics.website.cost,
+        totalProfitPaise: calcGrossProfit(catMetrics.website.revenue, catMetrics.website.cost),
+        marginPercent: calcGrossMarginPercent(catMetrics.website.revenue, catMetrics.website.cost),
+        projectCount: catMetrics.website.count
+      },
+      app: {
+        totalRevenuePaise: catMetrics.app.revenue,
+        totalCostPaise: catMetrics.app.cost,
+        totalProfitPaise: calcGrossProfit(catMetrics.app.revenue, catMetrics.app.cost),
+        marginPercent: calcGrossMarginPercent(catMetrics.app.revenue, catMetrics.app.cost),
+        projectCount: catMetrics.app.count
+      },
+      desktop: {
+        totalRevenuePaise: catMetrics.desktop.revenue,
+        totalCostPaise: catMetrics.desktop.cost,
+        totalProfitPaise: calcGrossProfit(catMetrics.desktop.revenue, catMetrics.desktop.cost),
+        marginPercent: calcGrossMarginPercent(catMetrics.desktop.revenue, catMetrics.desktop.cost),
+        projectCount: catMetrics.desktop.count
+      }
+    };
     return {
       totalQuotedRevenuePaise,
       totalApprovedRevenuePaise,
@@ -4027,7 +4325,8 @@ var FinancialService = class {
       overallMarkupPercent,
       projectsBelowTargetMarginCount,
       projectsWithMissingCostsCount,
-      projects: projectDTOs
+      projects: projectDTOs,
+      categoryBreakdown
     };
   }
 };
@@ -4446,29 +4745,29 @@ router4.get(
 );
 router4.get(
   "/financials/dashboard",
-  requirePermission("view_financials"),
+  requireSuperAdmin,
   AdminFinancialController.getDashboard
 );
 router4.get(
   "/financials/projects/:submissionId",
-  requirePermission("view_financials"),
+  requireSuperAdmin,
   AdminFinancialController.getProjectFinancials
 );
 router4.post(
   "/financials/costs",
-  requirePermission("manage_financials"),
+  requireSuperAdmin,
   validateBody(CreateCostEntrySchema),
   AdminFinancialController.addCostEntry
 );
 router4.post(
   "/financials/payments",
-  requirePermission("manage_financials"),
+  requireSuperAdmin,
   validateBody(CreatePaymentRecordSchema),
   AdminFinancialController.addPaymentRecord
 );
 router4.put(
   "/financials/target-margin/:submissionId",
-  requirePermission("manage_financials"),
+  requireSuperAdmin,
   validateBody(UpdateTargetMarginSchema),
   AdminFinancialController.updateTargetMargin
 );
@@ -6570,6 +6869,110 @@ var MASTER_APP_STEP_NOTES = {
   "app-step-6-design-security-deployment": "INTERNAL DEPLOYMENT & COMPLIANCE:\n- App Store Review Guidelines: ensure privacy policy and account deletion button are present.\n- MFA and Encryption: apply bcrypt/argon2 and AES-256 for sensitive user data at rest.\n- Review CI/CD pipeline for automated Fastlane store builds.",
   "app-step-7-budget-timeline": "INTERNAL APP MARGIN & DELIVERY TARGETS:\n- Minimum target gross margin: 50% for mobile applications.\n- Contractor allocation must be capped at 35% of total quote value.\n- Ensure milestone payment terms: 40% advance, 30% beta release, 30% store deployment."
 };
+var MASTER_DESKTOP_STEPS = [
+  {
+    id: "desktop-step-1-client-info",
+    title: "Client Information",
+    subtitle: "Primary contact and company identity for desktop project delivery",
+    order: 1,
+    questions: [
+      { id: "desktop_client_name", fieldKey: "client_name", label: "Full Name", type: "text", placeholder: "e.g. Vikram Sen", isRequired: true, isActive: true, order: 1 },
+      { id: "desktop_company_name", fieldKey: "company_name", label: "Company / Organization Name", type: "text", placeholder: "e.g. Apex Industrial Systems", isRequired: true, isActive: true, order: 2 },
+      { id: "desktop_client_email", fieldKey: "client_email", label: "Email Address", type: "email", placeholder: "name@company.com", isRequired: true, isActive: true, order: 3 },
+      { id: "desktop_client_phone", fieldKey: "client_phone", label: "Phone Number", type: "phone", placeholder: "+91 98765 43210", isRequired: true, isActive: true, order: 4 },
+      { id: "desktop_business_category", fieldKey: "business_category", label: "Industry Sector", type: "dropdown", options: ["Retail & POS Billing", "Manufacturing & ERP", "Healthcare & Clinical Management", "Logistics, Warehousing & Fleet", "Finance, Accounting & Tax", "Education & Coaching Institute", "Engineering, CAD & Utility Tools", "Media, Audio/Video & Creative Software", "Other / Custom"], isRequired: true, isActive: true, order: 5 }
+    ]
+  },
+  {
+    id: "desktop-step-2-overview",
+    title: "Desktop Software Overview",
+    subtitle: "High-level application concept, purpose, and target users",
+    order: 2,
+    questions: [
+      { id: "desktop_app_name", fieldKey: "app_name", label: "Software / Project Name", type: "text", placeholder: "e.g. ApexPOS Desktop or ToolMaster", isRequired: true, isActive: true, order: 1 },
+      { id: "desktop_app_purpose", fieldKey: "app_purpose", label: "Primary Purpose & Key Objectives", type: "textarea", placeholder: "Explain what this desktop software will do, what daily business problems it solves, and core operational workflows...", isRequired: true, isActive: true, order: 2 },
+      { id: "desktop_primary_users", fieldKey: "primary_users", label: "Primary End-Users", type: "dropdown", options: ["Billing Clerks & Cashiers", "Internal Corporate Staff & Managers", "Warehouse & Inventory Handlers", "Technicians / Field Engineers", "Public Consumers / End-Users (Commercial Product)", "C-Suite Executives & Analysts"], isRequired: true, isActive: true, order: 3 },
+      { id: "desktop_concurrency_terminals", fieldKey: "concurrency_terminals", label: "Number of Desktop Terminals / PCs", type: "radio", options: ["Single Standalone PC (1)", "Small Team (2\u20135 PCs)", "Medium Facility (6\u201320 PCs)", "Multi-Location Enterprise (20+ PCs)"], isRequired: true, isActive: true, order: 4 }
+    ]
+  },
+  {
+    id: "desktop-step-3-os-platforms",
+    title: "Operating System Platforms",
+    subtitle: "Target desktop platforms, versions, and hardware architecture",
+    order: 3,
+    questions: [
+      { id: "desktop_target_os", fieldKey: "target_os", label: "Target Operating Systems", type: "checkbox", options: ["Windows 10 / 11 (64-bit)", "Windows 7 / 8 Legacy Compatibility", "macOS (Apple Silicon M1/M2/M3/M4)", "macOS (Intel x64)", "Linux (Ubuntu / Debian / RHEL)"], isRequired: true, isActive: true, order: 1 },
+      { id: "desktop_screen_orientation", fieldKey: "screen_orientation", label: "Display & Screen Setup", type: "dropdown", options: ["Standard Desktop Monitor (1080p / 1440p / 4K)", "Touchscreen POS Counter Monitor", "Dual Monitor Setup (Operator + Customer Display)", "Compact Laptop Displays (1366x768 support required)"], isRequired: true, isActive: true, order: 2 },
+      { id: "desktop_hardware_constraints", fieldKey: "hardware_constraints", label: "Minimum Hardware Target", type: "radio", options: ["Low-End PC (Intel Core i3 / Celeron, 4GB RAM)", "Standard Office PC (Core i5, 8GB RAM)", "High-Performance Workstation (Dedicated GPU, 16GB+ RAM)"], isRequired: true, isActive: true, order: 3 }
+    ]
+  },
+  {
+    id: "desktop-step-4-architecture-tech",
+    title: "App Architecture & Framework",
+    subtitle: "Connectivity mode, offline behavior, and framework preferences",
+    order: 4,
+    questions: [
+      { id: "desktop_connectivity_mode", fieldKey: "connectivity_mode", label: "Network & Connectivity Mode", type: "radio", options: ["100% Offline (Zero internet required, standalone local data)", "Offline-First with Hybrid Cloud Sync (Works offline, syncs when internet available)", "Local Area Network (LAN Multi-User with 1 Master PC Server)", "Always-Online Cloud-Connected Client"], isRequired: true, isActive: true, order: 1 },
+      { id: "desktop_preferred_tech", fieldKey: "preferred_tech", label: "Preferred Technology Stack (if any)", type: "dropdown", options: ["No preference (Antigravity recommends best stack)", "Electron (Node.js + React/Vue - cross-platform rich UI)", "Tauri (Rust + Web Frontend - ultra lightweight & fast)", ".NET / C# (Windows Native WPF / WinForms / MAUI)", "Python (PyQt / PySide / Tkinter)", "Flutter Desktop (Cross-platform native)"], isRequired: false, isActive: true, order: 2 },
+      { id: "desktop_background_services", fieldKey: "background_services", label: "Background Daemons / Services Required", type: "checkbox", options: ["System Tray Icon (Minimize to tray)", "Auto-Start on Windows/Mac Boot", "Background Scheduled Watcher / Sync Daemon", "Local HTTP/WebSocket Server for Hardware", "None (Standard window app only)"], isRequired: true, isActive: true, order: 3 }
+    ]
+  },
+  {
+    id: "desktop-step-5-hardware-printers",
+    title: "Hardware & Device Integration",
+    subtitle: "Peripheral hardware, printers, scanners, and custom ports",
+    order: 5,
+    questions: [
+      { id: "desktop_hardware_peripherals", fieldKey: "hardware_peripherals", label: "Peripheral Devices to Connect", type: "checkbox", options: ['Thermal Receipt Printers (ESC/POS 2" or 3" via USB/LAN)', "Barcode / QR Code Scanners (USB / Bluetooth HID)", "Electronic Cash Drawer (RJ11 via receipt printer)", "Digital Electronic Weighing Scale (RS232 Serial COM)", "RFID / Smart Card Reader", "Webcam / Document Camera", "Biometric Fingerprint Scanner", "No external hardware required"], isRequired: true, isActive: true, order: 1 },
+      { id: "desktop_printer_formats", fieldKey: "printer_formats", label: "Report & Invoice Printing Formats", type: "checkbox", options: ["Standard A4 / A5 Full Page Laser/Inkjet Invoices", "2-inch Thermal Receipts (58mm)", "3-inch Thermal Receipts (80mm)", "Sticky Barcode Label Printing (e.g. TSC / Zebra)", "Direct PDF / Excel File Export without physical print"], isRequired: true, isActive: true, order: 2 }
+    ]
+  },
+  {
+    id: "desktop-step-6-database-security",
+    title: "Database & License Security",
+    subtitle: "Local data persistence, encryption, backups, and licensing DRM",
+    order: 6,
+    questions: [
+      { id: "desktop_local_database", fieldKey: "local_database", label: "Local Database Storage Preference", type: "dropdown", options: ["SQLite (Standard embedded single-file database)", "SQLCipher (256-bit AES encrypted SQLite database)", "PostgreSQL / MySQL Local Server (for LAN multi-PC setups)", "Local JSON / Encrypted Binary Files", "Cloud Database API Only (PostgreSQL / MongoDB)"], isRequired: true, isActive: true, order: 1 },
+      { id: "desktop_backup_strategy", fieldKey: "backup_strategy", label: "Database Backup Strategy", type: "checkbox", options: ["Automated Daily Local Backup on App Close", "One-Click Manual Backup & Restore Utility", "Encrypted Cloud Backup (Google Drive / S3 / Custom FTP)", "USB Pen-Drive Auto-Export on insertion"], isRequired: true, isActive: true, order: 2 },
+      { id: "desktop_licensing_drm", fieldKey: "licensing_drm", label: "Software Licensing & DRM Model", type: "radio", options: ["Hardware-Locked Machine Key (Binds to PC CPU/Motherboard ID)", "Online Activation & License Key Validation Server", "Subscription / Expiry Date Lockdown with Renewal Key", "Free / Open Internal Software (No DRM required)"], isRequired: true, isActive: true, order: 3 }
+    ]
+  },
+  {
+    id: "desktop-step-7-installer-updates",
+    title: "Packaging & Distribution",
+    subtitle: "Desktop installers, auto-updaters, and code signing certificates",
+    order: 7,
+    questions: [
+      { id: "desktop_installer_formats", fieldKey: "installer_formats", label: "Desired Installer Formats", type: "checkbox", options: ["Windows Setup Wizard (.exe / InnoSetup / NSIS)", "Windows Silent / Enterprise Installer (.msi)", "Portable Executable (Runs without installation from USB)", "macOS Disk Image (.dmg with Drag-to-Applications)", "Linux Package (.deb / AppImage / Flatpak)"], isRequired: true, isActive: true, order: 1 },
+      { id: "desktop_auto_updater", fieldKey: "auto_updater", label: "Auto-Update System", type: "radio", options: ["Silent Background Auto-Updater (App updates itself automatically)", "Prompt User when New Update is Available", "Manual Installer Downloads from Website / Drive", "No updater needed"], isRequired: true, isActive: true, order: 2 },
+      { id: "desktop_code_signing", fieldKey: "code_signing", label: "Code Signing Certificates", type: "radio", options: ["We need Code Signing Certificate Setup (Prevents Windows SmartScreen warning)", "We already have our own EV / OV Code Signing Certificate", "Self-Signed / Internal testing certificate is fine for now"], isRequired: true, isActive: true, order: 3 }
+    ]
+  },
+  {
+    id: "desktop-step-8-budget-timeline",
+    title: "Budget, Timeline & Handover",
+    subtitle: "Project commercial guidelines and final specification confirmation",
+    order: 8,
+    questions: [
+      { id: "desktop_budget_range", fieldKey: "budget_range", label: "Estimated Budget Range", type: "radio", options: ["\u20B915,000 \u2013 \u20B925,000 (Utility / MVP Tool)", "\u20B925,000 \u2013 \u20B945,000 (Commercial POS / Billing System)", "\u20B945,000 \u2013 \u20B980,000 (Multi-Terminal Enterprise ERP)", "\u20B980,000+ (High-Performance Custom Native Suite)", "Need Quotation & Consultation"], isRequired: true, isActive: true, order: 1 },
+      { id: "desktop_start_urgency", fieldKey: "start_urgency", label: "When do you plan to start?", type: "radio", options: ["Immediately", "Within 1 Week", "Within 1 Month", "Within 3 Months", "Flexible"], isRequired: true, isActive: true, order: 2 },
+      { id: "desktop_delivery_timeline", fieldKey: "delivery_timeline", label: "Preferred Delivery Timeline", type: "radio", options: ["2 Weeks (Fast Track)", "1 Month", "2\u20133 Months", "3\u20136 Months", "Flexible"], isRequired: true, isActive: true, order: 3 },
+      { id: "desktop_additional_notes", fieldKey: "additional_requirements", label: "Additional Technical Specifications & Notes", type: "textarea", placeholder: "Any legacy database to migrate, specific hardware models, receipt layout requirements...", isRequired: false, isActive: true, order: 4 },
+      { id: "desktop_accuracy_confirmed", fieldKey: "accuracy_confirmed", label: "Information Accuracy Confirmation", type: "checkbox", options: ["I confirm that the information provided in this desktop software requirement specification is accurate and complete."], isRequired: true, isActive: true, order: 5 }
+    ]
+  }
+];
+var MASTER_DESKTOP_STEP_NOTES = {
+  "desktop-step-1-client-info": "INTERNAL DESKTOP CLIENT INTAKE:\n- Verify client business model: B2B internal operations vs commercial software product.\n- Confirm primary operating OS environments during scoping call within 24 hours.",
+  "desktop-step-2-overview": "INTERNAL ARCHITECTURE SCOPING:\n- If multi-terminal LAN setup, recommend local server architecture with SQLite/Postgres.\n- If POS Billing, check barcode symbologies (EAN-13, Code 128, QR Code).",
+  "desktop-step-3-os-platforms": "INTERNAL PLATFORM & MEMORY SIZING:\n- Windows 10/11: Standard Electron or Tauri setup.\n- If macOS required, build must support Universal Binary (x64 and arm64 Apple Silicon).\n- For low-end POS hardware (<4GB RAM), prioritize Tauri over Electron to ensure memory usage under 100MB.",
+  "desktop-step-4-architecture-tech": "INTERNAL CONNECTIVITY & TECH EVALUATION:\n- Offline-First: Implement local transactional database with idempotent queue for cloud sync.\n- Background Daemons: Configure Windows Service or system tray background worker with low CPU footprint.",
+  "desktop-step-5-hardware-printers": "INTERNAL PERIPHERAL & DRIVER SIZING:\n- ESC/POS Thermal: Use direct node-printer or raw USB communication for instant receipt cut and drawer kick.\n- Serial COM ports: Ensure baud rate (9600 / 115200) configuration is accessible via desktop app settings.",
+  "desktop-step-6-database-security": "INTERNAL DATABASE ENCRYPTION & DRM:\n- Financial / POS databases must use SQLCipher with 256-bit AES encryption.\n- If DRM selected, implement CPU ID + Disk UUID hardware-locking algorithm.",
+  "desktop-step-7-installer-updates": "INTERNAL PACKAGING & CODE SIGNING:\n- InnoSetup / NSIS installer wizard with custom desktop shortcut and uninstaller.\n- Inform client: Windows SmartScreen warning can only be removed with verified EV Code Signing certificate.",
+  "desktop-step-8-budget-timeline": "INTERNAL COMMERCIAL & MARGIN GUIDELINES:\n- Maintain minimum 50% target gross margin on desktop applications.\n- Hardware on-site deployment: add technician travel/remote desktop AnyDesk setup allowance.\n- Payment milestones: 40% advance, 30% alpha build, 30% installer & source code handover."
+};
 
 // src/seed/seed.ts
 async function runSeed() {
@@ -6599,20 +7002,27 @@ async function runSeed() {
   } else {
     console.log(`[Seed] Found ${brandCount} existing Brand Profiles. Preserving user configurations.`);
   }
-  const packageCount = await Package.countDocuments();
-  if (packageCount === 0) {
-    for (const p of INITIAL_WEBSITE_PACKAGES) {
-      await Package.create(p);
-    }
-    console.log(`[Seed] Seeded ${INITIAL_WEBSITE_PACKAGES.length} Website Packages.`);
+  const allInitialPackages = [
+    ...INITIAL_WEBSITE_PACKAGES,
+    ...INITIAL_APP_PACKAGES,
+    ...INITIAL_DESKTOP_PACKAGES
+  ];
+  for (const p of allInitialPackages) {
+    await Package.findOneAndUpdate(
+      { slug: p.slug },
+      { $set: p },
+      { upsert: true, new: true }
+    );
   }
-  const addonCount = await Addon.countDocuments();
-  if (addonCount === 0) {
-    for (const a of INITIAL_ADDONS) {
-      await Addon.create(a);
-    }
-    console.log(`[Seed] Seeded ${INITIAL_ADDONS.length} Addons.`);
+  console.log(`[Seed] Synced ${allInitialPackages.length} packages across Website, App, and Desktop categories.`);
+  for (const a of INITIAL_ADDONS) {
+    await Addon.findOneAndUpdate(
+      { slug: a.slug },
+      { $set: a },
+      { upsert: true, new: true }
+    );
   }
+  console.log(`[Seed] Synced ${INITIAL_ADDONS.length} Addons.`);
   const websiteForm = await FormDefinition.findOneAndUpdate(
     { slug: "website-requirements", version: 1 },
     {
@@ -6643,6 +7053,21 @@ async function runSeed() {
     { upsert: true, new: true }
   );
   console.log(`[Seed] Master App Requirements Form ready (${MASTER_APP_STEPS.length} steps, id: ${appForm._id})`);
+  const desktopForm = await FormDefinition.findOneAndUpdate(
+    { slug: "desktop-app-requirements", version: 1 },
+    {
+      slug: "desktop-app-requirements",
+      title: "Desktop Software Requirement Specification",
+      description: "Comprehensive multi-step specification builder for Windows, macOS & Linux desktop applications, POS systems, and native software.",
+      category: "desktop",
+      version: 1,
+      status: "published",
+      steps: MASTER_DESKTOP_STEPS,
+      publishedAt: /* @__PURE__ */ new Date()
+    },
+    { upsert: true, new: true }
+  );
+  console.log(`[Seed] Master Desktop Software Requirements Form ready (${MASTER_DESKTOP_STEPS.length} steps, id: ${desktopForm._id})`);
   for (const [stepId, notes] of Object.entries(MASTER_WEBSITE_STEP_NOTES)) {
     await FormStepNotes.findOneAndUpdate(
       {
@@ -6673,7 +7098,22 @@ async function runSeed() {
       { upsert: true }
     );
   }
-  console.log("[Seed] Seeded private FormStepNotes for all Website and App steps.");
+  for (const [stepId, notes] of Object.entries(MASTER_DESKTOP_STEP_NOTES)) {
+    await FormStepNotes.findOneAndUpdate(
+      {
+        formDefinitionId: desktopForm._id,
+        formVersion: 1,
+        stepId
+      },
+      {
+        notes,
+        authorId: admin._id,
+        authorName: admin.fullName
+      },
+      { upsert: true }
+    );
+  }
+  console.log("[Seed] Seeded private FormStepNotes for all Website, App, and Desktop steps.");
   console.log("[Seed] Database initialization and seeding completed successfully!");
 }
 if (process.argv[1] && (process.argv[1].includes("seed.ts") || process.argv[1].includes("seed.js"))) {

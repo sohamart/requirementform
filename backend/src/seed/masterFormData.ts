@@ -1531,3 +1531,118 @@ export const MASTER_APP_STEP_NOTES: Record<string, string> = {
   'app-step-7-budget-timeline':
     'INTERNAL APP MARGIN & DELIVERY TARGETS:\n- Minimum target gross margin: 50% for mobile applications.\n- Contractor allocation must be capped at 35% of total quote value.\n- Ensure milestone payment terms: 40% advance, 30% beta release, 30% store deployment.',
 };
+
+export const MASTER_DESKTOP_STEPS: FormStep[] = [
+  {
+    id: 'desktop-step-1-client-info',
+    title: 'Client Information',
+    subtitle: 'Primary contact and company identity for desktop project delivery',
+    order: 1,
+    questions: [
+      { id: 'desktop_client_name', fieldKey: 'client_name', label: 'Full Name', type: 'text', placeholder: 'e.g. Vikram Sen', isRequired: true, isActive: true, order: 1 },
+      { id: 'desktop_company_name', fieldKey: 'company_name', label: 'Company / Organization Name', type: 'text', placeholder: 'e.g. Apex Industrial Systems', isRequired: true, isActive: true, order: 2 },
+      { id: 'desktop_client_email', fieldKey: 'client_email', label: 'Email Address', type: 'email', placeholder: 'name@company.com', isRequired: true, isActive: true, order: 3 },
+      { id: 'desktop_client_phone', fieldKey: 'client_phone', label: 'Phone Number', type: 'phone', placeholder: '+91 98765 43210', isRequired: true, isActive: true, order: 4 },
+      { id: 'desktop_business_category', fieldKey: 'business_category', label: 'Industry Sector', type: 'dropdown', options: ['Retail & POS Billing', 'Manufacturing & ERP', 'Healthcare & Clinical Management', 'Logistics, Warehousing & Fleet', 'Finance, Accounting & Tax', 'Education & Coaching Institute', 'Engineering, CAD & Utility Tools', 'Media, Audio/Video & Creative Software', 'Other / Custom'], isRequired: true, isActive: true, order: 5 },
+    ],
+  },
+  {
+    id: 'desktop-step-2-overview',
+    title: 'Desktop Software Overview',
+    subtitle: 'High-level application concept, purpose, and target users',
+    order: 2,
+    questions: [
+      { id: 'desktop_app_name', fieldKey: 'app_name', label: 'Software / Project Name', type: 'text', placeholder: 'e.g. ApexPOS Desktop or ToolMaster', isRequired: true, isActive: true, order: 1 },
+      { id: 'desktop_app_purpose', fieldKey: 'app_purpose', label: 'Primary Purpose & Key Objectives', type: 'textarea', placeholder: 'Explain what this desktop software will do, what daily business problems it solves, and core operational workflows...', isRequired: true, isActive: true, order: 2 },
+      { id: 'desktop_primary_users', fieldKey: 'primary_users', label: 'Primary End-Users', type: 'dropdown', options: ['Billing Clerks & Cashiers', 'Internal Corporate Staff & Managers', 'Warehouse & Inventory Handlers', 'Technicians / Field Engineers', 'Public Consumers / End-Users (Commercial Product)', 'C-Suite Executives & Analysts'], isRequired: true, isActive: true, order: 3 },
+      { id: 'desktop_concurrency_terminals', fieldKey: 'concurrency_terminals', label: 'Number of Desktop Terminals / PCs', type: 'radio', options: ['Single Standalone PC (1)', 'Small Team (2–5 PCs)', 'Medium Facility (6–20 PCs)', 'Multi-Location Enterprise (20+ PCs)'], isRequired: true, isActive: true, order: 4 },
+    ],
+  },
+  {
+    id: 'desktop-step-3-os-platforms',
+    title: 'Operating System Platforms',
+    subtitle: 'Target desktop platforms, versions, and hardware architecture',
+    order: 3,
+    questions: [
+      { id: 'desktop_target_os', fieldKey: 'target_os', label: 'Target Operating Systems', type: 'checkbox', options: ['Windows 10 / 11 (64-bit)', 'Windows 7 / 8 Legacy Compatibility', 'macOS (Apple Silicon M1/M2/M3/M4)', 'macOS (Intel x64)', 'Linux (Ubuntu / Debian / RHEL)'], isRequired: true, isActive: true, order: 1 },
+      { id: 'desktop_screen_orientation', fieldKey: 'screen_orientation', label: 'Display & Screen Setup', type: 'dropdown', options: ['Standard Desktop Monitor (1080p / 1440p / 4K)', 'Touchscreen POS Counter Monitor', 'Dual Monitor Setup (Operator + Customer Display)', 'Compact Laptop Displays (1366x768 support required)'], isRequired: true, isActive: true, order: 2 },
+      { id: 'desktop_hardware_constraints', fieldKey: 'hardware_constraints', label: 'Minimum Hardware Target', type: 'radio', options: ['Low-End PC (Intel Core i3 / Celeron, 4GB RAM)', 'Standard Office PC (Core i5, 8GB RAM)', 'High-Performance Workstation (Dedicated GPU, 16GB+ RAM)'], isRequired: true, isActive: true, order: 3 },
+    ],
+  },
+  {
+    id: 'desktop-step-4-architecture-tech',
+    title: 'App Architecture & Framework',
+    subtitle: 'Connectivity mode, offline behavior, and framework preferences',
+    order: 4,
+    questions: [
+      { id: 'desktop_connectivity_mode', fieldKey: 'connectivity_mode', label: 'Network & Connectivity Mode', type: 'radio', options: ['100% Offline (Zero internet required, standalone local data)', 'Offline-First with Hybrid Cloud Sync (Works offline, syncs when internet available)', 'Local Area Network (LAN Multi-User with 1 Master PC Server)', 'Always-Online Cloud-Connected Client'], isRequired: true, isActive: true, order: 1 },
+      { id: 'desktop_preferred_tech', fieldKey: 'preferred_tech', label: 'Preferred Technology Stack (if any)', type: 'dropdown', options: ['No preference (Antigravity recommends best stack)', 'Electron (Node.js + React/Vue - cross-platform rich UI)', 'Tauri (Rust + Web Frontend - ultra lightweight & fast)', '.NET / C# (Windows Native WPF / WinForms / MAUI)', 'Python (PyQt / PySide / Tkinter)', 'Flutter Desktop (Cross-platform native)'], isRequired: false, isActive: true, order: 2 },
+      { id: 'desktop_background_services', fieldKey: 'background_services', label: 'Background Daemons / Services Required', type: 'checkbox', options: ['System Tray Icon (Minimize to tray)', 'Auto-Start on Windows/Mac Boot', 'Background Scheduled Watcher / Sync Daemon', 'Local HTTP/WebSocket Server for Hardware', 'None (Standard window app only)'], isRequired: true, isActive: true, order: 3 },
+    ],
+  },
+  {
+    id: 'desktop-step-5-hardware-printers',
+    title: 'Hardware & Device Integration',
+    subtitle: 'Peripheral hardware, printers, scanners, and custom ports',
+    order: 5,
+    questions: [
+      { id: 'desktop_hardware_peripherals', fieldKey: 'hardware_peripherals', label: 'Peripheral Devices to Connect', type: 'checkbox', options: ['Thermal Receipt Printers (ESC/POS 2" or 3" via USB/LAN)', 'Barcode / QR Code Scanners (USB / Bluetooth HID)', 'Electronic Cash Drawer (RJ11 via receipt printer)', 'Digital Electronic Weighing Scale (RS232 Serial COM)', 'RFID / Smart Card Reader', 'Webcam / Document Camera', 'Biometric Fingerprint Scanner', 'No external hardware required'], isRequired: true, isActive: true, order: 1 },
+      { id: 'desktop_printer_formats', fieldKey: 'printer_formats', label: 'Report & Invoice Printing Formats', type: 'checkbox', options: ['Standard A4 / A5 Full Page Laser/Inkjet Invoices', '2-inch Thermal Receipts (58mm)', '3-inch Thermal Receipts (80mm)', 'Sticky Barcode Label Printing (e.g. TSC / Zebra)', 'Direct PDF / Excel File Export without physical print'], isRequired: true, isActive: true, order: 2 },
+    ],
+  },
+  {
+    id: 'desktop-step-6-database-security',
+    title: 'Database & License Security',
+    subtitle: 'Local data persistence, encryption, backups, and licensing DRM',
+    order: 6,
+    questions: [
+      { id: 'desktop_local_database', fieldKey: 'local_database', label: 'Local Database Storage Preference', type: 'dropdown', options: ['SQLite (Standard embedded single-file database)', 'SQLCipher (256-bit AES encrypted SQLite database)', 'PostgreSQL / MySQL Local Server (for LAN multi-PC setups)', 'Local JSON / Encrypted Binary Files', 'Cloud Database API Only (PostgreSQL / MongoDB)'], isRequired: true, isActive: true, order: 1 },
+      { id: 'desktop_backup_strategy', fieldKey: 'backup_strategy', label: 'Database Backup Strategy', type: 'checkbox', options: ['Automated Daily Local Backup on App Close', 'One-Click Manual Backup & Restore Utility', 'Encrypted Cloud Backup (Google Drive / S3 / Custom FTP)', 'USB Pen-Drive Auto-Export on insertion'], isRequired: true, isActive: true, order: 2 },
+      { id: 'desktop_licensing_drm', fieldKey: 'licensing_drm', label: 'Software Licensing & DRM Model', type: 'radio', options: ['Hardware-Locked Machine Key (Binds to PC CPU/Motherboard ID)', 'Online Activation & License Key Validation Server', 'Subscription / Expiry Date Lockdown with Renewal Key', 'Free / Open Internal Software (No DRM required)'], isRequired: true, isActive: true, order: 3 },
+    ],
+  },
+  {
+    id: 'desktop-step-7-installer-updates',
+    title: 'Packaging & Distribution',
+    subtitle: 'Desktop installers, auto-updaters, and code signing certificates',
+    order: 7,
+    questions: [
+      { id: 'desktop_installer_formats', fieldKey: 'installer_formats', label: 'Desired Installer Formats', type: 'checkbox', options: ['Windows Setup Wizard (.exe / InnoSetup / NSIS)', 'Windows Silent / Enterprise Installer (.msi)', 'Portable Executable (Runs without installation from USB)', 'macOS Disk Image (.dmg with Drag-to-Applications)', 'Linux Package (.deb / AppImage / Flatpak)'], isRequired: true, isActive: true, order: 1 },
+      { id: 'desktop_auto_updater', fieldKey: 'auto_updater', label: 'Auto-Update System', type: 'radio', options: ['Silent Background Auto-Updater (App updates itself automatically)', 'Prompt User when New Update is Available', 'Manual Installer Downloads from Website / Drive', 'No updater needed'], isRequired: true, isActive: true, order: 2 },
+      { id: 'desktop_code_signing', fieldKey: 'code_signing', label: 'Code Signing Certificates', type: 'radio', options: ['We need Code Signing Certificate Setup (Prevents Windows SmartScreen warning)', 'We already have our own EV / OV Code Signing Certificate', 'Self-Signed / Internal testing certificate is fine for now'], isRequired: true, isActive: true, order: 3 },
+    ],
+  },
+  {
+    id: 'desktop-step-8-budget-timeline',
+    title: 'Budget, Timeline & Handover',
+    subtitle: 'Project commercial guidelines and final specification confirmation',
+    order: 8,
+    questions: [
+      { id: 'desktop_budget_range', fieldKey: 'budget_range', label: 'Estimated Budget Range', type: 'radio', options: ['₹15,000 – ₹25,000 (Utility / MVP Tool)', '₹25,000 – ₹45,000 (Commercial POS / Billing System)', '₹45,000 – ₹80,000 (Multi-Terminal Enterprise ERP)', '₹80,000+ (High-Performance Custom Native Suite)', 'Need Quotation & Consultation'], isRequired: true, isActive: true, order: 1 },
+      { id: 'desktop_start_urgency', fieldKey: 'start_urgency', label: 'When do you plan to start?', type: 'radio', options: ['Immediately', 'Within 1 Week', 'Within 1 Month', 'Within 3 Months', 'Flexible'], isRequired: true, isActive: true, order: 2 },
+      { id: 'desktop_delivery_timeline', fieldKey: 'delivery_timeline', label: 'Preferred Delivery Timeline', type: 'radio', options: ['2 Weeks (Fast Track)', '1 Month', '2–3 Months', '3–6 Months', 'Flexible'], isRequired: true, isActive: true, order: 3 },
+      { id: 'desktop_additional_notes', fieldKey: 'additional_requirements', label: 'Additional Technical Specifications & Notes', type: 'textarea', placeholder: 'Any legacy database to migrate, specific hardware models, receipt layout requirements...', isRequired: false, isActive: true, order: 4 },
+      { id: 'desktop_accuracy_confirmed', fieldKey: 'accuracy_confirmed', label: 'Information Accuracy Confirmation', type: 'checkbox', options: ['I confirm that the information provided in this desktop software requirement specification is accurate and complete.'], isRequired: true, isActive: true, order: 5 },
+    ],
+  },
+];
+
+export const MASTER_DESKTOP_STEP_NOTES: Record<string, string> = {
+  'desktop-step-1-client-info':
+    'INTERNAL DESKTOP CLIENT INTAKE:\n- Verify client business model: B2B internal operations vs commercial software product.\n- Confirm primary operating OS environments during scoping call within 24 hours.',
+  'desktop-step-2-overview':
+    'INTERNAL ARCHITECTURE SCOPING:\n- If multi-terminal LAN setup, recommend local server architecture with SQLite/Postgres.\n- If POS Billing, check barcode symbologies (EAN-13, Code 128, QR Code).',
+  'desktop-step-3-os-platforms':
+    'INTERNAL PLATFORM & MEMORY SIZING:\n- Windows 10/11: Standard Electron or Tauri setup.\n- If macOS required, build must support Universal Binary (x64 and arm64 Apple Silicon).\n- For low-end POS hardware (<4GB RAM), prioritize Tauri over Electron to ensure memory usage under 100MB.',
+  'desktop-step-4-architecture-tech':
+    'INTERNAL CONNECTIVITY & TECH EVALUATION:\n- Offline-First: Implement local transactional database with idempotent queue for cloud sync.\n- Background Daemons: Configure Windows Service or system tray background worker with low CPU footprint.',
+  'desktop-step-5-hardware-printers':
+    'INTERNAL PERIPHERAL & DRIVER SIZING:\n- ESC/POS Thermal: Use direct node-printer or raw USB communication for instant receipt cut and drawer kick.\n- Serial COM ports: Ensure baud rate (9600 / 115200) configuration is accessible via desktop app settings.',
+  'desktop-step-6-database-security':
+    'INTERNAL DATABASE ENCRYPTION & DRM:\n- Financial / POS databases must use SQLCipher with 256-bit AES encryption.\n- If DRM selected, implement CPU ID + Disk UUID hardware-locking algorithm.',
+  'desktop-step-7-installer-updates':
+    'INTERNAL PACKAGING & CODE SIGNING:\n- InnoSetup / NSIS installer wizard with custom desktop shortcut and uninstaller.\n- Inform client: Windows SmartScreen warning can only be removed with verified EV Code Signing certificate.',
+  'desktop-step-8-budget-timeline':
+    'INTERNAL COMMERCIAL & MARGIN GUIDELINES:\n- Maintain minimum 50% target gross margin on desktop applications.\n- Hardware on-site deployment: add technician travel/remote desktop AnyDesk setup allowance.\n- Payment milestones: 40% advance, 30% alpha build, 30% installer & source code handover.',
+};
+

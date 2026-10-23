@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import {
   Globe,
   Smartphone,
+  Monitor,
   Eye,
   FileDown,
   StickyNote,
@@ -19,7 +20,18 @@ import { AdminSubmissionDTO, SubmissionInternalNotesDTO } from '@shared/types/in
 import { useAuth } from '../../context/AuthContext.js';
 
 export const AdminSubmissionsPage: React.FC = () => {
-  const { category = 'website' } = useParams<{ category: 'website' | 'app' }>();
+  const { category: paramCategory } = useParams<{ category: 'website' | 'app' | 'desktop' }>();
+  const location = useLocation();
+
+  // Dynamically resolve category from URL or params
+  const category: 'website' | 'app' | 'desktop' =
+    paramCategory ||
+    (location.pathname.includes('/submissions/desktop')
+      ? 'desktop'
+      : location.pathname.includes('/submissions/app')
+      ? 'app'
+      : 'website');
+
   const { hasPermission } = useAuth();
   const canManageNotes = hasPermission('manage_internal_notes');
 
@@ -139,7 +151,12 @@ export const AdminSubmissionsPage: React.FC = () => {
             {category.toUpperCase()} INTAKE MANAGEMENT
           </span>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">
-            {category === 'website' ? 'Website' : 'App'} Requirement Submissions
+            {category === 'desktop'
+              ? 'Desktop Software'
+              : category === 'app'
+              ? 'Mobile App'
+              : 'Website'}{' '}
+            Requirement Submissions
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
             Review structured client responses, configure private internal step notes, and generate quotations.
@@ -393,13 +410,38 @@ export const AdminSubmissionsPage: React.FC = () => {
 
             {/* Step Selection Tabs */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-2 border-b border-slate-100 dark:border-charcoal-750">
-              {[
-                { id: 'client-info', label: '1. Client Info' },
-                { id: 'website-overview', label: '2. Overview' },
-                { id: 'pages-and-content', label: '3. Scope' },
-                { id: 'features-integrations', label: '4. Features' },
-                { id: 'budget-timeline', label: '5. Budget' },
-              ].map((step) => (
+              {(activeSub.projectCategory === 'desktop'
+                ? [
+                    { id: 'client-info', label: '1. Client Info' },
+                    { id: 'desktop-overview', label: '2. Overview' },
+                    { id: 'os-platforms', label: '3. Platforms' },
+                    { id: 'tech-architecture', label: '4. Tech Architecture' },
+                    { id: 'hardware-integration', label: '5. Hardware & Printers' },
+                    { id: 'database-security', label: '6. DB & Security' },
+                    { id: 'packaging-distribution', label: '7. Distribution' },
+                    { id: 'desktop-budget', label: '8. Budget & Timeline' },
+                  ]
+                : activeSub.projectCategory === 'app'
+                ? [
+                    { id: 'client-info', label: '1. Client Info' },
+                    { id: 'app-overview', label: '2. Overview' },
+                    { id: 'platforms-devices', label: '3. Platforms' },
+                    { id: 'app-architecture', label: '4. Tech Architecture' },
+                    { id: 'security-compliance', label: '5. Security' },
+                    { id: 'maintenance-services', label: '6. Maintenance' },
+                    { id: 'app-budget', label: '7. Budget & Timeline' },
+                  ]
+                : [
+                    { id: 'client-info', label: '1. Client Info' },
+                    { id: 'website-overview', label: '2. Overview' },
+                    { id: 'pages-and-content', label: '3. Scope' },
+                    { id: 'features-integrations', label: '4. Features' },
+                    { id: 'design-branding', label: '5. Design' },
+                    { id: 'domain-hosting', label: '6. Domain & Host' },
+                    { id: 'timeline-maintenance', label: '7. Timeline' },
+                    { id: 'budget-preferences', label: '8. Budget' },
+                  ]
+              ).map((step) => (
                 <button
                   key={step.id}
                   onClick={() => handleStepTabChange(step.id)}

@@ -140,9 +140,10 @@ export const AppContent: React.FC = () => {
             {/* 2. User & Access Management */}
             <Route path="users" element={<AdminUsersPage />} />
 
-            {/* 3 & 4. Website and App Submissions */}
+            {/* 3, 4 & 5. Website, App, and Desktop Submissions */}
             <Route path="submissions/website" element={<AdminSubmissionsPage />} />
             <Route path="submissions/app" element={<AdminSubmissionsPage />} />
+            <Route path="submissions/desktop" element={<AdminSubmissionsPage />} />
 
             {/* 5. Dynamic Form Builder */}
             <Route path="forms" element={<AdminFormBuilderPage />} />

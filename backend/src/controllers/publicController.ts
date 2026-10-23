@@ -11,9 +11,9 @@ export class PublicController {
    */
   static async getPublishedForm(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const category = req.params.category as 'website' | 'app';
-      if (category !== 'website' && category !== 'app') {
-        res.status(400).json({ success: false, error: 'Category must be website or app' });
+      const category = req.params.category as 'website' | 'app' | 'desktop';
+      if (category !== 'website' && category !== 'app' && category !== 'desktop') {
+        res.status(400).json({ success: false, error: 'Category must be website, app, or desktop' });
         return;
       }
 
@@ -45,7 +45,7 @@ export class PublicController {
     try {
       const category = req.query.category as string | undefined;
       const filter: Record<string, any> = { isActive: true };
-      if (category === 'website' || category === 'app') {
+      if (category === 'website' || category === 'app' || category === 'desktop') {
         filter.category = category;
       }
 
@@ -76,8 +76,8 @@ export class PublicController {
     try {
       const category = req.query.category as string | undefined;
       const filter: Record<string, any> = { isActive: true };
-      if (category === 'website' || category === 'app') {
-        filter.category = { $in: [category, 'both'] };
+      if (category === 'website' || category === 'app' || category === 'desktop') {
+        filter.category = { $in: [category, 'both', 'all'] };
       }
 
       const addons = await Addon.find(filter).sort({ order: 1 });

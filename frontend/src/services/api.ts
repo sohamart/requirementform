@@ -66,9 +66,9 @@ export const authApi = {
 };
 
 export const publicApi = {
-  getPublishedForm: (category: 'website' | 'app') =>
+  getPublishedForm: (category: 'website' | 'app' | 'desktop') =>
     api.get<{ success: boolean; form: FormDefinitionDTO }>(`/public/forms/${category}`),
-  getPackages: (category?: string) =>
+  getPackages: (category?: 'website' | 'app' | 'desktop' | string) =>
     api.get<{ success: boolean; packages: PackageDTO[] }>('/public/packages', { params: { category } }),
   getAddons: (category?: string) =>
     api.get<{ success: boolean; addons: AddonDTO[] }>('/public/addons', { params: { category } }),

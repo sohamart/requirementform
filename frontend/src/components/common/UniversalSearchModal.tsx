@@ -338,7 +338,7 @@ export const UniversalSearchModal: React.FC<UniversalSearchModalProps> = ({
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
                           <span className="text-xs font-bold uppercase px-2 py-0.5 rounded bg-brand-500/10 text-brand-600 dark:text-brand-400">
-                            {pkg.category === 'app' ? 'App Project' : 'Website'}
+                            {pkg.category === 'desktop' ? 'Desktop App' : pkg.category === 'app' ? 'Mobile App' : 'Website'}
                           </span>
                           <div className="text-right">
                             <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">

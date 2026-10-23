@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IPackage extends Document {
   slug: string;
-  category: 'website' | 'app';
+  category: 'website' | 'app' | 'desktop';
   name: string;
   description: string;
   pricingMode: 'fixed' | 'starting_price' | 'manual_review';
@@ -27,7 +27,7 @@ const PackageSchema = new Schema<IPackage>(
     },
     category: {
       type: String,
-      enum: ['website', 'app'],
+      enum: ['website', 'app', 'desktop'],
       required: true,
       index: true,
     },

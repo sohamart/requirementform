@@ -12,7 +12,7 @@ export interface ISubmission extends Document {
   };
   formDefinitionId: mongoose.Types.ObjectId;
   formVersion: number;
-  projectCategory: 'website' | 'app';
+  projectCategory: 'website' | 'app' | 'desktop';
   status: SubmissionStatus;
   answers: Record<string, any>;
   revisionNumber: number;
@@ -56,7 +56,7 @@ const SubmissionSchema = new Schema<ISubmission>(
     },
     projectCategory: {
       type: String,
-      enum: ['website', 'app'],
+      enum: ['website', 'app', 'desktop'],
       required: true,
       index: true,
     },

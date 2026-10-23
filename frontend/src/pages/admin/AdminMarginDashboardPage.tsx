@@ -11,12 +11,17 @@ import {
   Search,
   ExternalLink,
   ShieldAlert,
+  Globe,
+  Smartphone,
+  Monitor,
 } from 'lucide-react';
 import { adminApi } from '../../services/api.js';
 import { FinancialAnalyticsDashboardDTO, ProjectFinancialsDTO } from '@shared/types/index.js';
 import { formatINR, formatPercent } from '@shared/utils/currency.js';
+import { useAuth } from '../../context/AuthContext.js';
 
 export const AdminMarginDashboardPage: React.FC = () => {
+  const { user } = useAuth();
   const [data, setData] = useState<FinancialAnalyticsDashboardDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +31,12 @@ export const AdminMarginDashboardPage: React.FC = () => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    loadDashboard();
-  }, []);
+    if (user?.role === 'superadmin') {
+      loadDashboard();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   const loadDashboard = () => {
     setLoading(true);
@@ -39,10 +48,22 @@ export const AdminMarginDashboardPage: React.FC = () => {
         }
       })
       .catch((err) => {
-        setError(err.response?.data?.error || 'Failed to load financial dashboard. Check permissions.');
+        setError(err.response?.data?.error || 'Failed to load financial dashboard. Superadmin only.');
       })
       .finally(() => setLoading(false));
   };
+
+  if (user?.role !== 'superadmin') {
+    return (
+      <div className="p-8 rounded-2xl glass-panel text-center max-w-lg mx-auto my-12 border border-red-500/20 shadow-xl">
+        <ShieldAlert className="w-12 h-12 text-red-500 mx-auto mb-3" />
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Financial Access Strictly Restricted</h3>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+          Profit margins, direct costs, and financial analytics are strictly confidential and accessible exclusively by the Superadmin account.
+        </p>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -60,7 +81,7 @@ export const AdminMarginDashboardPage: React.FC = () => {
         <h3 className="text-base font-bold text-slate-900 dark:text-white">Financial Access Restricted</h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-4">{error}</p>
         <p className="text-xs text-slate-400">
-          This area requires the <code>view_financials</code> administrative permission.
+          This area requires the <code>superadmin</code> administrative role.
         </p>
       </div>
     );
@@ -252,6 +273,118 @@ export const AdminMarginDashboardPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Category-Wise Profit Margin Breakdown (Strictly Superadmin) */}
+      {data.categoryBreakdown && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+              Category-Wise Profit Margin Breakdown (Audited)
+            </h3>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-500/10 text-brand-500 font-bold">
+              SUPERADMIN CONFIDENTIAL
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Website Margins Card */}
+            <div className="p-5 rounded-2xl glass-card border border-brand-500/30">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-500 flex items-center justify-center">
+                    <Globe className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">Websites & Portals</h4>
+                    <span className="text-[10px] text-slate-400">{data.categoryBreakdown.website.projectCount} Projects</span>
+                  </div>
+                </div>
+                <span className="text-xs font-black text-brand-500 px-2 py-0.5 rounded-full bg-brand-500/10">
+                  {formatPercent(data.categoryBreakdown.website.marginPercent)} Margin
+                </span>
+              </div>
+              <div className="space-y-1.5 text-xs pt-2 border-t border-slate-100 dark:border-charcoal-750">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Revenue:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{formatINR(data.categoryBreakdown.website.totalRevenuePaise)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Direct Cost:</span>
+                  <span className="font-bold text-red-500">{formatINR(data.categoryBreakdown.website.totalCostPaise)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Gross Profit:</span>
+                  <span className="font-black text-emerald-500">{formatINR(data.categoryBreakdown.website.totalProfitPaise)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile App Margins Card */}
+            <div className="p-5 rounded-2xl glass-card border border-blue-500/30">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
+                    <Smartphone className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">Mobile Apps</h4>
+                    <span className="text-[10px] text-slate-400">{data.categoryBreakdown.app.projectCount} Projects</span>
+                  </div>
+                </div>
+                <span className="text-xs font-black text-blue-500 px-2 py-0.5 rounded-full bg-blue-500/10">
+                  {formatPercent(data.categoryBreakdown.app.marginPercent)} Margin
+                </span>
+              </div>
+              <div className="space-y-1.5 text-xs pt-2 border-t border-slate-100 dark:border-charcoal-750">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Revenue:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{formatINR(data.categoryBreakdown.app.totalRevenuePaise)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Direct Cost:</span>
+                  <span className="font-bold text-red-500">{formatINR(data.categoryBreakdown.app.totalCostPaise)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Gross Profit:</span>
+                  <span className="font-black text-emerald-500">{formatINR(data.categoryBreakdown.app.totalProfitPaise)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Software Margins Card */}
+            <div className="p-5 rounded-2xl glass-card border border-purple-500/30">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center">
+                    <Monitor className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">Desktop Software</h4>
+                    <span className="text-[10px] text-slate-400">{data.categoryBreakdown.desktop.projectCount} Projects</span>
+                  </div>
+                </div>
+                <span className="text-xs font-black text-purple-500 px-2 py-0.5 rounded-full bg-purple-500/10">
+                  {formatPercent(data.categoryBreakdown.desktop.marginPercent)} Margin
+                </span>
+              </div>
+              <div className="space-y-1.5 text-xs pt-2 border-t border-slate-100 dark:border-charcoal-750">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Revenue:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{formatINR(data.categoryBreakdown.desktop.totalRevenuePaise)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Direct Cost:</span>
+                  <span className="font-bold text-red-500">{formatINR(data.categoryBreakdown.desktop.totalCostPaise)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Gross Profit:</span>
+                  <span className="font-black text-emerald-500">{formatINR(data.categoryBreakdown.desktop.totalProfitPaise)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Projects Financial Table */}
       <div className="glass-panel rounded-3xl border border-slate-200 dark:border-charcoal-750 overflow-hidden shadow-xl">

@@ -16,8 +16,10 @@ import {
 import { adminApi } from '../../services/api.js';
 import { ProjectFinancialsDTO, CostCategory } from '@shared/types/index.js';
 import { formatINR, formatPercent, toPaise, toRupees } from '@shared/utils/currency.js';
+import { useAuth } from '../../context/AuthContext.js';
 
 export const AdminProjectCostsPage: React.FC = () => {
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const submissionIdParam = searchParams.get('submissionId');
 
@@ -46,6 +48,7 @@ export const AdminProjectCostsPage: React.FC = () => {
 
   // Load submissions list for dropdown
   useEffect(() => {
+    if (user?.role !== 'superadmin') return;
     adminApi
       .getAllSubmissions()
       .then((res) => {
@@ -57,7 +60,7 @@ export const AdminProjectCostsPage: React.FC = () => {
         }
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [user]);
 
   // Load project financials when selectedSubId changes
   useEffect(() => {
@@ -182,6 +185,18 @@ export const AdminProjectCostsPage: React.FC = () => {
         return cat.replace(/_/g, ' ');
     }
   };
+
+  if (user?.role !== 'superadmin') {
+    return (
+      <div className="p-8 rounded-2xl glass-panel text-center max-w-lg mx-auto my-12 border border-red-500/20 shadow-xl">
+        <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Strictly Confidential • Superadmin Only</h3>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+          Project direct costing records, margin thresholds, and internal payment logs are restricted exclusively to the Superadmin account.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

@@ -173,6 +173,12 @@ export class FinancialService {
     let projectsBelowTargetMarginCount = 0;
     let projectsWithMissingCostsCount = 0;
 
+    const catMetrics: Record<'website' | 'app' | 'desktop', { revenue: number; cost: number; count: number }> = {
+      website: { revenue: 0, cost: 0, count: 0 },
+      app: { revenue: 0, cost: 0, count: 0 },
+      desktop: { revenue: 0, cost: 0, count: 0 },
+    };
+
     const projectDTOs: ProjectFinancialsDTO[] = [];
 
     for (const fin of allFinancials) {
@@ -184,6 +190,14 @@ export class FinancialService {
       totalCollectedRevenuePaise += fin.collectedRevenuePaise;
       totalEstimatedDirectCostPaise += fin.estimatedDirectCostPaise;
       totalActualDirectCostPaise += fin.actualDirectCostPaise;
+
+      const projRev = fin.approvedRevenuePaise > 0 ? fin.approvedRevenuePaise : fin.quotedRevenuePaise;
+      const cat = (sub.projectCategory || 'website') as 'website' | 'app' | 'desktop';
+      if (catMetrics[cat]) {
+        catMetrics[cat].revenue += projRev;
+        catMetrics[cat].cost += fin.actualDirectCostPaise;
+        catMetrics[cat].count += 1;
+      }
 
       const isBelowTarget =
         fin.grossMarginPercent !== null && fin.grossMarginPercent < fin.targetMarginPercent;
@@ -223,6 +237,30 @@ export class FinancialService {
       totalActualDirectCostPaise
     );
 
+    const categoryBreakdown = {
+      website: {
+        totalRevenuePaise: catMetrics.website.revenue,
+        totalCostPaise: catMetrics.website.cost,
+        totalProfitPaise: calcGrossProfit(catMetrics.website.revenue, catMetrics.website.cost),
+        marginPercent: calcGrossMarginPercent(catMetrics.website.revenue, catMetrics.website.cost),
+        projectCount: catMetrics.website.count,
+      },
+      app: {
+        totalRevenuePaise: catMetrics.app.revenue,
+        totalCostPaise: catMetrics.app.cost,
+        totalProfitPaise: calcGrossProfit(catMetrics.app.revenue, catMetrics.app.cost),
+        marginPercent: calcGrossMarginPercent(catMetrics.app.revenue, catMetrics.app.cost),
+        projectCount: catMetrics.app.count,
+      },
+      desktop: {
+        totalRevenuePaise: catMetrics.desktop.revenue,
+        totalCostPaise: catMetrics.desktop.cost,
+        totalProfitPaise: calcGrossProfit(catMetrics.desktop.revenue, catMetrics.desktop.cost),
+        marginPercent: calcGrossMarginPercent(catMetrics.desktop.revenue, catMetrics.desktop.cost),
+        projectCount: catMetrics.desktop.count,
+      },
+    };
+
     return {
       totalQuotedRevenuePaise,
       totalApprovedRevenuePaise,
@@ -240,6 +278,7 @@ export class FinancialService {
       projectsBelowTargetMarginCount,
       projectsWithMissingCostsCount,
       projects: projectDTOs,
+      categoryBreakdown,
     };
   }
 }

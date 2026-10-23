@@ -12,6 +12,9 @@ import {
   X,
   Sparkles,
   AlertCircle,
+  Globe,
+  Smartphone,
+  Monitor,
 } from 'lucide-react';
 import { adminApi, publicApi } from '../../services/api.js';
 import {
@@ -27,6 +30,13 @@ export const AdminQuotationsPage: React.FC = () => {
   const [submissions, setSubmissions] = useState<AdminSubmissionDTO[]>([]);
   const [brands, setBrands] = useState<BrandProfileDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'website' | 'app' | 'desktop'>('all');
+
+  // Helper to determine quotation's category
+  const getQuotationCategory = (q: ClientQuotationDTO): 'website' | 'app' | 'desktop' => {
+    const sub = submissions.find((s) => s.id === q.submissionId);
+    return (sub?.projectCategory as any) || 'website';
+  };
 
   // Editor Modal
   const [showModal, setShowModal] = useState(false);
@@ -318,6 +328,50 @@ export const AdminQuotationsPage: React.FC = () => {
         </button>
       </div>
 
+      {/* Category Filter Tabs */}
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => setCategoryFilter('all')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            categoryFilter === 'all'
+              ? 'bg-brand-500 text-white shadow-sm'
+              : 'bg-white dark:bg-charcoal-850 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50'
+          }`}
+        >
+          All Quotations ({quotations.length})
+        </button>
+        <button
+          onClick={() => setCategoryFilter('website')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            categoryFilter === 'website'
+              ? 'bg-brand-500 text-white shadow-sm'
+              : 'bg-white dark:bg-charcoal-850 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50'
+          }`}
+        >
+          Websites ({quotations.filter((q) => getQuotationCategory(q) === 'website').length})
+        </button>
+        <button
+          onClick={() => setCategoryFilter('app')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            categoryFilter === 'app'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-white dark:bg-charcoal-850 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50'
+          }`}
+        >
+          Mobile Apps ({quotations.filter((q) => getQuotationCategory(q) === 'app').length})
+        </button>
+        <button
+          onClick={() => setCategoryFilter('desktop')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            categoryFilter === 'desktop'
+              ? 'bg-purple-600 text-white shadow-sm'
+              : 'bg-white dark:bg-charcoal-850 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-charcoal-750 hover:bg-slate-50'
+          }`}
+        >
+          Desktop Apps ({quotations.filter((q) => getQuotationCategory(q) === 'desktop').length})
+        </button>
+      </div>
+
       {loading ? (
         <div className="py-20 text-center text-slate-400 text-sm">Loading quotations...</div>
       ) : quotations.length === 0 ? (
@@ -335,6 +389,7 @@ export const AdminQuotationsPage: React.FC = () => {
               <thead>
                 <tr className="border-b border-slate-100 dark:border-charcoal-750 bg-slate-50/50 dark:bg-charcoal-900/50 text-[11px] font-extrabold uppercase text-slate-400">
                   <th className="py-3 px-4">Quote Number</th>
+                  <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4">Client</th>
                   <th className="py-3 px-4">Brand Profile</th>
                   <th className="py-3 px-4 text-right">Subtotal</th>
@@ -345,7 +400,11 @@ export const AdminQuotationsPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-charcoal-750 text-xs font-medium">
-                {quotations.map((q) => (
+                {quotations
+                  .filter((q) => categoryFilter === 'all' || getQuotationCategory(q) === categoryFilter)
+                  .map((q) => {
+                    const cat = getQuotationCategory(q);
+                    return (
                   <tr
                     key={q.id}
                     className="hover:bg-slate-50/50 dark:hover:bg-charcoal-850/50 transition-colors"
@@ -355,6 +414,25 @@ export const AdminQuotationsPage: React.FC = () => {
                       <span className="block text-[10px] text-slate-400 font-sans">
                         v{q.revisionNumber}
                       </span>
+                    </td>
+
+                    <td className="py-3.5 px-4">
+                      {cat === 'desktop' ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 whitespace-nowrap">
+                          <Monitor className="w-3 h-3" />
+                          <span>Desktop</span>
+                        </span>
+                      ) : cat === 'app' ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 whitespace-nowrap">
+                          <Smartphone className="w-3 h-3" />
+                          <span>Mobile App</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20 whitespace-nowrap">
+                          <Globe className="w-3 h-3" />
+                          <span>Website</span>
+                        </span>
+                      )}
                     </td>
 
                     <td className="py-3.5 px-4 font-semibold text-slate-900 dark:text-white">
@@ -421,7 +499,8 @@ export const AdminQuotationsPage: React.FC = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

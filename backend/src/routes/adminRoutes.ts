@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireAdmin } from '../middleware/auth.js';
+import { requireAdmin, requireSuperAdmin } from '../middleware/auth.js';
 import { requirePermission } from '../middleware/permissions.js';
 import { validateBody } from '../middleware/validation.js';
 import {
@@ -113,32 +113,32 @@ router.get(
   AdminQuotationController.downloadPDF
 );
 
-// --- FINANCIALS & PROFIT MARGINS (STRICTLY GATED) ---
+// --- FINANCIALS & PROFIT MARGINS (STRICTLY GATED - SUPERADMIN ONLY) ---
 router.get(
   '/financials/dashboard',
-  requirePermission('view_financials'),
+  requireSuperAdmin,
   AdminFinancialController.getDashboard
 );
 router.get(
   '/financials/projects/:submissionId',
-  requirePermission('view_financials'),
+  requireSuperAdmin,
   AdminFinancialController.getProjectFinancials
 );
 router.post(
   '/financials/costs',
-  requirePermission('manage_financials'),
+  requireSuperAdmin,
   validateBody(CreateCostEntrySchema),
   AdminFinancialController.addCostEntry
 );
 router.post(
   '/financials/payments',
-  requirePermission('manage_financials'),
+  requireSuperAdmin,
   validateBody(CreatePaymentRecordSchema),
   AdminFinancialController.addPaymentRecord
 );
 router.put(
   '/financials/target-margin/:submissionId',
-  requirePermission('manage_financials'),
+  requireSuperAdmin,
   validateBody(UpdateTargetMarginSchema),
   AdminFinancialController.updateTargetMargin
 );

@@ -27,7 +27,7 @@ export const AdminFormBuilderPage: React.FC = () => {
   const { hasPermission } = useAuth();
   const canManageNotes = hasPermission('manage_internal_notes');
 
-  const [category, setCategory] = useState<'website' | 'app'>('website');
+  const [category, setCategory] = useState<'website' | 'app' | 'desktop'>('website');
   const [formDef, setFormDef] = useState<FormDefinitionDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -393,6 +393,16 @@ export const AdminFormBuilderPage: React.FC = () => {
               }`}
             >
               App Form
+            </button>
+            <button
+              onClick={() => setCategory('desktop')}
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                category === 'desktop'
+                  ? 'bg-white dark:bg-charcoal-900 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-slate-500 hover:text-white'
+              }`}
+            >
+              Desktop App Form
             </button>
           </div>
 

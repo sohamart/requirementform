@@ -5,6 +5,7 @@ import {
   Users,
   Globe,
   Smartphone,
+  Monitor,
   FormInput,
   Package,
   Layers,
@@ -44,20 +45,25 @@ interface NavSection {
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
   const { hasPermission, user, logout } = useAuth();
   const navigate = useNavigate();
+  const isSuperAdmin = user?.role === 'superadmin';
 
   const sections: NavSection[] = [
     {
       title: 'DASHBOARDS',
       items: [
         { label: 'Overview', path: '/admin', icon: LayoutDashboard },
-        {
-          label: 'Profit & Margin',
-          path: '/admin/financials',
-          icon: TrendingUp,
-          permission: 'view_financials',
-          badge: 'PRIVATE',
-          badgeColor: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
-        },
+        ...(isSuperAdmin
+          ? [
+              {
+                label: 'Profit & Margin',
+                path: '/admin/financials',
+                icon: TrendingUp,
+                permission: 'view_financials',
+                badge: 'SUPERADMIN',
+                badgeColor: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
+              },
+            ]
+          : []),
       ],
     },
     {
@@ -65,6 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
       items: [
         { label: 'Website Submissions', path: '/admin/submissions/website', icon: Globe, permission: 'manage_submissions' },
         { label: 'App Submissions', path: '/admin/submissions/app', icon: Smartphone, permission: 'manage_submissions' },
+        { label: 'Desktop Submissions', path: '/admin/submissions/desktop', icon: Monitor, permission: 'manage_submissions' },
       ],
     },
     {
@@ -83,12 +90,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
         { label: 'Brand Profiles', path: '/admin/brands', icon: Palette, permission: 'manage_brands' },
       ],
     },
-    {
-      title: 'FINANCIAL MANAGEMENT',
-      items: [
-        { label: 'Project Cost Tracking', path: '/admin/costs', icon: Receipt, permission: 'view_financials' },
-      ],
-    },
+    ...(isSuperAdmin
+      ? [
+          {
+            title: 'FINANCIAL MANAGEMENT',
+            items: [
+              { label: 'Project Cost Tracking', path: '/admin/costs', icon: Receipt, permission: 'view_financials' },
+            ],
+          },
+        ]
+      : []),
     {
       title: 'SYSTEM GOVERNANCE',
       items: [

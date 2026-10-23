@@ -75,7 +75,7 @@ export const AdminInternalNotesPage: React.FC = () => {
           >
             {submissions.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.enquiryReference} - {s.clientSnapshot.name}
+                {s.enquiryReference} - {s.clientSnapshot.name} ({s.projectCategory})
               </option>
             ))}
           </select>

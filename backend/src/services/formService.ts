@@ -8,7 +8,7 @@ export class FormService {
    * Get the active published form for clients.
    * NEVER returns private step notes.
    */
-  static async getPublishedForm(category: 'website' | 'app'): Promise<IFormDefinition | null> {
+  static async getPublishedForm(category: 'website' | 'app' | 'desktop'): Promise<IFormDefinition | null> {
     return FormDefinition.findOne({
       category,
       status: 'published',
@@ -36,7 +36,7 @@ export class FormService {
     slug: string;
     title: string;
     description: string;
-    category: 'website' | 'app';
+    category: 'website' | 'app' | 'desktop';
     steps: any[];
   }): Promise<IFormDefinition> {
     const latest = await FormDefinition.findOne({ slug: data.slug }).sort({ version: -1 });

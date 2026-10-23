@@ -18,7 +18,7 @@ export class SubmissionService {
     user: IUser,
     data: {
       formDefinitionId: string;
-      projectCategory: 'website' | 'app';
+      projectCategory: 'website' | 'app' | 'desktop';
       answers: Record<string, any>;
       stepDeveloperNotes?: Record<string, string>;
       idempotencyKey?: string;
@@ -124,7 +124,7 @@ export class SubmissionService {
   }
 
   static async getAdminSubmissions(query?: {
-    category?: 'website' | 'app';
+    category?: 'website' | 'app' | 'desktop';
     status?: string;
     search?: string;
   }): Promise<ISubmission[]> {

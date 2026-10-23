@@ -8,6 +8,8 @@ import { FormDefinition } from '../models/FormDefinition.js';
 import { FormStepNotes } from '../models/FormStepNotes.js';
 import {
   INITIAL_WEBSITE_PACKAGES,
+  INITIAL_APP_PACKAGES,
+  INITIAL_DESKTOP_PACKAGES,
   INITIAL_ADDONS,
   INITIAL_BRANDS,
   SYSTEM_PERMISSIONS,
@@ -15,8 +17,10 @@ import {
 import {
   MASTER_WEBSITE_STEPS,
   MASTER_APP_STEPS,
+  MASTER_DESKTOP_STEPS,
   MASTER_WEBSITE_STEP_NOTES,
   MASTER_APP_STEP_NOTES,
+  MASTER_DESKTOP_STEP_NOTES,
 } from './masterFormData.js';
 import { ENV } from '../config/env.js';
 
@@ -53,23 +57,30 @@ export async function runSeed(): Promise<void> {
     console.log(`[Seed] Found ${brandCount} existing Brand Profiles. Preserving user configurations.`);
   }
 
-  // 3. Seed Packages
-  const packageCount = await Package.countDocuments();
-  if (packageCount === 0) {
-    for (const p of INITIAL_WEBSITE_PACKAGES) {
-      await Package.create(p);
-    }
-    console.log(`[Seed] Seeded ${INITIAL_WEBSITE_PACKAGES.length} Website Packages.`);
+  // 3. Seed Packages (Website, App, Desktop)
+  const allInitialPackages = [
+    ...INITIAL_WEBSITE_PACKAGES,
+    ...INITIAL_APP_PACKAGES,
+    ...INITIAL_DESKTOP_PACKAGES,
+  ];
+  for (const p of allInitialPackages) {
+    await Package.findOneAndUpdate(
+      { slug: p.slug },
+      { $set: p },
+      { upsert: true, new: true }
+    );
   }
+  console.log(`[Seed] Synced ${allInitialPackages.length} packages across Website, App, and Desktop categories.`);
 
   // 4. Seed Addons
-  const addonCount = await Addon.countDocuments();
-  if (addonCount === 0) {
-    for (const a of INITIAL_ADDONS) {
-      await Addon.create(a);
-    }
-    console.log(`[Seed] Seeded ${INITIAL_ADDONS.length} Addons.`);
+  for (const a of INITIAL_ADDONS) {
+    await Addon.findOneAndUpdate(
+      { slug: a.slug },
+      { $set: a },
+      { upsert: true, new: true }
+    );
   }
+  console.log(`[Seed] Synced ${INITIAL_ADDONS.length} Addons.`);
 
   // 5. Seed Website Requirements Form (8 Structured Steps, 46 Questions)
   const websiteForm = await FormDefinition.findOneAndUpdate(
@@ -105,7 +116,24 @@ export async function runSeed(): Promise<void> {
   );
   console.log(`[Seed] Master App Requirements Form ready (${MASTER_APP_STEPS.length} steps, id: ${appForm._id})`);
 
-  // 7. Seed Form-Level Private Step Notes for All Steps
+  // 7. Seed Desktop Software Requirements Form (8 Structured Steps)
+  const desktopForm = await FormDefinition.findOneAndUpdate(
+    { slug: 'desktop-app-requirements', version: 1 },
+    {
+      slug: 'desktop-app-requirements',
+      title: 'Desktop Software Requirement Specification',
+      description: 'Comprehensive multi-step specification builder for Windows, macOS & Linux desktop applications, POS systems, and native software.',
+      category: 'desktop',
+      version: 1,
+      status: 'published',
+      steps: MASTER_DESKTOP_STEPS,
+      publishedAt: new Date(),
+    },
+    { upsert: true, new: true }
+  );
+  console.log(`[Seed] Master Desktop Software Requirements Form ready (${MASTER_DESKTOP_STEPS.length} steps, id: ${desktopForm._id})`);
+
+  // 8. Seed Form-Level Private Step Notes for All Steps
   for (const [stepId, notes] of Object.entries(MASTER_WEBSITE_STEP_NOTES)) {
     await FormStepNotes.findOneAndUpdate(
       {
@@ -137,7 +165,23 @@ export async function runSeed(): Promise<void> {
       { upsert: true }
     );
   }
-  console.log('[Seed] Seeded private FormStepNotes for all Website and App steps.');
+
+  for (const [stepId, notes] of Object.entries(MASTER_DESKTOP_STEP_NOTES)) {
+    await FormStepNotes.findOneAndUpdate(
+      {
+        formDefinitionId: desktopForm._id,
+        formVersion: 1,
+        stepId,
+      },
+      {
+        notes,
+        authorId: admin._id,
+        authorName: admin.fullName,
+      },
+      { upsert: true }
+    );
+  }
+  console.log('[Seed] Seeded private FormStepNotes for all Website, App, and Desktop steps.');
 
   console.log('[Seed] Database initialization and seeding completed successfully!');
 }

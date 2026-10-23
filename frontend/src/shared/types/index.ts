@@ -86,12 +86,14 @@ export interface FormStep {
   questions: FormQuestion[];
 }
 
+export type ProjectCategory = 'website' | 'app' | 'desktop';
+
 export interface FormDefinitionDTO {
   id: string;
   slug: string;
   title: string;
   description: string;
-  category: 'website' | 'app';
+  category: ProjectCategory;
   version: number;
   status: 'draft' | 'published' | 'archived';
   steps: FormStep[];
@@ -135,7 +137,7 @@ export interface ClientSubmissionDTO {
   };
   formDefinitionId: string;
   formVersion: number;
-  projectCategory: 'website' | 'app';
+  projectCategory: ProjectCategory;
   status: SubmissionStatus;
   answers: Record<string, any>;
   submittedAt: string;
@@ -170,7 +172,7 @@ export interface SubmissionInternalNotesDTO {
 export interface PackageDTO {
   id: string;
   slug: string;
-  category: 'website' | 'app';
+  category: ProjectCategory;
   name: string;
   description: string;
   pricingMode: 'fixed' | 'starting_price' | 'manual_review';
@@ -188,7 +190,7 @@ export interface PackageDTO {
 export interface AddonDTO {
   id: string;
   slug: string;
-  category: 'website' | 'app' | 'both';
+  category: 'website' | 'app' | 'desktop' | 'both' | 'all';
   name: string;
   description: string;
   billingType: 'one_time' | 'monthly' | 'per_unit';
@@ -327,7 +329,7 @@ export interface ProjectFinancialsDTO {
   id: string;
   submissionId: string;
   enquiryReference: string;
-  projectCategory: 'website' | 'app';
+  projectCategory: ProjectCategory;
   clientName: string;
   status: SubmissionStatus;
   quotedRevenuePaise: number;
@@ -349,6 +351,14 @@ export interface ProjectFinancialsDTO {
   updatedAt: string;
 }
 
+export interface CategoryMarginMetrics {
+  totalRevenuePaise: number;
+  totalCostPaise: number;
+  totalProfitPaise: number;
+  marginPercent: number | null;
+  projectCount: number;
+}
+
 export interface FinancialAnalyticsDashboardDTO {
   totalQuotedRevenuePaise: number;
   totalApprovedRevenuePaise: number;
@@ -363,6 +373,11 @@ export interface FinancialAnalyticsDashboardDTO {
   projectsBelowTargetMarginCount: number;
   projectsWithMissingCostsCount: number;
   projects: ProjectFinancialsDTO[];
+  categoryBreakdown?: {
+    website: CategoryMarginMetrics;
+    app: CategoryMarginMetrics;
+    desktop: CategoryMarginMetrics;
+  };
 }
 
 // ================= AI-POWERED SMART DOMAIN FINDER =================

@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IAddon extends Document {
   slug: string;
-  category: 'website' | 'app' | 'both';
+  category: 'website' | 'app' | 'desktop' | 'both' | 'all';
   name: string;
   description: string;
   billingType: 'one_time' | 'monthly' | 'per_unit';
@@ -24,7 +24,7 @@ const AddonSchema = new Schema<IAddon>(
     },
     category: {
       type: String,
-      enum: ['website', 'app', 'both'],
+      enum: ['website', 'app', 'desktop', 'both', 'all'],
       required: true,
       index: true,
     },

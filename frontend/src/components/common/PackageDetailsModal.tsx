@@ -91,7 +91,13 @@ export const PackageDetailsModal: React.FC<PackageDetailsModalProps> = ({
               ) : (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-slate-100/90 dark:bg-charcoal-800/90 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-charcoal-750 shadow-2xs">
                   <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-                  <span>{packageItem.category === 'app' ? 'App Project' : 'Website Tier'}</span>
+                  <span>
+                    {packageItem.category === 'desktop'
+                      ? 'Desktop Software'
+                      : packageItem.category === 'app'
+                      ? 'Mobile App Project'
+                      : 'Website Tier'}
+                  </span>
                 </span>
               )}
 

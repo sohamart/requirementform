@@ -4,7 +4,7 @@
 
 export interface SeedPackage {
   slug: string;
-  category: 'website' | 'app';
+  category: 'website' | 'app' | 'desktop';
   name: string;
   description: string;
   pricingMode: 'fixed' | 'starting_price' | 'manual_review';
@@ -19,7 +19,7 @@ export interface SeedPackage {
 
 export interface SeedAddon {
   slug: string;
-  category: 'website' | 'app' | 'both';
+  category: 'website' | 'app' | 'desktop' | 'both' | 'all';
   name: string;
   description: string;
   billingType: 'one_time' | 'monthly' | 'per_unit';
@@ -247,6 +247,194 @@ export const INITIAL_WEBSITE_PACKAGES: SeedPackage[] = [
   },
 ];
 
+export const INITIAL_APP_PACKAGES: SeedPackage[] = [
+  {
+    slug: 'starter-mobile-app',
+    category: 'app',
+    name: 'Starter Mobile App (Android/iOS)',
+    description: 'MVP mobile app with core interactive screens, user authentication, and Firebase cloud backend integration.',
+    pricingMode: 'fixed',
+    standardPricePaise: 2499900, // ₹24,999
+    offerPricePaise: 1499900,    // ₹14,999
+    billingFrequency: 'one_time',
+    features: [
+      'Up to 5 Custom Mobile Screens',
+      'Cross-Platform Flutter / React Native Build',
+      'User Authentication (Email & Google Sign-In)',
+      'Firebase Cloud Firestore & Storage Setup',
+      'Automated Push Notifications via FCM',
+      'Production APK & iOS IPA Build Export',
+      '100% Full Source Code & Handover',
+    ],
+    maxRevisions: 2,
+    isActive: true,
+    order: 1,
+  },
+  {
+    slug: 'business-mobile-app',
+    category: 'app',
+    name: 'Business Mobile App',
+    description: 'Commercial business application with catalog, customer booking, profile management, and payment gateway.',
+    pricingMode: 'fixed',
+    standardPricePaise: 3999900, // ₹39,999
+    offerPricePaise: 2499900,    // ₹24,999
+    billingFrequency: 'one_time',
+    features: [
+      'Up to 12 Interactive Custom Screens',
+      'Direct WhatsApp & Phone Click-to-Call Actions',
+      'Indian Payment Gateway (Razorpay/UPI Integration)',
+      'In-App Push Notifications & Customer Alerts',
+      'Customer Profile, Favorites & Order History',
+      'Google Maps & Location Store Locator',
+      'App Store & Google Play Upload Assistance',
+      'Full Source Code & 100% IP Ownership',
+    ],
+    maxRevisions: 3,
+    isActive: true,
+    order: 2,
+  },
+  {
+    slug: 'ecommerce-mobile-app',
+    category: 'app',
+    name: 'E-commerce Mobile App',
+    description: 'High-converting mobile shopping app with product catalog, cart, coupons, orders, and real-time order tracking.',
+    pricingMode: 'fixed',
+    standardPricePaise: 5999900, // ₹59,999
+    offerPricePaise: 3899900,    // ₹38,999
+    billingFrequency: 'one_time',
+    features: [
+      'Multi-Category Product Catalog & Fast Search',
+      'Shopping Cart & One-Click Razorpay/Stripe Checkout',
+      'Real-Time Live Order Status & Delivery Tracking',
+      'Discount Coupons, Promo Codes & Sale Banners',
+      'Customer Wishlist & Multi-Address Book',
+      'Dedicated Admin Dashboard & Sales Analytics',
+      'Automated Push Notification Marketing Campaigns',
+      '100% Full Source Code Handover',
+    ],
+    maxRevisions: 3,
+    isActive: true,
+    order: 3,
+  },
+  {
+    slug: 'custom-enterprise-app',
+    category: 'app',
+    name: 'Custom Enterprise Mobile App',
+    description: 'Mission-critical enterprise mobile app with offline synchronization, role-based workflows, and ERP backend integration.',
+    pricingMode: 'starting_price',
+    standardPricePaise: 8999900, // ₹89,999
+    offerPricePaise: 5999900,    // ₹59,999
+    billingFrequency: 'one_time',
+    features: [
+      'Complex Custom Business Logic & Multi-Role RBAC',
+      'Real-Time WebSockets & Offline Data Synchronization',
+      'Biometric Authentication (FaceID & Fingerprint)',
+      'Custom Node.js / Express REST & GraphQL Backend',
+      'Enterprise Cloud Architecture (AWS / GCP / Docker)',
+      'Automated CI/CD Fastlane Build & Release Pipeline',
+      'Comprehensive Technical Architecture Documentation',
+      '100% Lifetime Source Code & Full IP Ownership',
+    ],
+    maxRevisions: 4,
+    isActive: true,
+    order: 4,
+  },
+];
+
+export const INITIAL_DESKTOP_PACKAGES: SeedPackage[] = [
+  {
+    slug: 'desktop-utility-tool',
+    category: 'desktop',
+    name: 'Desktop Utility & Tool App',
+    description: 'Fast standalone desktop application for Windows & macOS with local file processing, offline utility, and modern UI.',
+    pricingMode: 'fixed',
+    standardPricePaise: 1999900, // ₹19,999
+    offerPricePaise: 1299900,    // ₹12,999
+    billingFrequency: 'one_time',
+    features: [
+      'Cross-Platform Windows (.exe/MSI) & macOS (.dmg) Build',
+      'High-Speed Electron / Tauri Architecture',
+      'Local File System Access & Document Processing',
+      '100% Offline Operation (Zero Cloud Dependency)',
+      'Modern Dark & Light Mode Glassmorphism Interface',
+      'Auto-Updater Configuration for Smooth Releases',
+      '100% Full Source Code & Project Handover',
+    ],
+    maxRevisions: 2,
+    isActive: true,
+    order: 1,
+  },
+  {
+    slug: 'desktop-business-pos',
+    category: 'desktop',
+    name: 'Business POS & Billing Desktop App',
+    description: 'Offline-first Point-of-Sale billing software with barcode scanning, thermal receipt printing, and local SQLite database.',
+    pricingMode: 'fixed',
+    standardPricePaise: 3699900, // ₹36,999
+    offerPricePaise: 2299900,    // ₹22,999
+    billingFrequency: 'one_time',
+    features: [
+      'Fast POS Billing & Quick Cash Counter Keyboard Shortcuts',
+      'ESC/POS Thermal Receipt Printer Integration (2" & 3")',
+      'USB & Bluetooth Barcode / QR Scanner Compatibility',
+      'Offline SQLite Encrypted Database (SQLCipher Security)',
+      'Daily Sales, Tax Summary & Stock Depletion Reports',
+      'Customer Credit Ledger & Udhar Khata Management',
+      'Automated Daily Local Database Backups',
+      '100% Source Code Ownership & Desktop Setup Support',
+    ],
+    maxRevisions: 3,
+    isActive: true,
+    order: 2,
+  },
+  {
+    slug: 'desktop-enterprise-erp',
+    category: 'desktop',
+    name: 'Enterprise Desktop ERP Software',
+    description: 'Comprehensive desktop management system with local network multi-terminal sync, accounting, and cloud hybrid backup.',
+    pricingMode: 'fixed',
+    standardPricePaise: 6499900, // ₹64,999
+    offerPricePaise: 3999900,    // ₹39,999
+    billingFrequency: 'one_time',
+    features: [
+      'Multi-Terminal Local Network (LAN) Real-Time Data Sync',
+      'Comprehensive Inventory, Billing, GST & Multi-Store Accounting',
+      'Role-Based Employee Access (Admin, Cashier, Manager)',
+      'One-Click Excel / PDF Bulk Report Generator & Exports',
+      'Hybrid Local SQLite & Encrypted Cloud Backup Sync',
+      'Custom Shortcut Hotkeys for High-Speed Typing',
+      'Dedicated Windows & macOS Desktop Installer Wizard',
+      'Lifetime Source Code & Full IP Ownership Handover',
+    ],
+    maxRevisions: 3,
+    isActive: true,
+    order: 3,
+  },
+  {
+    slug: 'desktop-custom-app',
+    category: 'desktop',
+    name: 'Custom Native Desktop Software',
+    description: 'Bespoke high-performance native desktop application with hardware acceleration, background daemon workers, and custom device integration.',
+    pricingMode: 'starting_price',
+    standardPricePaise: 8999900, // ₹89,999
+    offerPricePaise: 5499900,    // ₹54,999
+    billingFrequency: 'one_time',
+    features: [
+      'C# / .NET / Rust / Tauri Native High-Performance Build',
+      'Serial Port, COM Port & Custom Hardware Device Drivers',
+      'Background Service / Daemon Worker Capabilities',
+      'Hardware-Locked License Key & DRM Protection System',
+      'Ultra-Low RAM Footprint & Rapid Sub-Second Startup',
+      'Automated Windows / Mac Code Signing & Installer Generation',
+      'Enterprise Source Code & Architectural Documentation',
+      '100% IP & Copyright Handover',
+    ],
+    maxRevisions: 4,
+    isActive: true,
+    order: 4,
+  },
+];
+
 export const INITIAL_ADDONS: SeedAddon[] = [
   {
     slug: 'content-assistance',
@@ -260,7 +448,7 @@ export const INITIAL_ADDONS: SeedAddon[] = [
   },
   {
     slug: 'enhanced-seo',
-    category: 'both',
+    category: 'website',
     name: 'Enhanced SEO',
     description: 'Deep meta optimization, schema markup, OpenGraph tags, sitemap submission, and indexing setup.',
     billingType: 'one_time',
@@ -280,8 +468,8 @@ export const INITIAL_ADDONS: SeedAddon[] = [
   },
   {
     slug: 'monthly-maintenance',
-    category: 'both',
-    name: 'Monthly Maintenance',
+    category: 'all',
+    name: 'Monthly Maintenance & Support',
     description: 'Continuous uptime monitoring, security patching, monthly backups, and minor text/image updates.',
     billingType: 'monthly',
     unitPricePaise: 99900, // ₹999 / month
@@ -290,8 +478,8 @@ export const INITIAL_ADDONS: SeedAddon[] = [
   },
   {
     slug: 'priority-delivery',
-    category: 'both',
-    name: 'Priority Delivery',
+    category: 'all',
+    name: 'Priority Fast-Track Delivery',
     description: 'Accelerated development sprint delivering the completed initial build in record turnaround time.',
     billingType: 'one_time',
     unitPricePaise: 200000, // ₹2,000
@@ -301,7 +489,7 @@ export const INITIAL_ADDONS: SeedAddon[] = [
   {
     slug: 'extra-standard-page',
     category: 'website',
-    name: 'Extra Standard Page',
+    name: 'Extra Standard Web Page',
     description: 'Additional structured standard page with customized styling, responsive layout, and content placement.',
     billingType: 'per_unit',
     unitPricePaise: 50000, // ₹500 / page
@@ -319,6 +507,46 @@ export const INITIAL_ADDONS: SeedAddon[] = [
     unitLabel: 'screens',
     isActive: true,
     order: 7,
+  },
+  {
+    slug: 'code-signing-certificate',
+    category: 'desktop',
+    name: 'Code Signing Certificate & Windows SmartScreen Setup',
+    description: 'Configures EV / OV Code Signing certificates to prevent "Unknown Publisher" security warnings during desktop app installation.',
+    billingType: 'one_time',
+    unitPricePaise: 350000, // ₹3,500
+    isActive: true,
+    order: 8,
+  },
+  {
+    slug: 'thermal-printer-driver',
+    category: 'desktop',
+    name: 'Thermal Receipt Printer Driver Integration',
+    description: 'Direct ESC/POS hardware integration for thermal receipt printers (2" and 3" roll formats).',
+    billingType: 'one_time',
+    unitPricePaise: 250000, // ₹2,500
+    isActive: true,
+    order: 9,
+  },
+  {
+    slug: 'sqlite-encrypted-db',
+    category: 'desktop',
+    name: 'SQLCipher Encrypted Local Database Module',
+    description: '256-bit AES encryption on the local desktop database to prevent unauthorized access or data theft.',
+    billingType: 'one_time',
+    unitPricePaise: 200000, // ₹2,000
+    isActive: true,
+    order: 10,
+  },
+  {
+    slug: 'app-store-publishing',
+    category: 'app',
+    name: 'Apple App Store & Google Play Publishing Assistance',
+    description: 'Complete hands-on assistance preparing screenshots, store metadata, privacy policy compliance, and review submission.',
+    billingType: 'one_time',
+    unitPricePaise: 300000, // ₹3,000
+    isActive: true,
+    order: 11,
   },
 ];
 
