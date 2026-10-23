@@ -14,9 +14,11 @@
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../shared/*"]
+      "@shared/*": ["../shared/*"],
+      "zod": ["node_modules/zod"],
+      "zod/*": ["node_modules/zod/*"]
     }
   },
   "include": ["src", "../shared"],
