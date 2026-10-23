@@ -18,8 +18,11 @@ import {
   GoDaddyStatusDTO,
 } from '@shared/types/index.js';
 
+const rawApiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+export const API_BASE_URL = rawApiUrl ? `${rawApiUrl}/api/v1` : '/api/v1';
+
 export const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
