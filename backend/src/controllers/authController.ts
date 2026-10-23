@@ -11,7 +11,7 @@ export class AuthController {
     res.cookie('auth_token', token, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: ENV.SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1000,
       path: '/',
     });
@@ -75,7 +75,13 @@ export class AuthController {
         await logAuditEvent(req, 'USER_LOGGED_OUT', 'Session', req.sessionRecord._id.toString());
       }
 
-      res.clearCookie('auth_token', { path: '/' });
+      const isProduction = ENV.NODE_ENV === 'production';
+      res.clearCookie('auth_token', {
+        path: '/',
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+      });
       res.status(200).json({
         success: true,
         message: 'Successfully logged out.',
@@ -96,7 +102,13 @@ export class AuthController {
         await logAuditEvent(req, 'USER_LOGGED_OUT_EVERYWHERE', 'User', req.user._id.toString());
       }
 
-      res.clearCookie('auth_token', { path: '/' });
+      const isProduction = ENV.NODE_ENV === 'production';
+      res.clearCookie('auth_token', {
+        path: '/',
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+      });
       res.status(200).json({
         success: true,
         message: 'All active sessions have been revoked.',

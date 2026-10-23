@@ -16,7 +16,13 @@ export async function authenticateSession(
   try {
     const cookieToken = req.cookies?.auth_token;
     const authHeader = req.headers.authorization;
-    const bearerToken = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    let bearerToken: string | null = null;
+    if (authHeader) {
+      const match = authHeader.match(/^Bearer\s+(.+)$/i);
+      if (match) {
+        bearerToken = match[1].trim();
+      }
+    }
     const token = cookieToken || bearerToken;
 
     if (!token) {

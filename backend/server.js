@@ -551,7 +551,13 @@ async function authenticateSession(req, res, next) {
   try {
     const cookieToken = req.cookies?.auth_token;
     const authHeader = req.headers.authorization;
-    const bearerToken = authHeader && authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
+    let bearerToken = null;
+    if (authHeader) {
+      const match = authHeader.match(/^Bearer\s+(.+)$/i);
+      if (match) {
+        bearerToken = match[1].trim();
+      }
+    }
     const token = cookieToken || bearerToken;
     if (!token) {
       return next();
@@ -968,7 +974,7 @@ var AuthController = class _AuthController {
     res.cookie("auth_token", token, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "strict" : "lax",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: ENV.SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1e3,
       path: "/"
     });
@@ -1024,7 +1030,13 @@ var AuthController = class _AuthController {
         await AuthService.revokeSession(req.sessionRecord._id.toString());
         await logAuditEvent(req, "USER_LOGGED_OUT", "Session", req.sessionRecord._id.toString());
       }
-      res.clearCookie("auth_token", { path: "/" });
+      const isProduction = ENV.NODE_ENV === "production";
+      res.clearCookie("auth_token", {
+        path: "/",
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax"
+      });
       res.status(200).json({
         success: true,
         message: "Successfully logged out."
@@ -1039,7 +1051,13 @@ var AuthController = class _AuthController {
         await AuthService.revokeAllUserSessions(req.user._id.toString());
         await logAuditEvent(req, "USER_LOGGED_OUT_EVERYWHERE", "User", req.user._id.toString());
       }
-      res.clearCookie("auth_token", { path: "/" });
+      const isProduction = ENV.NODE_ENV === "production";
+      res.clearCookie("auth_token", {
+        path: "/",
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax"
+      });
       res.status(200).json({
         success: true,
         message: "All active sessions have been revoked."
