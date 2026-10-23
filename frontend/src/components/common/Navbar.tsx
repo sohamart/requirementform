@@ -21,9 +21,10 @@ import { publicApi } from '../../services/api.js';
 
 interface NavbarProps {
   onOpenProjectSelector: () => void;
+  onOpenSearch?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSearch }) => {
   const { user, logout, isAdmin } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -178,14 +179,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector }) => {
 
         {/* Right: Actions, Theme & User Management */}
         <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-          {/* Quick Search Icon Button (Compact, doesn't crowd navbar) */}
+          {/* Universal Search Button */}
           <button
             type="button"
-            onClick={onOpenProjectSelector}
-            title="Search & Start Project"
-            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-colors cursor-pointer app-press border border-transparent hover:border-slate-200 dark:hover:border-charcoal-750"
+            onClick={onOpenSearch || onOpenProjectSelector}
+            title="Universal Search (Ctrl+K)"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-colors cursor-pointer app-press border border-transparent hover:border-slate-200 dark:hover:border-charcoal-750"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-4 h-4 text-brand-500" />
+            <span className="hidden md:inline text-xs font-medium text-slate-500 dark:text-slate-400">
+              Search
+            </span>
+            <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-slate-200/60 dark:bg-charcoal-800 text-slate-500 dark:text-slate-400 border border-slate-300/60 dark:border-charcoal-700">
+              ⌘K
+            </kbd>
           </button>
 
           {/* Theme Toggle Button */}
@@ -306,6 +313,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector }) => {
       {/* Slide-Down Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden mt-2 rounded-2xl border border-slate-200/90 dark:border-charcoal-750/90 bg-white/95 dark:bg-charcoal-900/95 backdrop-blur-2xl p-4 shadow-2xl animate-in slide-in-from-top-3 duration-200 space-y-3">
+          {/* Quick Search in Mobile Drawer */}
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              if (onOpenSearch) onOpenSearch();
+              else onOpenProjectSelector();
+            }}
+            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-slate-100/90 dark:bg-charcoal-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-charcoal-700 app-press cursor-pointer text-left"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-brand-500 shrink-0" />
+              <span className="text-slate-500 dark:text-slate-400">Search packages, domains & charges...</span>
+            </div>
+            <kbd className="px-1.5 py-0.5 rounded bg-white dark:bg-charcoal-900 text-[10px] font-mono border border-slate-200 dark:border-charcoal-750 text-slate-500 shrink-0">
+              Find
+            </kbd>
+          </button>
+
           <div className="grid grid-cols-2 gap-2">
             <Link
               to="/"

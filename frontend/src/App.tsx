@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
 import { ThemeProvider } from './context/ThemeContext.js';
 import { Navbar } from './components/common/Navbar.js';
 import { MobileBottomDock } from './components/common/MobileBottomDock.js';
 import { ProjectSelectionPopup } from './components/common/ProjectSelectionPopup.js';
+import { UniversalSearchModal } from './components/common/UniversalSearchModal.js';
 import { LandingPage } from './pages/LandingPage.js';
 import { AuthPage } from './pages/AuthPage.js';
 import { RequirementFormPage } from './pages/RequirementFormPage.js';
@@ -56,22 +57,48 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
 export const AppContent: React.FC = () => {
   const [projectSelectorOpen, setProjectSelectorOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
   const location = useLocation();
 
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isFormRoute = location.pathname.startsWith('/requirements');
 
+  // Global Ctrl+K / Cmd+K shortcut to open Universal Search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchModalOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-charcoal-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* Marketing Navbar: Only on non-admin routes to prevent double header collision */}
       {!isAdminRoute && (
-        <Navbar onOpenProjectSelector={() => setProjectSelectorOpen(true)} />
+        <Navbar
+          onOpenProjectSelector={() => setProjectSelectorOpen(true)}
+          onOpenSearch={() => setSearchModalOpen(true)}
+        />
       )}
 
       {/* Global Project Selection Welcome Popup */}
       <ProjectSelectionPopup
         isOpen={projectSelectorOpen}
         onClose={() => setProjectSelectorOpen(false)}
+      />
+
+      {/* Global Universal Search Palette (Packages, Domains, Addons & Charges) */}
+      <UniversalSearchModal
+        isOpen={searchModalOpen}
+        onClose={() => setSearchModalOpen(false)}
+        onOpenProjectSelector={() => {
+          setSearchModalOpen(false);
+          setProjectSelectorOpen(true);
+        }}
       />
 
       <div className={`flex-1 ${isAdminRoute ? '' : isFormRoute ? 'pb-8 md:pb-0' : 'pb-20 md:pb-0'}`}>
