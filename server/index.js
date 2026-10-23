@@ -291536,8 +291536,13 @@ var ENV = {
 
 // src/config/db.ts
 var replSetInstance = null;
+var cachedConnectionPromise = null;
 async function connectDB() {
   if (import_mongoose.default.connection.readyState === 1) {
+    return "connected";
+  }
+  if (cachedConnectionPromise) {
+    await cachedConnectionPromise;
     return "connected";
   }
   let uri = ENV.MONGODB_URI;
@@ -291561,12 +291566,16 @@ async function connectDB() {
     throw new Error("Database connection failed: No MONGODB_URI and in-memory replica set not enabled.");
   }
   try {
-    await import_mongoose.default.connect(uri, {
-      autoIndex: true
+    cachedConnectionPromise = import_mongoose.default.connect(uri, {
+      autoIndex: true,
+      serverSelectionTimeoutMS: 5e3,
+      connectTimeoutMS: 5e3
     });
+    await cachedConnectionPromise;
     console.log("[Database] Connected successfully to MongoDB.");
     return uri;
   } catch (err) {
+    cachedConnectionPromise = null;
     console.error("[Database] Mongoose connection error:", err);
     throw err;
   }
@@ -302958,20 +302967,7 @@ app.use(import_express6.default.urlencoded({ extended: true, limit: "10mb" }));
 if (ENV.NODE_ENV !== "test") {
   app.use((0, import_morgan.default)("dev"));
 }
-app.use(authenticateSession);
-app.use("/api", apiLimiter);
-app.get(["/api/v1/health", "/v1/health", "/health", "/"], (req, res) => {
-  const isDbConnected = import_mongoose20.default.connection.readyState === 1;
-  res.status(isDbConnected ? 200 : 503).json({
-    status: isDbConnected ? "healthy" : "degraded",
-    database: isDbConnected ? "connected" : "disconnected",
-    uptimeSeconds: Math.floor(process.uptime()),
-    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-    environment: ENV.NODE_ENV
-  });
-});
 app.use(async (req, res, next) => {
-  if (req.path === "/api/v1/health") return next();
   if (import_mongoose20.default.connection.readyState !== 1) {
     try {
       await connectDB();
@@ -302985,6 +302981,18 @@ app.use(async (req, res, next) => {
     }
   }
   next();
+});
+app.use(authenticateSession);
+app.use("/api", apiLimiter);
+app.get(["/api/v1/health", "/v1/health", "/health", "/"], (req, res) => {
+  const isDbConnected = import_mongoose20.default.connection.readyState === 1;
+  res.status(isDbConnected ? 200 : 503).json({
+    status: isDbConnected ? "healthy" : "degraded",
+    database: isDbConnected ? "connected" : "disconnected",
+    uptimeSeconds: Math.floor(process.uptime()),
+    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+    environment: ENV.NODE_ENV
+  });
 });
 app.use("/api/v1/auth", authRoutes_default);
 app.use("/v1/auth", authRoutes_default);
@@ -303019,7 +303027,8 @@ async function startServer() {
   process.on("SIGINT", shutdown);
   return server;
 }
-if (!process.env.VERCEL && process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
+var isServerless = !!(process.env.VERCEL || process.env.VERCEL_ENV || process.env.NOW_REGION || process.env.LAMBDA_TASK_ROOT || process.env.NODE_ENV === "production");
+if (!isServerless && process.env.NODE_ENV !== "test") {
   startServer().catch((err) => {
     console.error("[Server] Fatal startup error:", err);
     process.exit(1);

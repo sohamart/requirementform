@@ -3,10 +3,16 @@ import { MongoMemoryReplSet } from 'mongodb-memory-server';
 import { ENV } from './env.js';
 
 let replSetInstance: MongoMemoryReplSet | null = null;
+let cachedConnectionPromise: Promise<any> | null = null;
 
 export async function connectDB(): Promise<string> {
   // Re-use active connection in serverless warm invocations
   if (mongoose.connection.readyState === 1) {
+    return 'connected';
+  }
+
+  if (cachedConnectionPromise) {
+    await cachedConnectionPromise;
     return 'connected';
   }
 
@@ -34,12 +40,16 @@ export async function connectDB(): Promise<string> {
   }
 
   try {
-    await mongoose.connect(uri, {
+    cachedConnectionPromise = mongoose.connect(uri, {
       autoIndex: true,
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
     });
+    await cachedConnectionPromise;
     console.log('[Database] Connected successfully to MongoDB.');
     return uri;
   } catch (err) {
+    cachedConnectionPromise = null;
     console.error('[Database] Mongoose connection error:', err);
     throw err;
   }

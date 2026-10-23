@@ -50,6 +50,23 @@ if (ENV.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
+// Ensure DB connection before servicing ANY API requests (critical on serverless cold starts)
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    try {
+      await connectDB();
+    } catch (err: any) {
+      console.error('[Database] Middleware connection error:', err);
+      return res.status(500).json({
+        success: false,
+        error: 'Database Connection Error',
+        message: err.message || 'Unable to connect to MongoDB Atlas database',
+      });
+    }
+  }
+  next();
+});
+
 // Session Authentication Middleware (attaches req.user & req.sessionRecord if token present)
 app.use(authenticateSession);
 
@@ -66,24 +83,6 @@ app.get(['/api/v1/health', '/v1/health', '/health', '/'], (req, res) => {
     timestamp: new Date().toISOString(),
     environment: ENV.NODE_ENV,
   });
-});
-
-// Ensure DB connection before servicing API requests (especially on serverless cold starts)
-app.use(async (req, res, next) => {
-  if (req.path === '/api/v1/health') return next();
-  if (mongoose.connection.readyState !== 1) {
-    try {
-      await connectDB();
-    } catch (err: any) {
-      console.error('[Database] Middleware connection error:', err);
-      return res.status(500).json({
-        success: false,
-        error: 'Database Connection Error',
-        message: err.message || 'Unable to connect to MongoDB Atlas database',
-      });
-    }
-  }
-  next();
 });
 
 // Mount Versioned API Routes (Support both with and without /api prefix from reverse proxies)
@@ -130,8 +129,9 @@ export async function startServer() {
   return server;
 }
 
-// Start HTTP server only in local development mode (never in production/Vercel serverless/tests)
-if (!process.env.VERCEL && process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+// Start HTTP server only in standalone local dev mode (never on Vercel serverless / AWS Lambda / production)
+const isServerless = !!(process.env.VERCEL || process.env.VERCEL_ENV || process.env.NOW_REGION || process.env.LAMBDA_TASK_ROOT || process.env.NODE_ENV === 'production');
+if (!isServerless && process.env.NODE_ENV !== 'test') {
   startServer().catch((err) => {
     console.error('[Server] Fatal startup error:', err);
     process.exit(1);
