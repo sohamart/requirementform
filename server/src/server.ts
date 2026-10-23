@@ -125,8 +125,8 @@ export async function startServer() {
   return server;
 }
 
-// Start HTTP server unless running in test mode
-if (process.env.NODE_ENV !== 'test') {
+// Start HTTP server only in local development mode (never in production/Vercel serverless/tests)
+if (!process.env.VERCEL && process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
   startServer().catch((err) => {
     console.error('[Server] Fatal startup error:', err);
     process.exit(1);
