@@ -6,12 +6,13 @@ let replSetInstance: MongoMemoryReplSet | null = null;
 let cachedConnectionPromise: Promise<any> | null = null;
 
 export async function connectDB(): Promise<string> {
-  // Re-use active connection in serverless warm invocations
+  // 1. Re-use active connection in serverless warm invocations
   if (mongoose.connection.readyState === 1) {
     return 'connected';
   }
 
-  if (cachedConnectionPromise) {
+  // 2. If a connection is currently being established, wait for it
+  if (mongoose.connection.readyState === 2 && cachedConnectionPromise) {
     await cachedConnectionPromise;
     return 'connected';
   }
@@ -41,10 +42,11 @@ export async function connectDB(): Promise<string> {
 
   try {
     cachedConnectionPromise = mongoose.connect(uri, {
-      autoIndex: true,
+      autoIndex: process.env.NODE_ENV !== 'production',
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 5000,
     });
+
     await cachedConnectionPromise;
     console.log('[Database] Connected successfully to MongoDB.');
     return uri;
@@ -54,6 +56,10 @@ export async function connectDB(): Promise<string> {
     throw err;
   }
 }
+
+mongoose.connection.on('disconnected', () => {
+  cachedConnectionPromise = null;
+});
 
 export async function disconnectDB(): Promise<void> {
   try {

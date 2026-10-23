@@ -5,9 +5,9 @@
   "description": "Backend API for Requirement Portal, Form Builder, Quotations & Profit Margins",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch src/standalone.ts",
     "prebuild": "node prebuild.cjs",
-    "build": "node prebuild.cjs && esbuild src/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/server.js --alias:@shared=../shared && node -e \"const fs=require('fs'); fs.copyFileSync('dist/server.js', 'index.js'); fs.copyFileSync('dist/server.js', 'server.js');\"",
+    "build": "node build.cjs",
     "start": "node index.js",
     "seed": "tsx src/seed/seed.ts",
     "fresh": "tsx src/seed/freshData.ts",

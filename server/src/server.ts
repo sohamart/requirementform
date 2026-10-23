@@ -129,13 +129,4 @@ export async function startServer() {
   return server;
 }
 
-// Start HTTP server only in standalone local dev mode (never on Vercel serverless / AWS Lambda / production)
-const isServerless = !!(process.env.VERCEL || process.env.VERCEL_ENV || process.env.NOW_REGION || process.env.LAMBDA_TASK_ROOT || process.env.NODE_ENV === 'production');
-if (!isServerless && process.env.NODE_ENV !== 'test') {
-  startServer().catch((err) => {
-    console.error('[Server] Fatal startup error:', err);
-    process.exit(1);
-  });
-}
-
 export default app;
