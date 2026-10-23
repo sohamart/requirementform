@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Globe,
@@ -76,12 +76,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
       .catch((err) => console.error('Failed to load add-ons:', err));
   }, []);
 
-  // Filtered packages
-  const filteredPackages = packages.filter((pkg) => {
-    if (packageCategory === 'starter') return pkg.offerPricePaise <= 1500000; // <= ₹15,000
-    if (packageCategory === 'pro') return pkg.offerPricePaise > 1500000;
-    return true;
-  });
+  // Active Category Packages (Strictly filtered by current projectCategory)
+  const activeCategoryPackages = useMemo(() => {
+    return packages.filter((pkg) => !pkg.category || pkg.category === projectCategory);
+  }, [packages, projectCategory]);
+
+  // Sub-tier Filtered packages (all / starter / pro)
+  const filteredPackages = useMemo(() => {
+    return activeCategoryPackages.filter((pkg) => {
+      if (packageCategory === 'starter') return pkg.offerPricePaise <= 1500000; // <= ₹15,000
+      if (packageCategory === 'pro') return pkg.offerPricePaise > 1500000;
+      return true;
+    });
+  }, [activeCategoryPackages, packageCategory]);
 
   // Filtered addons
   const filteredAddons = addons.filter((a) => {
@@ -607,7 +614,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
             <button
               type="button"
-              onClick={() => setProjectCategory('website')}
+              onClick={() => {
+                setProjectCategory('website');
+                setPackageCategory('all');
+              }}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm ${
                 projectCategory === 'website'
                   ? 'bg-brand-500 text-white shadow-glow-sm ring-2 ring-brand-500/20'
@@ -620,7 +630,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
 
             <button
               type="button"
-              onClick={() => setProjectCategory('app')}
+              onClick={() => {
+                setProjectCategory('app');
+                setPackageCategory('all');
+              }}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm ${
                 projectCategory === 'app'
                   ? 'bg-blue-600 text-white shadow-glow-sm ring-2 ring-blue-500/20'
@@ -633,7 +646,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
 
             <button
               type="button"
-              onClick={() => setProjectCategory('desktop')}
+              onClick={() => {
+                setProjectCategory('desktop');
+                setPackageCategory('all');
+              }}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-sm ${
                 projectCategory === 'desktop'
                   ? 'bg-purple-600 text-white shadow-glow-sm ring-2 ring-purple-500/20'
@@ -655,7 +671,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              All Packages ({packages.length})
+              All Packages ({activeCategoryPackages.length})
             </button>
             <button
               onClick={() => setPackageCategory('starter')}
@@ -684,6 +700,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
           <div className="text-center py-16 text-slate-400 flex flex-col items-center justify-center gap-3">
             <div className="w-8 h-8 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
             <span className="text-sm">Loading package catalogue...</span>
+          </div>
+        ) : filteredPackages.length === 0 ? (
+          <div className="text-center py-12 p-6 rounded-2xl glass-card border border-slate-200/60 dark:border-charcoal-750/60 max-w-lg mx-auto">
+            <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
+              No packages found in this specific tier.
+            </p>
+            <button
+              onClick={() => setPackageCategory('all')}
+              className="mt-3 px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 text-white cursor-pointer hover:bg-brand-600 transition-colors shadow-sm"
+            >
+              View All {activeCategoryPackages.length} {projectCategory === 'website' ? 'Website' : projectCategory === 'app' ? 'Mobile App' : 'Desktop'} Packages
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

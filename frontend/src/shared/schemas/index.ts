@@ -96,7 +96,7 @@ export const FormDefinitionSchema = z.object({
   slug: z.string().min(2).regex(/^[a-z0-9-]+$/, 'Slug must be alphanumeric with hyphens'),
   title: z.string().min(2, 'Title is required'),
   description: z.string().min(2, 'Description is required'),
-  category: z.enum(['website', 'app']),
+  category: z.enum(['website', 'app', 'desktop']),
   steps: z.array(FormStepSchema),
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
 });
@@ -110,7 +110,7 @@ export const SaveStepNotesSchema = z.object({
 // Submission Schema
 export const CreateSubmissionSchema = z.object({
   formDefinitionId: z.string().min(1),
-  projectCategory: z.enum(['website', 'app']),
+  projectCategory: z.enum(['website', 'app', 'desktop']),
   answers: z.record(z.string(), z.any()),
   stepDeveloperNotes: z.record(z.string(), z.string()).optional(),
   idempotencyKey: z.string().optional(),
@@ -131,7 +131,7 @@ export const UpdateSubmissionStatusSchema = z.object({
 // Package & Addon Schemas
 export const PackageSchema = z.object({
   slug: z.string().min(2),
-  category: z.enum(['website', 'app']),
+  category: z.enum(['website', 'app', 'desktop']),
   name: z.string().min(2),
   description: z.string(),
   pricingMode: z.enum(['fixed', 'starting_price', 'manual_review']),
@@ -146,7 +146,7 @@ export const PackageSchema = z.object({
 
 export const AddonSchema = z.object({
   slug: z.string().min(2),
-  category: z.enum(['website', 'app', 'both']),
+  category: z.enum(['website', 'app', 'desktop', 'both', 'all']),
   name: z.string().min(2),
   description: z.string(),
   billingType: z.enum(['one_time', 'monthly', 'per_unit']),

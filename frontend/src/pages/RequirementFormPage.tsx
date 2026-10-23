@@ -224,7 +224,7 @@ export const RequirementFormPage: React.FC = () => {
     try {
       const res = await clientApi.createSubmission({
         formDefinitionId: formDef.id,
-        projectCategory: category as 'website' | 'app',
+        projectCategory: category as 'website' | 'app' | 'desktop',
         answers,
         stepDeveloperNotes: canAddInternalNotes ? stepDeveloperNotes : undefined,
         idempotencyKey: `sub_${user.id}_${formDef.id}_${Date.now()}`,

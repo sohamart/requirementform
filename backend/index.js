@@ -1475,7 +1475,7 @@ var FormDefinitionSchema = z.object({
   slug: z.string().min(2).regex(/^[a-z0-9-]+$/, "Slug must be alphanumeric with hyphens"),
   title: z.string().min(2, "Title is required"),
   description: z.string().min(2, "Description is required"),
-  category: z.enum(["website", "app"]),
+  category: z.enum(["website", "app", "desktop"]),
   steps: z.array(FormStepSchema),
   status: z.enum(["draft", "published", "archived"]).default("draft")
 });
@@ -1485,7 +1485,7 @@ var SaveStepNotesSchema = z.object({
 });
 var CreateSubmissionSchema = z.object({
   formDefinitionId: z.string().min(1),
-  projectCategory: z.enum(["website", "app"]),
+  projectCategory: z.enum(["website", "app", "desktop"]),
   answers: z.record(z.string(), z.any()),
   stepDeveloperNotes: z.record(z.string(), z.string()).optional(),
   idempotencyKey: z.string().optional()
@@ -1503,7 +1503,7 @@ var UpdateSubmissionStatusSchema = z.object({
 });
 var PackageSchema = z.object({
   slug: z.string().min(2),
-  category: z.enum(["website", "app"]),
+  category: z.enum(["website", "app", "desktop"]),
   name: z.string().min(2),
   description: z.string(),
   pricingMode: z.enum(["fixed", "starting_price", "manual_review"]),
@@ -1517,7 +1517,7 @@ var PackageSchema = z.object({
 });
 var AddonSchema = z.object({
   slug: z.string().min(2),
-  category: z.enum(["website", "app", "both"]),
+  category: z.enum(["website", "app", "desktop", "both", "all"]),
   name: z.string().min(2),
   description: z.string(),
   billingType: z.enum(["one_time", "monthly", "per_unit"]),
