@@ -358,6 +358,13 @@ export const UniversalSearchModal: React.FC<UniversalSearchModalProps> = ({
                         <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
                           {pkg.description}
                         </p>
+
+                        {pkg.features?.some((f) => f.toLowerCase().includes('domain') || f.toLowerCase().includes('hosting')) && (
+                          <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
+                            <Globe className="w-3 h-3" />
+                            <span>1st Year Domain & Hosting Included</span>
+                          </div>
+                        )}
                       </div>
 
                       <div className="mt-3 pt-2.5 border-t border-slate-200/60 dark:border-charcoal-750/60 flex items-center justify-between text-xs font-semibold text-brand-600 dark:text-brand-400">

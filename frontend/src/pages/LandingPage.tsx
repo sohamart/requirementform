@@ -11,6 +11,8 @@ import {
   Clock,
   Layers,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Cpu,
   FileCheck,
   Code2,
@@ -40,6 +42,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
 
   // Package category filter state
   const [packageCategory, setPackageCategory] = useState<'all' | 'starter' | 'pro'>('all');
+
+  // Track expanded "View more benefits" for package cards
+  const [expandedPackages, setExpandedPackages] = useState<Record<string, boolean>>({});
+
+  const togglePackageExpand = (idOrSlug: string) => {
+    setExpandedPackages((prev) => ({
+      ...prev,
+      [idOrSlug]: !prev[idOrSlug],
+    }));
+  };
 
   useEffect(() => {
     Promise.all([publicApi.getPackages('website'), publicApi.getAddons()])
@@ -529,10 +541,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
               const hasDiscount = pkg.standardPricePaise > pkg.offerPricePaise;
               const savings = hasDiscount ? pkg.standardPricePaise - pkg.offerPricePaise : 0;
               const isFeatured = idx === 1; // Highlight second tier as most popular
+              const pkgKey = pkg.id || pkg.slug;
+              const isExpanded = !!expandedPackages[pkgKey];
+              const INITIAL_VISIBLE_COUNT = 4;
+              const visibleFeatures = isExpanded ? pkg.features : pkg.features.slice(0, INITIAL_VISIBLE_COUNT);
+              const remainingCount = pkg.features.length - INITIAL_VISIBLE_COUNT;
+              const hasDomainOrHosting = pkg.features.some(
+                (f) =>
+                  f.toLowerCase().includes('1st year') ||
+                  f.toLowerCase().includes('domain') ||
+                  f.toLowerCase().includes('hosting')
+              );
 
               return (
                 <div
-                  key={pkg.id}
+                  key={pkg.id || pkg.slug}
                   className={`flex flex-col rounded-3xl glass-card p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
                     isFeatured
                       ? 'border-brand-500 dark:border-brand-500 ring-2 ring-brand-500/20'
@@ -556,9 +579,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
                   <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
                     {pkg.name}
                   </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 min-h-[36px] line-clamp-2 mb-4">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 min-h-[36px] line-clamp-2 mb-3">
                     {pkg.description}
                   </p>
+
+                  {/* 1st Year Domain & Hosting Included Banner */}
+                  {hasDomainOrHosting && (
+                    <div className="mb-3 p-2.5 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-brand-500/10 border border-emerald-500/30 text-left animate-in fade-in duration-200">
+                      <div className="flex items-center gap-1.5 text-xs font-extrabold text-emerald-700 dark:text-emerald-300">
+                        <Globe className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                        <span>1st Year Domain & Hosting Included</span>
+                      </div>
+                      <p className="mt-0.5 text-[10px] text-slate-600 dark:text-slate-400 leading-tight">
+                        Free for 1st Year. Standard renewal applicable from 2nd year onwards for domain & hosting.
+                      </p>
+                    </div>
+                  )}
 
                   {/* Pricing Display */}
                   <div className="my-2 p-3.5 rounded-2xl bg-slate-50/80 dark:bg-charcoal-900/80 border border-slate-100 dark:border-charcoal-750">
@@ -577,24 +613,65 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
                     </span>
                   </div>
 
-                  {/* Features List */}
-                  <div className="my-4 flex-1">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-charcoal-600 mb-2.5">
-                      Included Scope:
-                    </p>
+                  {/* Features / Benefits List */}
+                  <div className="my-3 flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-charcoal-600">
+                        Included Scope ({pkg.features.length}):
+                      </p>
+                    </div>
                     <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-                      {pkg.features.map((feat, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-brand-500 mt-0.5 flex-shrink-0" />
-                          <span>{feat}</span>
-                        </li>
-                      ))}
+                      {visibleFeatures.map((feat, i) => {
+                        const isSpecialHighlight =
+                          feat.toLowerCase().includes('1st year') ||
+                          feat.toLowerCase().includes('domain') ||
+                          feat.toLowerCase().includes('hosting');
+
+                        return (
+                          <li
+                            key={i}
+                            className={`flex items-start gap-2 ${
+                              isSpecialHighlight
+                                ? 'font-semibold text-emerald-700 dark:text-emerald-300'
+                                : ''
+                            }`}
+                          >
+                            <CheckCircle
+                              className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${
+                                isSpecialHighlight ? 'text-emerald-500' : 'text-brand-500'
+                              }`}
+                            />
+                            <span>{feat}</span>
+                          </li>
+                        );
+                      })}
                     </ul>
+
+                    {/* Expandable "Show More Benefits" Button */}
+                    {remainingCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => togglePackageExpand(pkgKey)}
+                        className="mt-3 w-full py-1.5 px-3 rounded-xl text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 hover:bg-brand-500/10 transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-brand-500/25 bg-brand-500/5 app-press"
+                      >
+                        {isExpanded ? (
+                          <>
+                            <span>Show less</span>
+                            <ChevronUp className="w-3.5 h-3.5" />
+                          </>
+                        ) : (
+                          <>
+                            <span>+{remainingCount} more benefits & features</span>
+                            <ChevronDown className="w-3.5 h-3.5" />
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
 
                   {/* Action CTA */}
                   <button
-                    onClick={() => navigate('/requirements/website')}
+                    onClick={() => navigate(`/requirements/website?package=${pkg.slug}`)}
                     className={`w-full mt-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-center app-press ${
                       isFeatured
                         ? 'bg-brand-500 hover:bg-brand-600 text-white shadow-glow-sm'

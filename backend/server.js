@@ -165,7 +165,7 @@ var INITIAL_WEBSITE_PACKAGES = [
     slug: "landing-page",
     category: "website",
     name: "Landing Page",
-    description: "High-conversion single page landing experience tailored for marketing campaigns and product launches.",
+    description: "High-conversion single page landing experience tailored for marketing campaigns, ad lead generation, and product launches.",
     pricingMode: "fixed",
     standardPricePaise: 799900,
     // ₹7,999
@@ -173,12 +173,14 @@ var INITIAL_WEBSITE_PACKAGES = [
     // ₹4,999
     billingFrequency: "one_time",
     features: [
-      "Single High-Converting Page",
-      "Hero Section with Call-to-Action",
-      "Mobile Responsive & Fast Loading",
-      "Contact Form & Lead Capture",
-      "Basic On-Page SEO Setup",
-      "Social Media Integration"
+      "Single High-Converting Lead Generation Page",
+      "Hero Section with Compelling Call-to-Action",
+      "Mobile Responsive & Ultra-Fast Loading Speed",
+      "Contact Form & Direct WhatsApp Chat Button",
+      "Basic On-Page SEO & Social Meta Tags",
+      "Google Analytics 4 & Meta Pixel Setup",
+      "Free Lifetime SSL Security Certificate",
+      "100% Full Source Code & Asset Handover"
     ],
     maxRevisions: 2,
     isActive: true,
@@ -188,7 +190,7 @@ var INITIAL_WEBSITE_PACKAGES = [
     slug: "portfolio-website",
     category: "website",
     name: "Portfolio Website",
-    description: "Showcase creative work, projects, and professional credibility with a bespoke interactive portfolio.",
+    description: "Showcase creative work, client projects, and professional credibility with a bespoke interactive portfolio.",
     pricingMode: "fixed",
     standardPricePaise: 999900,
     // ₹9,999
@@ -196,12 +198,15 @@ var INITIAL_WEBSITE_PACKAGES = [
     // ₹5,999
     billingFrequency: "one_time",
     features: [
-      "Up to 4 Custom Pages",
-      "Interactive Work / Project Gallery",
-      "About & Resume Section",
-      "Inquiry & Contact Form",
-      "High-Speed Performance Optimization",
-      "Mobile-First Layout"
+      "Up to 4 Custom Interactive Pages",
+      "Creative Work & Project Case Studies Gallery",
+      "About, Biography & CV/Resume Download Section",
+      "Direct Client Inquiry & Contact Form",
+      "High-Speed Performance & CDN Caching",
+      "Mobile-First Layout with Smooth Animations",
+      "Free Lifetime SSL Certificate & Cloudflare CDN",
+      "Google Search Console & Basic SEO Setup",
+      "100% Full Source Code & Copyright Ownership"
     ],
     maxRevisions: 2,
     isActive: true,
@@ -219,12 +224,16 @@ var INITIAL_WEBSITE_PACKAGES = [
     // ₹8,999
     billingFrequency: "one_time",
     features: [
-      "Up to 7 Structured Pages",
-      "Services & Case Studies Showcase",
-      "Interactive Contact & Quote Forms",
-      "Google Maps & Business Location",
-      "Speed & SEO Optimized Architecture",
-      "Security & SSL Configuration"
+      "1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)",
+      "1st Year High-Speed SSD Cloud Hosting Included (Renewal applicable from 2nd year)",
+      "Up to 7 Custom Business Pages",
+      "Services & Case Studies Interactive Showcase",
+      "Lead Capture Contact & Quote Request Forms",
+      "Direct WhatsApp Floating Chat Integration",
+      "Google Maps & Local Business Location Setup",
+      "Speed & Technical On-Page SEO Optimization",
+      "Free Lifetime SSL Security Certificate",
+      "Full Source Code & 100% IP Ownership"
     ],
     maxRevisions: 3,
     isActive: true,
@@ -234,7 +243,7 @@ var INITIAL_WEBSITE_PACKAGES = [
     slug: "blog-news-website",
     category: "website",
     name: "Blog / News Website",
-    description: "Content-driven publishing platform with categories, author profiles, and reader engagement.",
+    description: "Content-driven publishing platform with categories, author profiles, ad monetization, and reader engagement.",
     pricingMode: "fixed",
     standardPricePaise: 1399900,
     // ₹13,999
@@ -242,12 +251,15 @@ var INITIAL_WEBSITE_PACKAGES = [
     // ₹7,999
     billingFrequency: "one_time",
     features: [
-      "Modern Editorial Content Layout",
-      "Dynamic Categories & Tagging",
-      "Author Profiles & Social Sharing",
-      "Search & Archive Navigation",
-      "Newsletter Subscription Integration",
-      "Ad Slot / Monetization Readiness"
+      "1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)",
+      "Modern Editorial Content & Article Layout",
+      "Dynamic Categories, Tags & Search Archive",
+      "Author Profiles & Social Media Sharing",
+      "Newsletter / Subscriber Lead Integration",
+      "Ad Slot & Google AdSense Monetization Readiness",
+      "Fast Page Speed & Core Web Vitals Optimization",
+      "Free SSL Certificate & Cloudflare DDoS Shield",
+      "100% Full Source Code Handover"
     ],
     maxRevisions: 2,
     isActive: true,
@@ -257,7 +269,7 @@ var INITIAL_WEBSITE_PACKAGES = [
     slug: "booking-website",
     category: "website",
     name: "Booking Website",
-    description: "Direct appointment scheduling, calendar synchronization, and service bookings for professionals and studios.",
+    description: "Direct appointment scheduling, calendar synchronization, and service bookings for clinics, consultants, and studios.",
     pricingMode: "fixed",
     standardPricePaise: 2299900,
     // ₹22,999
@@ -265,12 +277,16 @@ var INITIAL_WEBSITE_PACKAGES = [
     // ₹12,999
     billingFrequency: "one_time",
     features: [
-      "Automated Appointment Booking Flow",
-      "Calendar Slot Synchronization",
-      "Email / SMS Booking Confirmations",
-      "Service Menu with Pricing",
-      "Customer Management Dashboard",
-      "Advance Payment Integration"
+      "1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)",
+      "1st Year High-Speed SSD Cloud Hosting Included (Renewal applicable from 2nd year)",
+      "Automated Appointment Booking & Scheduling Flow",
+      "Google Calendar & Real-Time Slot Synchronization",
+      "Email & WhatsApp/SMS Booking Confirmations",
+      "Service Menu with Dynamic Pricing & Durations",
+      "Customer & Booking Management Dashboard",
+      "Advance Payment Gateway Integration (Razorpay/UPI)",
+      "Automated Daily Backups & SSL Encryption",
+      "100% Full Source Code & Admin Handover"
     ],
     maxRevisions: 3,
     isActive: true,
@@ -280,7 +296,7 @@ var INITIAL_WEBSITE_PACKAGES = [
     slug: "ecommerce-store",
     category: "website",
     name: "E-commerce Store",
-    description: "Feature-rich online store with catalog, shopping cart, checkout, payment gateway, and order notifications.",
+    description: "Feature-rich online store with catalog, shopping cart, checkout, payment gateway, inventory, and order notifications.",
     pricingMode: "fixed",
     standardPricePaise: 2999900,
     // ₹29,999
@@ -288,12 +304,18 @@ var INITIAL_WEBSITE_PACKAGES = [
     // ₹16,999
     billingFrequency: "one_time",
     features: [
-      "Full Product Catalog & Categories",
-      "Shopping Cart & Secure Checkout",
-      "Indian / International Payment Gateways",
-      "Order Confirmation & Invoicing",
-      "Coupon Codes & Discounts Support",
-      "Inventory & Stock Tracking"
+      "1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)",
+      "1st Year High-Speed SSD Cloud Hosting Included (Renewal applicable from 2nd year)",
+      "Full Product Catalog & Multi-Level Categories",
+      "Shopping Cart & High-Converting One-Page Checkout",
+      "Indian & International Payment Gateways (Razorpay/Stripe/UPI)",
+      "Automated Order Invoicing & GST Tax Calculation",
+      "Discount Coupons, Promo Codes & Sale Banners",
+      "Real-Time Inventory & Stock Depletion Tracking",
+      "Customer Accounts, Wishlist & Order Tracking Portal",
+      "Dedicated Admin Dashboard & Sales Analytics",
+      "SSL Security & Cloudflare DDoS Protection",
+      "100% Full Source Code & Product Upload Training"
     ],
     maxRevisions: 3,
     isActive: true,
@@ -311,12 +333,18 @@ var INITIAL_WEBSITE_PACKAGES = [
     // ₹22,999
     billingFrequency: "one_time",
     features: [
-      "Course Curriculum & Chapter Viewer",
-      "Student Login & Progress Tracking",
-      "Secured Video & Material Access",
-      "Enrollment Checkout & Instant Access",
-      "Quiz & Assessment Capability",
-      "Automated Course Completion Certificates"
+      "1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)",
+      "1st Year High-Speed SSD Cloud Hosting Included (Renewal applicable from 2nd year)",
+      "Full Course Curriculum & Chapter Video Player",
+      "Student Enrollment, Login & Chapter Progress Tracking",
+      "Secured Video Streaming & Anti-Download Protection",
+      "Instant Checkout & Automated Course Enrollment",
+      "Quizzes, Assessments & Evaluation Module",
+      "Automated PDF Course Completion Certificates",
+      "Instructor & Student Discussion Q&A Forum",
+      "Dedicated Admin Dashboard & Revenue Analytics",
+      "Daily Cloud Backups & SSL Security",
+      "100% Full Source Code & System Handover"
     ],
     maxRevisions: 4,
     isActive: true,
@@ -334,12 +362,16 @@ var INITIAL_WEBSITE_PACKAGES = [
     // ₹29,999
     billingFrequency: "one_time",
     features: [
-      "Custom Role-Based Web Application",
-      "Interactive Client / Admin Dashboards",
+      "1st Year Free Domain (.com / .in) Included (Renewal applicable from 2nd year)",
+      "1st Year High-Speed SSD Cloud Hosting Included (Renewal applicable from 2nd year)",
+      "Custom Role-Based Web Application Architecture",
+      "Interactive Client & Admin Real-Time Dashboards",
       "Scalable Database & REST API Architecture",
-      "Third-Party Services & Webhook Integration",
-      "Complex Workflow & Automation Logic",
-      "Dedicated Deployment & Cloud Architecture"
+      "Third-Party Services, Webhook & Payment Integrations",
+      "Complex Workflow & Business Automation Logic",
+      "Dedicated Cloud Deployment (AWS/Vercel/DigitalOcean)",
+      "Automated CI/CD Pipeline & GitHub Repository Setup",
+      "Comprehensive Technical Documentation & 100% IP Ownership"
     ],
     maxRevisions: 4,
     isActive: true,
