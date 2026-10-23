@@ -68,6 +68,24 @@ app.get('/api/v1/health', (req, res) => {
   });
 });
 
+// Ensure DB connection before servicing API requests (especially on serverless cold starts)
+app.use(async (req, res, next) => {
+  if (req.path === '/api/v1/health') return next();
+  if (mongoose.connection.readyState !== 1) {
+    try {
+      await connectDB();
+    } catch (err: any) {
+      console.error('[Database] Middleware connection error:', err);
+      return res.status(500).json({
+        success: false,
+        error: 'Database Connection Error',
+        message: err.message || 'Unable to connect to MongoDB Atlas database',
+      });
+    }
+  }
+  next();
+});
+
 // Mount Versioned API Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/public', publicRoutes);

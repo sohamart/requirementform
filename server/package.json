@@ -1,13 +1,14 @@
 {
   "name": "requirementform-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend API for Requirement Portal, Form Builder, Quotations & Profit Margins",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "prebuild": "node prebuild.cjs",
-    "build": "node prebuild.cjs && tsc",
-    "start": "tsx src/server.ts",
+    "build": "node prebuild.cjs && esbuild src/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/server.js --packages=external --alias:@shared=../shared",
+    "start": "node dist/server.js",
     "seed": "tsx src/seed/seed.ts",
     "fresh": "tsx src/seed/freshData.ts",
     "test": "vitest run"
@@ -17,6 +18,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "esbuild": "^0.25.0",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",

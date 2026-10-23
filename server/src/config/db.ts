@@ -12,7 +12,7 @@ export async function connectDB(): Promise<string> {
 
   let uri = ENV.MONGODB_URI;
 
-  if (!uri && ENV.ALLOW_IN_MEMORY_DB) {
+  if (!uri && ENV.ALLOW_IN_MEMORY_DB && process.env.VERCEL !== '1' && process.env.NODE_ENV !== 'production') {
     console.log('[Database] No MONGODB_URI provided. Initializing MongoMemoryReplSet for transactional parity...');
     try {
       replSetInstance = await MongoMemoryReplSet.create({
