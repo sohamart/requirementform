@@ -57,7 +57,7 @@ app.use(authenticateSession);
 app.use('/api', apiLimiter);
 
 // Health check endpoint
-app.get('/api/v1/health', (req, res) => {
+app.get(['/api/v1/health', '/v1/health', '/health', '/'], (req, res) => {
   const isDbConnected = mongoose.connection.readyState === 1;
   res.status(isDbConnected ? 200 : 503).json({
     status: isDbConnected ? 'healthy' : 'degraded',
@@ -86,12 +86,17 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Mount Versioned API Routes
+// Mount Versioned API Routes (Support both with and without /api prefix from reverse proxies)
 app.use('/api/v1/auth', authRoutes);
+app.use('/v1/auth', authRoutes);
 app.use('/api/v1/public', publicRoutes);
+app.use('/v1/public', publicRoutes);
 app.use('/api/v1/submissions', submissionRoutes);
+app.use('/v1/submissions', submissionRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/v1/admin', adminRoutes);
 app.use('/api/v1/domains', domainFinderRoutes);
+app.use('/v1/domains', domainFinderRoutes);
 
 // Centralized Error Handling
 app.use(errorHandler);
