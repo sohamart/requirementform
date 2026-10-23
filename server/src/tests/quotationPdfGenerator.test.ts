@@ -92,7 +92,7 @@ describe('Quotation PDF Generator & Financial Milestone Calculations', () => {
 
   describe('Character Normalization for Standard PDF Fonts', () => {
     it('normalizes cross symbols, em-dashes, and currency symbols into clean standard glyphs', () => {
-      expect(cleanText('Weblets × Esyus')).toBe('Weblets x Esyus');
+      expect(cleanText('Esyus × Weblets')).toBe('Esyus x Weblets');
       expect(cleanText('Full-Stack — Modern Architecture')).toBe('Full-Stack - Modern Architecture');
       expect(cleanText('“Smart Quotes” & ‘Apostrophes’')).toBe('"Smart Quotes" & \'Apostrophes\'');
       expect(cleanText('₹59,999')).toBe('INR 59,999');
@@ -112,7 +112,7 @@ describe('Quotation PDF Generator & Financial Milestone Calculations', () => {
         scopeSummary: 'Custom full-stack web application with secure client authentication and automated reporting.',
         status: 'issued',
         brandSnapshot: {
-          name: 'Weblets × Esyus',
+          name: 'Esyus × Weblets',
           tagline: 'Modern Digital Engineering & Scalable Cloud Solutions',
           logoText: 'WEB',
           primaryColor: '#FF6B00',
