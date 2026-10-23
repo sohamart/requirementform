@@ -8,7 +8,6 @@ import mongoose20 from "mongoose";
 
 // src/config/db.ts
 import mongoose from "mongoose";
-import { MongoMemoryReplSet } from "mongodb-memory-server";
 
 // src/config/env.ts
 import dotenv from "dotenv";
@@ -45,8 +44,9 @@ async function connectDB() {
   }
   let uri = ENV.MONGODB_URI;
   if (!uri && ENV.ALLOW_IN_MEMORY_DB && process.env.VERCEL !== "1" && process.env.NODE_ENV !== "production") {
-    console.log("[Database] No MONGODB_URI provided. Initializing MongoMemoryReplSet for transactional parity...");
+    console.log("[Database] No MONGODB_URI provided. Initializing MongoMemoryReplSet for local development...");
     try {
+      const { MongoMemoryReplSet } = await import("mongodb-memory-server");
       replSetInstance = await MongoMemoryReplSet.create({
         replSet: {
           count: 1,

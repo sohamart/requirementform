@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
-import { MongoMemoryReplSet } from 'mongodb-memory-server';
 import { ENV } from './env.js';
 
-let replSetInstance: MongoMemoryReplSet | null = null;
+let replSetInstance: any = null;
 let cachedConnectionPromise: Promise<any> | null = null;
 
 export async function connectDB(): Promise<string> {
-  // 1. Re-use active connection in serverless warm invocations
+  // 1. Re-use active connection in warm invocations
   if (mongoose.connection.readyState === 1) {
     return 'connected';
   }
@@ -20,8 +19,9 @@ export async function connectDB(): Promise<string> {
   let uri = ENV.MONGODB_URI;
 
   if (!uri && ENV.ALLOW_IN_MEMORY_DB && process.env.VERCEL !== '1' && process.env.NODE_ENV !== 'production') {
-    console.log('[Database] No MONGODB_URI provided. Initializing MongoMemoryReplSet for transactional parity...');
+    console.log('[Database] No MONGODB_URI provided. Initializing MongoMemoryReplSet for local development...');
     try {
+      const { MongoMemoryReplSet } = await import('mongodb-memory-server');
       replSetInstance = await MongoMemoryReplSet.create({
         replSet: {
           count: 1,
