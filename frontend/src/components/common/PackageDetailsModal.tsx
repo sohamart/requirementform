@@ -78,13 +78,27 @@ export const PackageDetailsModal: React.FC<PackageDetailsModalProps> = ({
 
           {/* Modal Header */}
           <div className="pr-8">
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
-                {packageItem.category === 'app' ? 'App Project' : 'Website Tier'}
-              </span>
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              {hasDomainOrHosting ? (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-tight bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 dark:from-emerald-950/60 dark:via-teal-950/40 dark:to-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-500/35 dark:border-emerald-400/35 shadow-xs whitespace-nowrap">
+                  <span className="relative flex h-1.5 w-1.5 shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                  </span>
+                  <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>1st Yr Domain & Hosting Included</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-slate-100/90 dark:bg-charcoal-800/90 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-charcoal-750 shadow-2xs">
+                  <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+                  <span>{packageItem.category === 'app' ? 'App Project' : 'Website Tier'}</span>
+                </span>
+              )}
+
               {hasDiscount && (
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                  Save {formatINR(savings)} (Offer)
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold tracking-tight bg-gradient-to-r from-emerald-500/15 via-teal-500/15 to-emerald-500/15 dark:from-emerald-950/70 dark:via-teal-950/60 dark:to-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-500/35 dark:border-emerald-400/40 shadow-xs whitespace-nowrap">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  <span>Save {formatINR(savings)} (Offer)</span>
                 </span>
               )}
             </div>
