@@ -10,11 +10,11 @@ export default defineConfig({
     alias: [
       {
         find: /^@shared\/(.*)\.js$/,
-        replacement: path.resolve(__dirname, '../shared/$1.ts'),
+        replacement: path.resolve(__dirname, 'src/shared/$1.ts'),
       },
       {
         find: /^@shared\/(.*)$/,
-        replacement: path.resolve(__dirname, '../shared/$1'),
+        replacement: path.resolve(__dirname, 'src/shared/$1'),
       },
     ],
   },

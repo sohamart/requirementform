@@ -1,12 +1,11 @@
 {
-  "name": "requirementform-server",
+  "name": "requirementform-backend",
   "version": "1.0.0",
   "type": "module",
   "description": "Backend API for Requirement Portal, Form Builder, Quotations & Profit Margins",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/standalone.ts",
-    "prebuild": "node prebuild.cjs",
     "build": "node build.cjs",
     "start": "node index.js",
     "seed": "tsx src/seed/seed.ts",

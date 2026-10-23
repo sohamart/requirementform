@@ -5,9 +5,8 @@ node_modules/
 # Production builds
 dist/
 **/dist/
-client/dist/
-server/dist/
-api/dist/
+frontend/dist/
+backend/dist/
 
 # Environment files (secrets protected)
 .env

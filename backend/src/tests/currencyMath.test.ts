@@ -7,7 +7,7 @@ import {
   calcGrossMarginPercent,
   calcMarkupPercent,
   formatPercent,
-} from '../../../shared/utils/currency.js';
+} from '../shared/utils/currency.js';
 
 describe('Currency & Financial Arithmetic Engine', () => {
   it('accurately converts Rupees to integer Paise minor units', () => {

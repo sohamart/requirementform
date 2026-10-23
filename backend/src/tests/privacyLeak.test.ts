@@ -5,7 +5,7 @@ import {
   serializeClientQuotation,
 } from '../utils/serializers.js';
 import { PDFService } from '../services/pdfService.js';
-import { ClientSubmissionDTO, ClientQuotationDTO } from '../../../shared/types/index.js';
+import { ClientSubmissionDTO, ClientQuotationDTO } from '../shared/types/index.js';
 
 describe('Continuous Privacy Leak Gate Test Suite', () => {
   it('strictly guarantees serializeClientSubmission omits private step notes, internal costs and margins', () => {

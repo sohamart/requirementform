@@ -1,12 +1,11 @@
 {
-  "name": "requirementform-client",
+  "name": "requirementform-frontend",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node prebuild.cjs",
-    "build": "node prebuild.cjs && tsc && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

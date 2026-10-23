@@ -16,16 +16,14 @@
     "noUnusedParameters": false,
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../shared/*"],
+      "@/*": ["src/*"],
+      "@shared/*": ["src/shared/*"],
       "zod": ["node_modules/zod"],
       "zod/*": ["node_modules/zod/*"]
     }
   },
   "include": [
-    "src",
-    "../shared/types",
-    "../shared/constants",
-    "../shared/utils"
+    "src"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
