@@ -21,6 +21,11 @@
       "zod/*": ["node_modules/zod/*"]
     }
   },
-  "include": ["src", "../shared"],
+  "include": [
+    "src",
+    "../shared/types",
+    "../shared/constants",
+    "../shared/utils"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

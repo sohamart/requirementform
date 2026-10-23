@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoginSchema, RegisterSchema } from '@shared/schemas/index.js';
+import { LoginSchema, RegisterSchema } from '../schemas/auth.js';
 import { useAuth } from '../context/AuthContext.js';
 import { Lock, Mail, User, Building, Phone, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
