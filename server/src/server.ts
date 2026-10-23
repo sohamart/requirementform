@@ -107,10 +107,12 @@ export async function startServer() {
   return server;
 }
 
-// Only start persistent HTTP server if not running tests and not in Vercel serverless
-if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+// Start HTTP server unless running in test mode
+if (process.env.NODE_ENV !== 'test') {
   startServer().catch((err) => {
     console.error('[Server] Fatal startup error:', err);
     process.exit(1);
   });
 }
+
+export default app;

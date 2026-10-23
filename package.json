@@ -2,6 +2,7 @@
   "name": "requirementform-monorepo",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Premium Client Portal, Dynamic Requirement Builder, Quotation Generator & Private Profit Management System",
   "scripts": {
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
