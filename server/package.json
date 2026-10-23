@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Backend API for Requirement Portal, Form Builder, Quotations & Profit Margins",
-  "main": "dist/server.js",
+  "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "prebuild": "node prebuild.cjs",
-    "build": "node prebuild.cjs && esbuild src/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/server.js --packages=external --alias:@shared=../shared",
-    "start": "node dist/server.js",
+    "build": "node prebuild.cjs && esbuild src/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/server.js --alias:@shared=../shared && node -e \"const fs=require('fs'); fs.copyFileSync('dist/server.js', 'index.js'); fs.copyFileSync('dist/server.js', 'server.js');\"",
+    "start": "node index.js",
     "seed": "tsx src/seed/seed.ts",
     "fresh": "tsx src/seed/freshData.ts",
     "test": "vitest run"
