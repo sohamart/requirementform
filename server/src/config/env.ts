@@ -13,8 +13,8 @@ export const ENV = {
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
   DEFAULT_BRAND_NAME: process.env.DEFAULT_BRAND_NAME || 'Weblets',
   DEFAULT_BRAND_COLOR: process.env.DEFAULT_BRAND_COLOR || '#FF6B00',
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'admin@agency.com',
-  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'Admin@Agency2026!',
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'sohamduttabwn@gmail.com',
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'Rohit@1905',
   SESSION_EXPIRY_DAYS: 7,
   // GoDaddy Domains API
   GODADDY_API_KEY: process.env.GODADDY_API_KEY || '',

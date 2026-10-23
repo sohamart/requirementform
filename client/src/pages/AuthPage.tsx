@@ -178,36 +178,6 @@ export const AuthPage: React.FC = () => {
                   </>
                 )}
               </button>
-
-              {/* Demo Credentials Quick-Fill helper */}
-              <div className="pt-3 border-t border-slate-100 dark:border-charcoal-750 text-center">
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-1.5">
-                  Quick fill for testing:
-                </p>
-                <div className="flex items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      loginForm.setValue('email', 'admin@agency.com');
-                      loginForm.setValue('password', 'Admin@Agency2026!');
-                    }}
-                    className="text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
-                  >
-                    Admin Demo
-                  </button>
-                  <span className="text-slate-300 dark:text-charcoal-700">•</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      loginForm.setValue('email', 'client@acmeretail.com');
-                      loginForm.setValue('password', 'Client@Pass2026!');
-                    }}
-                    className="text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
-                  >
-                    Client Demo
-                  </button>
-                </div>
-              </div>
             </form>
           ) : (
             /* --- REGISTER FORM --- */

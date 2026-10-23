@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "tsx src/server.ts",
     "seed": "tsx src/seed/seed.ts",
+    "fresh": "tsx src/seed/freshData.ts",
     "test": "vitest run"
   },
   "dependencies": {

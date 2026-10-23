@@ -42,23 +42,6 @@ export async function runSeed(): Promise<void> {
   );
   console.log(`[Seed] Superadmin ready: ${admin.email}`);
 
-  const clientPasswordHash = await bcrypt.hash('Client@Pass2026!', salt);
-  const client = await User.findOneAndUpdate(
-    { email: 'client@acmeretail.com' },
-    {
-      fullName: 'Rajesh Sharma',
-      email: 'client@acmeretail.com',
-      passwordHash: clientPasswordHash,
-      role: 'client',
-      permissions: [],
-      status: 'active',
-      phone: '+91 98765 11223',
-      company: 'Acme Retail Solutions Pvt Ltd',
-    },
-    { upsert: true, new: true }
-  );
-  console.log(`[Seed] Demo Client ready: ${client.email}`);
-
   // 2. Seed Brand Profiles (Only seed initial defaults if collection is empty to avoid resetting user edits)
   const brandCount = await BrandProfile.countDocuments();
   if (brandCount === 0) {
