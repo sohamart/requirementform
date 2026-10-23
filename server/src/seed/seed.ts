@@ -59,23 +59,34 @@ export async function runSeed(): Promise<void> {
   );
   console.log(`[Seed] Demo Client ready: ${client.email}`);
 
-  // 2. Seed Brand Profiles
-  for (const b of INITIAL_BRANDS) {
-    await BrandProfile.findOneAndUpdate({ name: b.name }, b, { upsert: true });
+  // 2. Seed Brand Profiles (Only seed initial defaults if collection is empty to avoid resetting user edits)
+  const brandCount = await BrandProfile.countDocuments();
+  if (brandCount === 0) {
+    for (const b of INITIAL_BRANDS) {
+      await BrandProfile.create(b);
+    }
+    console.log(`[Seed] Seeded ${INITIAL_BRANDS.length} Brand Profiles.`);
+  } else {
+    console.log(`[Seed] Found ${brandCount} existing Brand Profiles. Preserving user configurations.`);
   }
-  console.log(`[Seed] Seeded ${INITIAL_BRANDS.length} Brand Profiles.`);
 
   // 3. Seed Packages
-  for (const p of INITIAL_WEBSITE_PACKAGES) {
-    await Package.findOneAndUpdate({ slug: p.slug }, p, { upsert: true });
+  const packageCount = await Package.countDocuments();
+  if (packageCount === 0) {
+    for (const p of INITIAL_WEBSITE_PACKAGES) {
+      await Package.create(p);
+    }
+    console.log(`[Seed] Seeded ${INITIAL_WEBSITE_PACKAGES.length} Website Packages.`);
   }
-  console.log(`[Seed] Seeded ${INITIAL_WEBSITE_PACKAGES.length} Website Packages.`);
 
   // 4. Seed Addons
-  for (const a of INITIAL_ADDONS) {
-    await Addon.findOneAndUpdate({ slug: a.slug }, a, { upsert: true });
+  const addonCount = await Addon.countDocuments();
+  if (addonCount === 0) {
+    for (const a of INITIAL_ADDONS) {
+      await Addon.create(a);
+    }
+    console.log(`[Seed] Seeded ${INITIAL_ADDONS.length} Addons.`);
   }
-  console.log(`[Seed] Seeded ${INITIAL_ADDONS.length} Addons.`);
 
   // 5. Seed Website Requirements Form (8 Structured Steps, 46 Questions)
   const websiteForm = await FormDefinition.findOneAndUpdate(

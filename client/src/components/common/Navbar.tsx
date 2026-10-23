@@ -31,19 +31,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector }) => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [brandName, setBrandName] = useState('WEBLETS');
+  const [brandName, setBrandName] = useState<string>(() => {
+    return localStorage.getItem('weblets_brand_name') || 'WEBLETS';
+  });
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    publicApi
-      .getBrands()
-      .then((res) => {
-        if (res.data.success && res.data.brands.length > 0) {
-          const defaultBrand = res.data.brands.find((b) => b.isDefault) || res.data.brands[0];
-          setBrandName(defaultBrand.logoText || defaultBrand.name);
-        }
-      })
-      .catch(() => {});
+    const fetchBrand = () => {
+      publicApi
+        .getBrands()
+        .then((res) => {
+          if (res.data.success && res.data.brands.length > 0) {
+            const defaultBrand = res.data.brands.find((b) => b.isDefault) || res.data.brands[0];
+            const resolved = defaultBrand.name || defaultBrand.logoText || 'WEBLETS';
+            setBrandName(resolved);
+            localStorage.setItem('weblets_brand_name', resolved);
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchBrand();
+
+    // Listen to custom event when brand is updated in Admin
+    const onBrandUpdate = (e: any) => {
+      if (e?.detail) {
+        setBrandName(e.detail);
+      } else {
+        fetchBrand();
+      }
+    };
+
+    window.addEventListener('brand_updated', onBrandUpdate);
+    return () => window.removeEventListener('brand_updated', onBrandUpdate);
   }, []);
 
   useEffect(() => {
@@ -71,28 +91,28 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector }) => {
             : 'bg-white/85 dark:bg-charcoal-900/85 backdrop-blur-xl border border-slate-200/70 dark:border-charcoal-750/70 shadow-sm py-2 px-3 sm:px-5'
         } flex items-center justify-between gap-2 sm:gap-4`}
       >
-        {/* Left: Clean Brand Identity */}
+        {/* Left: Clean Brand Identity (Truncates smoothly so it never overflows) */}
         <Link
           to="/"
-          className="flex items-center gap-2.5 group cursor-pointer app-press select-none shrink-0"
-          title="Weblets Digital Engineering Platform"
+          className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer app-press select-none min-w-0 shrink"
+          title={brandName}
         >
-          <div className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-amber-500 flex items-center justify-center text-white font-black text-lg shadow-glow-sm group-hover:scale-105 transition-transform">
-            <span>W</span>
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-amber-500 flex items-center justify-center text-white font-black text-sm sm:text-base shadow-glow-sm group-hover:scale-105 transition-transform shrink-0">
+            <span>{brandName.charAt(0).toUpperCase() || 'W'}</span>
             <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-charcoal-900" />
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="font-black text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white leading-none whitespace-nowrap">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="font-black text-sm sm:text-base lg:text-lg tracking-tight text-slate-900 dark:text-white leading-none truncate max-w-[100px] xs:max-w-[130px] sm:max-w-[170px] md:max-w-[150px] lg:max-w-[200px] xl:max-w-[280px]">
               {brandName}
             </span>
-            <span className="text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-brand-500/10 text-brand-600 dark:text-brand-400">
+            <span className="text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-brand-500/10 text-brand-600 dark:text-brand-400 shrink-0">
               PRO
             </span>
           </div>
         </Link>
 
         {/* Center: Desktop Navigation Bar with Single-Line Items */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-100/70 dark:bg-charcoal-950/70 p-1 rounded-xl border border-slate-200/60 dark:border-charcoal-750/60">
+        <nav className="hidden md:flex items-center gap-0.5 lg:gap-1 bg-slate-100/70 dark:bg-charcoal-950/70 p-1 rounded-xl border border-slate-200/60 dark:border-charcoal-750/60 shrink-0">
           <Link
             to="/"
             className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
@@ -184,7 +204,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector }) => {
           {/* Primary CTA: Launch Requirement Builder (Guaranteed Single Line) */}
           <button
             onClick={onOpenProjectSelector}
-            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-brand-500 to-orange-500 hover:from-brand-600 hover:to-orange-600 text-white shadow-glow-sm hover:shadow-glow-brand transition-all cursor-pointer app-press whitespace-nowrap shrink-0"
+            className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-brand-500 to-orange-500 hover:from-brand-600 hover:to-orange-600 text-white shadow-glow-sm hover:shadow-glow-brand transition-all cursor-pointer app-press whitespace-nowrap shrink-0"
           >
             <Sparkles className="w-3.5 h-3.5 shrink-0" />
             <span>Start Project</span>

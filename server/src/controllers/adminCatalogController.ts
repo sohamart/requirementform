@@ -91,6 +91,12 @@ export class AdminCatalogController {
   static async getAllBrands(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const brands = await BrandProfile.find().sort({ isDefault: -1, name: 1 });
+      const hasDefault = brands.some((b) => b.isDefault);
+      if (!hasDefault && brands.length > 0) {
+        brands[0].isDefault = true;
+        await BrandProfile.findByIdAndUpdate(brands[0]._id, { isDefault: true });
+      }
+
       res.status(200).json({
         success: true,
         brands: brands.map((b) => ({
@@ -108,6 +114,11 @@ export class AdminCatalogController {
     try {
       if (req.body.isDefault) {
         await BrandProfile.updateMany({}, { isDefault: false });
+      } else {
+        const existingCount = await BrandProfile.countDocuments({ isDefault: true });
+        if (existingCount === 0) {
+          req.body.isDefault = true;
+        }
       }
 
       const brand = await BrandProfile.create(req.body);
@@ -132,6 +143,11 @@ export class AdminCatalogController {
     try {
       if (req.body.isDefault) {
         await BrandProfile.updateMany({ _id: { $ne: req.params.id } }, { isDefault: false });
+      } else {
+        const otherDefault = await BrandProfile.findOne({ isDefault: true, _id: { $ne: req.params.id } });
+        if (!otherDefault) {
+          req.body.isDefault = true;
+        }
       }
 
       const brand = await BrandProfile.findByIdAndUpdate(req.params.id, req.body, { new: true });

@@ -72,6 +72,14 @@ export const AdminBrandsPage: React.FC = () => {
       } else {
         await adminApi.createBrand(payload);
       }
+
+      // If marked as default or only brand exists, update local storage and notify Navbar immediately
+      if (payload.isDefault || brands.length <= 1) {
+        const brandTitle = payload.name || payload.logoText || 'WEBLETS';
+        localStorage.setItem('weblets_brand_name', brandTitle);
+        window.dispatchEvent(new CustomEvent('brand_updated', { detail: brandTitle }));
+      }
+
       setShowModal(false);
       loadBrands();
     } catch (err: any) {
@@ -195,7 +203,19 @@ export const AdminBrandsPage: React.FC = () => {
                     type="text"
                     required
                     value={editingBrand.name || ''}
-                    onChange={(e) => setEditingBrand({ ...editingBrand, name: e.target.value })}
+                    onChange={(e) => {
+                      const newName = e.target.value;
+                      setEditingBrand((prev) => {
+                        if (!prev) return null;
+                        const prevName = prev.name || '';
+                        const shouldSyncLogo = !prev.logoText || prev.logoText === prevName || prev.logoText === prevName.toUpperCase();
+                        return {
+                          ...prev,
+                          name: newName,
+                          logoText: shouldSyncLogo ? newName.toUpperCase() : prev.logoText,
+                        };
+                      });
+                    }}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-charcoal-750 bg-slate-50 dark:bg-charcoal-850 text-xs font-medium"
                   />
                 </div>
