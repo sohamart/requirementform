@@ -5,10 +5,14 @@ import { DomainFinderService, SUPPORTED_TLDS } from '../services/domainFinderSer
 
 describe('AI-Powered Smart Domain Finder Service & API', () => {
   describe('Name Generation & Linguistic Logic', () => {
-    it('cleans business names and tokens correctly', () => {
+    it('cleans business names and tokens correctly without truncating real names', () => {
       expect(DomainFinderService.cleanToken('OmniFlow Inc.')).toBe('omniflow');
       expect(DomainFinderService.cleanToken('The Cloud Desk, LLC')).toBe('clouddesk');
       expect(DomainFinderService.cleanToken('SwiftPay-HQ Co')).toBe('swiftpayhq');
+      expect(DomainFinderService.cleanToken('amit')).toBe('amit');
+      expect(DomainFinderService.cleanToken('ankur')).toBe('ankur');
+      expect(DomainFinderService.cleanToken('apple')).toBe('apple');
+      expect(DomainFinderService.cleanToken('cisco')).toBe('cisco');
     });
 
     it('generates creative candidates across different categories', () => {

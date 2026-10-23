@@ -109,13 +109,20 @@ export class DomainFinderService {
    */
   public static cleanToken(input: string): string {
     let cleaned = input.toLowerCase().trim();
-    // If user entered a full domain name (e.g. "esyus.com" or "weblets.in"), strip the extension for the token
+    // 1. If user entered a full domain name (e.g. "esyus.com" or "weblets.in"), strip the extension for the token
     cleaned = cleaned.replace(/\.(com|in|co\.in|io|ai|tech|store|app|dev|org|net|co|online|site|agency)$/i, '');
+
+    // 2. Strip standalone corporate designations (e.g. "OmniFlow Inc." -> "OmniFlow")
+    cleaned = cleaned.replace(/[\s,\-]+(inc|llc|corp|corporation|ltd|limited|co|company)\.?$/i, '');
+
+    // 3. Strip standalone leading articles ONLY when followed by whitespace or hyphen (e.g. "The Cloud Desk" -> "Cloud Desk")
+    // NEVER strip 'a' or 'an' from names like "amit", "ankur", "apple", "amazon"!
+    cleaned = cleaned.replace(/^(the|a|an)[\s\-]+/i, '');
+
+    // 4. Remove apostrophes, symbols, spaces, keeping clean alphanumeric string
     return cleaned
       .replace(/['’]/g, '')
       .replace(/[^a-z0-9]/g, '')
-      .replace(/^(the|an|a)/, '')
-      .replace(/(inc|llc|corp|co|ltd)$/, '')
       .trim();
   }
 
