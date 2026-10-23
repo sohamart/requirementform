@@ -129,4 +129,15 @@ export async function startServer() {
   return server;
 }
 
+// Auto-start HTTP server on Render, Railway, Docker, or standalone Node servers
+// Never start port listener on Vercel Serverless or in Vitest test runners
+const isServerless = !!(process.env.VERCEL || process.env.VERCEL_ENV || process.env.NOW_REGION || process.env.AWS_LAMBDA_FUNCTION_NAME);
+
+if (!isServerless && process.env.NODE_ENV !== 'test') {
+  startServer().catch((err) => {
+    console.error('[Server] Fatal startup error:', err);
+    process.exit(1);
+  });
+}
+
 export default app;
