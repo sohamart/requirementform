@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Globe,
   Smartphone,
@@ -28,6 +28,7 @@ import { PackageDTO, AddonDTO } from '@shared/types/index.js';
 import { formatINR } from '@shared/utils/currency.js';
 import { DomainFinderSection } from '../components/domain/DomainFinderSection.js';
 import { PackageDetailsModal } from '../components/common/PackageDetailsModal.js';
+import { smoothScrollTo } from '../utils/scroll.js';
 
 interface LandingPageProps {
   onOpenProjectSelector: () => void;
@@ -35,9 +36,25 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [packages, setPackages] = useState<PackageDTO[]>([]);
   const [addons, setAddons] = useState<AddonDTO[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Automatically smooth-scroll to requested section when hash or pathname matches
+  useEffect(() => {
+    if (location.pathname === '/domains' || location.hash === '#domain-finder') {
+      const timer = setTimeout(() => {
+        smoothScrollTo('domain-finder');
+      }, 150);
+      return () => clearTimeout(timer);
+    } else if (location.hash) {
+      const timer = setTimeout(() => {
+        smoothScrollTo(location.hash);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, location.hash]);
 
   // Hero interactive engine preview state ('website' | 'app' | 'desktop' | 'domains')
   const [activeEngine, setActiveEngine] = useState<'website' | 'app' | 'desktop' | 'domains'>('website');
@@ -144,13 +161,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
               <ArrowRight className="w-4 h-4 ml-1" />
             </button>
 
-            <a
-              href="#domain-finder"
+            <button
+              type="button"
+              onClick={() => smoothScrollTo('domain-finder')}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl font-semibold text-sm sm:text-base border border-slate-300/90 dark:border-charcoal-750/90 bg-white/60 dark:bg-charcoal-850/60 hover:bg-slate-100 dark:hover:bg-charcoal-800 text-slate-800 dark:text-white transition-all app-press cursor-pointer shadow-sm"
             >
               <Globe className="w-4 h-4 text-brand-500" />
               <span>Smart Domain Finder</span>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -489,13 +507,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
                   </div>
 
                   <div className="pt-2">
-                    <a
-                      href="#domain-finder"
+                    <button
+                      type="button"
+                      onClick={() => smoothScrollTo('domain-finder')}
                       className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all app-press cursor-pointer"
                     >
                       <span>Search Live Domains Below</span>
                       <ArrowRight className="w-4 h-4" />
-                    </a>
+                    </button>
                   </div>
                 </div>
 
@@ -597,7 +616,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
       {/* ========================================================
           3. PACKAGES & PRICING CATALOGUE
           ======================================================== */}
-      <section id="packages" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-200/80 dark:border-charcoal-750/80">
+      <section id="packages" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-200/80 dark:border-charcoal-750/80 scroll-mt-24 sm:scroll-mt-28">
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-500/10 text-brand-600 dark:text-brand-400 mb-3">
             <Layers className="w-3.5 h-3.5" />
@@ -879,7 +898,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenProjectSelector 
       {/* ========================================================
           4. MODULAR ADD-ONS & ENHANCEMENTS
           ======================================================== */}
-      <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-200/80 dark:border-charcoal-750/80 bg-slate-50/40 dark:bg-charcoal-900/30">
+      <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-200/80 dark:border-charcoal-750/80 bg-slate-50/40 dark:bg-charcoal-900/30 scroll-mt-24 sm:scroll-mt-28">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 mb-3">
             <Sparkles className="w-3.5 h-3.5" />

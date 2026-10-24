@@ -18,6 +18,7 @@ import {
   Bell,
   ShieldCheck,
   Activity,
+  HardDrive,
   ChevronRight,
   X,
   LogOut,
@@ -46,20 +47,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
   const { hasPermission, user, logout } = useAuth();
   const navigate = useNavigate();
   const isSuperAdmin = user?.role === 'superadmin';
+  const canAccessFinancials = isSuperAdmin || hasPermission('view_financials') || hasPermission('manage_financials');
+  const canAccessDrive = isSuperAdmin || hasPermission('view_google_drive') || hasPermission('manage_google_drive');
 
   const sections: NavSection[] = [
     {
       title: 'DASHBOARDS',
       items: [
         { label: 'Overview', path: '/admin', icon: LayoutDashboard },
-        ...(isSuperAdmin
+        ...(canAccessFinancials
           ? [
               {
                 label: 'Profit & Margin',
                 path: '/admin/financials',
                 icon: TrendingUp,
                 permission: 'view_financials',
-                badge: 'SUPERADMIN',
+                badge: isSuperAdmin ? 'SUPERADMIN' : 'GRANTED',
                 badgeColor: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
               },
             ]
@@ -74,6 +77,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
         { label: 'Desktop Submissions', path: '/admin/submissions/desktop', icon: Monitor, permission: 'manage_submissions' },
       ],
     },
+    ...(canAccessDrive
+      ? [
+          {
+            title: 'CLOUD STORAGE',
+            items: [
+              {
+                label: 'Google Drive Hub',
+                path: '/admin/drive',
+                icon: HardDrive,
+                permission: 'view_google_drive',
+                badge: '1-CLICK',
+                badgeColor: 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+              },
+            ],
+          },
+        ]
+      : []),
     {
       title: 'FORM BUILDER',
       items: [
@@ -90,12 +110,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) => {
         { label: 'Brand Profiles', path: '/admin/brands', icon: Palette, permission: 'manage_brands' },
       ],
     },
-    ...(isSuperAdmin
+    ...(canAccessFinancials
       ? [
           {
             title: 'FINANCIAL MANAGEMENT',
             items: [
-              { label: 'Project Cost Tracking', path: '/admin/costs', icon: Receipt, permission: 'view_financials' },
+              { label: 'Profit & In-Hand Calculator', path: '/admin/costs', icon: Receipt, permission: 'view_financials' },
             ],
           },
         ]

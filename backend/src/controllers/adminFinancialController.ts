@@ -114,16 +114,80 @@ export class AdminFinancialController {
     }
   }
 
+  static async deleteCostEntry(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const success = await FinancialService.deleteCostEntry(req.params.id);
+      if (!success) {
+        res.status(404).json({ success: false, error: 'Cost entry not found' });
+        return;
+      }
+      await logAuditEvent(req, 'FINANCIAL_COST_ENTRY_DELETED', 'CostEntry', req.params.id);
+      res.status(200).json({ success: true, message: 'Cost entry removed' });
+    } catch (err: any) {
+      res.status(400).json({ success: false, error: err.message || 'Failed to delete cost entry' });
+    }
+  }
+
+  static async updateFinancialConfig(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const fin = await FinancialService.updateFinancialConfig(
+        req.params.submissionId,
+        {
+          targetMarginPercent: req.body.targetMarginPercent,
+          partnerSharePercent: req.body.partnerSharePercent,
+          partnerName: req.body.partnerName,
+          extraInHandCostPaise: req.body.extraInHandCostPaise,
+          customRevenuePaise: req.body.customRevenuePaise,
+          financialNotes: req.body.financialNotes,
+        }
+      );
+
+      if (!fin) {
+        res.status(404).json({ success: false, error: 'Financial record not found' });
+        return;
+      }
+
+      await logAuditEvent(
+        req,
+        'FINANCIAL_CONFIG_UPDATED',
+        'ProjectFinancials',
+        fin._id.toString(),
+        {
+          partnerSharePercent: fin.partnerSharePercent,
+          inHandMargin: req.body.extraInHandCostPaise,
+        }
+      );
+
+      res.status(200).json({ success: true, financials: fin });
+    } catch (err: any) {
+      res.status(400).json({ success: false, error: err.message || 'Failed to update financial configuration' });
+    }
+  }
+
   static async updateTargetMargin(
     req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const fin = await FinancialService.updateTargetMargin(
+      const fin = await FinancialService.updateFinancialConfig(
         req.params.submissionId,
-        req.body.targetMarginPercent,
-        req.body.financialNotes
+        {
+          targetMarginPercent: req.body.targetMarginPercent,
+          partnerSharePercent: req.body.partnerSharePercent,
+          partnerName: req.body.partnerName,
+          extraInHandCostPaise: req.body.extraInHandCostPaise,
+          customRevenuePaise: req.body.customRevenuePaise,
+          financialNotes: req.body.financialNotes,
+        }
       );
 
       if (!fin) {

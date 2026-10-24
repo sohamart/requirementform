@@ -55,7 +55,11 @@ export class FinancialService {
     fin.collectedRevenuePaise = collectedPaise;
 
     const revenueForCalc =
-      fin.approvedRevenuePaise > 0 ? fin.approvedRevenuePaise : fin.quotedRevenuePaise;
+      fin.customRevenuePaise && fin.customRevenuePaise > 0
+        ? fin.customRevenuePaise
+        : fin.approvedRevenuePaise > 0
+        ? fin.approvedRevenuePaise
+        : fin.quotedRevenuePaise;
 
     fin.estimatedGrossProfitPaise = calcGrossProfit(revenueForCalc, estimatedCostPaise);
     fin.actualGrossProfitPaise = calcGrossProfit(revenueForCalc, actualCostPaise);
@@ -109,6 +113,15 @@ export class FinancialService {
     return entry;
   }
 
+  static async deleteCostEntry(costId: string): Promise<boolean> {
+    const entry = await CostEntry.findById(costId);
+    if (!entry) return false;
+    const submissionId = entry.submissionId.toString();
+    await CostEntry.findByIdAndDelete(costId);
+    await this.recalculateProjectFinancials(submissionId);
+    return true;
+  }
+
   static async addPaymentRecord(data: {
     submissionId: string;
     quotationId?: string;
@@ -141,12 +154,34 @@ export class FinancialService {
     targetMarginPercent: number,
     financialNotes?: string
   ): Promise<IProjectFinancials | null> {
+    return this.updateFinancialConfig(submissionId, {
+      targetMarginPercent,
+      financialNotes,
+    });
+  }
+
+  static async updateFinancialConfig(
+    submissionId: string,
+    data: {
+      targetMarginPercent?: number;
+      partnerSharePercent?: number;
+      partnerName?: string;
+      extraInHandCostPaise?: number;
+      customRevenuePaise?: number;
+      financialNotes?: string;
+    }
+  ): Promise<IProjectFinancials | null> {
+    const updatePayload: any = {};
+    if (data.targetMarginPercent !== undefined) updatePayload.targetMarginPercent = data.targetMarginPercent;
+    if (data.partnerSharePercent !== undefined) updatePayload.partnerSharePercent = data.partnerSharePercent;
+    if (data.partnerName !== undefined) updatePayload.partnerName = data.partnerName;
+    if (data.extraInHandCostPaise !== undefined) updatePayload.extraInHandCostPaise = data.extraInHandCostPaise;
+    if (data.customRevenuePaise !== undefined) updatePayload.customRevenuePaise = data.customRevenuePaise;
+    if (data.financialNotes !== undefined) updatePayload.financialNotes = data.financialNotes;
+
     const fin = await ProjectFinancials.findOneAndUpdate(
       { submissionId: new mongoose.Types.ObjectId(submissionId) },
-      {
-        targetMarginPercent,
-        ...(financialNotes !== undefined && { financialNotes }),
-      },
+      updatePayload,
       { new: true }
     );
 

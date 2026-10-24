@@ -14,6 +14,10 @@ export interface IProjectFinancials extends Document {
   grossMarginPercent: number | null;
   markupPercent: number | null;
   targetMarginPercent: number;
+  partnerSharePercent: number;
+  partnerName: string;
+  extraInHandCostPaise: number;
+  customRevenuePaise?: number;
   financialNotes?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -42,6 +46,10 @@ const ProjectFinancialsSchema = new Schema<IProjectFinancials>(
       default: 0,
     },
     approvedRevenuePaise: {
+      type: Number,
+      default: 0,
+    },
+    customRevenuePaise: {
       type: Number,
       default: 0,
     },
@@ -76,6 +84,18 @@ const ProjectFinancialsSchema = new Schema<IProjectFinancials>(
     targetMarginPercent: {
       type: Number,
       default: 45.0, // Default 45% target margin
+    },
+    partnerSharePercent: {
+      type: Number,
+      default: 0, // e.g. 20% partner cut
+    },
+    partnerName: {
+      type: String,
+      default: 'Partner',
+    },
+    extraInHandCostPaise: {
+      type: Number,
+      default: 0,
     },
     financialNotes: {
       type: String,

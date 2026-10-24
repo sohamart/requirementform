@@ -47,15 +47,18 @@ export async function runSeed(): Promise<void> {
   console.log(`[Seed] Superadmin ready: ${admin.email}`);
 
   // 2. Seed Brand Profiles (Only seed initial defaults if collection is empty to avoid resetting user edits)
-  const brandCount = await BrandProfile.countDocuments();
-  if (brandCount === 0) {
-    for (const b of INITIAL_BRANDS) {
-      await BrandProfile.create(b);
-    }
-    console.log(`[Seed] Seeded ${INITIAL_BRANDS.length} Brand Profiles.`);
-  } else {
-    console.log(`[Seed] Found ${brandCount} existing Brand Profiles. Preserving user configurations.`);
+  // 2. Seed Brand Profiles & Ensure Esyus × Weblets is Default
+  for (const b of INITIAL_BRANDS) {
+    await BrandProfile.findOneAndUpdate(
+      { name: b.name },
+      { $set: b },
+      { upsert: true, new: true }
+    );
   }
+  // Ensure only Esyus × Weblets is marked default
+  await BrandProfile.updateMany({ name: { $ne: 'Esyus × Weblets' } }, { isDefault: false });
+  await BrandProfile.updateOne({ name: 'Esyus × Weblets' }, { isDefault: true });
+  console.log('[Seed] Brand profiles verified. Default brand: Esyus × Weblets');
 
   // 3. Seed Packages (Website, App, Desktop)
   const allInitialPackages = [

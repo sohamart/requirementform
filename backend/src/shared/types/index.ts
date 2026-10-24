@@ -334,6 +334,7 @@ export interface ProjectFinancialsDTO {
   status: SubmissionStatus;
   quotedRevenuePaise: number;
   approvedRevenuePaise: number;
+  customRevenuePaise?: number;
   collectedRevenuePaise: number;
   outstandingReceivablesPaise: number;
   estimatedDirectCostPaise: number;
@@ -343,6 +344,12 @@ export interface ProjectFinancialsDTO {
   grossMarginPercent: number | null;
   markupPercent: number | null;
   targetMarginPercent: number;
+  partnerSharePercent: number;
+  partnerName: string;
+  extraInHandCostPaise: number;
+  partnerCutPaise: number;
+  inHandProfitPaise: number;
+  inHandMarginPercent: number | null;
   isBelowTargetMargin: boolean;
   hasMissingCosts: boolean;
   costEntries: CostEntryDTO[];

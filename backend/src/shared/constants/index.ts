@@ -552,6 +552,19 @@ export const INITIAL_ADDONS: SeedAddon[] = [
 
 export const INITIAL_BRANDS: SeedBrand[] = [
   {
+    name: 'Esyus × Weblets',
+    tagline: 'Joint Venture: Full-Spectrum Web, Mobile & Enterprise Engineering',
+    logoText: 'ESYUS × WEBLETS',
+    primaryColor: '#F97316',
+    secondaryColor: '#18181B',
+    contactEmail: 'solutions@esyus-weblets.com',
+    contactPhone: '+91 98765 99999',
+    websiteUrl: 'https://esyus-weblets.com',
+    addressLines: ['Consortium Center, Suite 100', 'Bandra Kurla Complex, Mumbai 400051', 'India'],
+    isDefault: true,
+    isActive: true,
+  },
+  {
     name: 'Weblets',
     tagline: 'Modern Digital Engineering & High-Impact Web Solutions',
     logoText: 'WEBLETS',
@@ -561,7 +574,7 @@ export const INITIAL_BRANDS: SeedBrand[] = [
     contactPhone: '+91 98765 43210',
     websiteUrl: 'https://weblets.io',
     addressLines: ['Tech Hub Tower, Level 4', 'Cyber City, Bangalore 560100', 'India'],
-    isDefault: true,
+    isDefault: false,
     isActive: true,
   },
   {
@@ -577,19 +590,6 @@ export const INITIAL_BRANDS: SeedBrand[] = [
     isDefault: false,
     isActive: true,
   },
-  {
-    name: 'Esyus × Weblets',
-    tagline: 'Joint Venture: Full-Spectrum Web, Mobile & Enterprise Engineering',
-    logoText: 'ESYUS × WEBLETS',
-    primaryColor: '#F97316',
-    secondaryColor: '#18181B',
-    contactEmail: 'solutions@esyus-weblets.com',
-    contactPhone: '+91 98765 99999',
-    websiteUrl: 'https://esyus-weblets.com',
-    addressLines: ['Consortium Center, Suite 100', 'Bandra Kurla Complex, Mumbai 400051', 'India'],
-    isDefault: false,
-    isActive: true,
-  },
 ];
 
 export const SYSTEM_PERMISSIONS = [
@@ -601,6 +601,8 @@ export const SYSTEM_PERMISSIONS = [
   'manage_internal_notes', // Required to see/edit private form step notes and submission notes
   'view_financials',       // Required to see Profit & Margin dashboard, costs, profit figures
   'manage_financials',     // Required to add/edit direct costs, expenses, target margins
+  'view_google_drive',     // Required to view Google Drive Hub and synced project folders
+  'manage_google_drive',   // Required to 1-click bulk sync, upload images & files to Google Drive
   'manage_users',
   'manage_settings',
 ] as const;

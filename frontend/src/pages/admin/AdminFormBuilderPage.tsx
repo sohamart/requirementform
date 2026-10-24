@@ -591,7 +591,7 @@ export const AdminFormBuilderPage: React.FC = () => {
                           <div className="flex-1">
                             <div className="flex flex-wrap items-center gap-2">
                               <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-200 dark:bg-charcoal-750 text-slate-700 dark:text-slate-300">
-                                {q.type}
+                                {q.type === 'file_upload' ? 'Cloud Link (Drive/Dropbox)' : q.type}
                               </span>
                               {q.isRequired && (
                                 <span className="text-[10px] font-bold text-red-500 uppercase">
@@ -800,7 +800,7 @@ export const AdminFormBuilderPage: React.FC = () => {
                     <option value="checkbox">Single Confirmation Checkbox</option>
                     <option value="date">Date</option>
                     <option value="budget_range">Budget Range</option>
-                    <option value="file_upload">Secure File Upload</option>
+                    <option value="file_upload">Cloud Storage Link (Google Drive / Dropbox)</option>
                     <option value="yes_no">Yes / No Switch</option>
                     <option value="info_block">Informational Callout</option>
                     <option value="color_picker">Color Picker / Dropdown</option>

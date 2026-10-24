@@ -28,6 +28,7 @@ import { AdminSettingsPage } from './pages/admin/AdminSettingsPage.js';
 import { AdminNotificationsPage } from './pages/admin/AdminNotificationsPage.js';
 import { AdminAuditLogsPage } from './pages/admin/AdminAuditLogsPage.js';
 import { AdminSystemHealthPage } from './pages/admin/AdminSystemHealthPage.js';
+import { AdminDriveHubPage } from './pages/admin/AdminDriveHubPage.js';
 
 // Protected Route Guard
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({
@@ -101,7 +102,7 @@ export const AppContent: React.FC = () => {
         }}
       />
 
-      <div className={`flex-1 ${isAdminRoute ? '' : isFormRoute ? 'pb-8 md:pb-0' : 'pb-20 md:pb-0'}`}>
+      <div className={`flex-1 ${isAdminRoute ? '' : isFormRoute ? 'pb-8 md:pb-0' : 'pb-28 sm:pb-24 md:pb-0'}`}>
         <Routes>
           {/* Public Routes */}
           <Route
@@ -144,6 +145,9 @@ export const AppContent: React.FC = () => {
             <Route path="submissions/website" element={<AdminSubmissionsPage />} />
             <Route path="submissions/app" element={<AdminSubmissionsPage />} />
             <Route path="submissions/desktop" element={<AdminSubmissionsPage />} />
+
+            {/* Google Drive Storage Hub & 1-Click Sync */}
+            <Route path="drive" element={<AdminDriveHubPage />} />
 
             {/* 5. Dynamic Form Builder */}
             <Route path="forms" element={<AdminFormBuilderPage />} />

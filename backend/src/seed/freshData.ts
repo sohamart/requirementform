@@ -15,6 +15,7 @@ import { FormDefinition } from '../models/FormDefinition.js';
 import { FormStepNotes } from '../models/FormStepNotes.js';
 import { Package } from '../models/Package.js';
 import { Addon } from '../models/Addon.js';
+import { DriveDocument } from '../models/DriveDocument.js';
 import {
   INITIAL_WEBSITE_PACKAGES,
   INITIAL_ADDONS,
@@ -35,6 +36,7 @@ export async function runFreshDataSetup(): Promise<void> {
   const deletedSubmissions = await Submission.deleteMany({});
   const deletedSubmissionNotes = await SubmissionInternalNotes.deleteMany({});
   const deletedQuotations = await Quotation.deleteMany({});
+  const deletedDriveDocs = await DriveDocument.deleteMany({});
   const deletedCostEntries = await CostEntry.deleteMany({});
   const deletedPaymentRecords = await PaymentRecord.deleteMany({});
   const deletedFinancials = await ProjectFinancials.deleteMany({});
@@ -45,6 +47,7 @@ export async function runFreshDataSetup(): Promise<void> {
   console.log(`[Fresh Data] Cleared ${deletedSubmissions.deletedCount} submissions.`);
   console.log(`[Fresh Data] Cleared ${deletedSubmissionNotes.deletedCount} submission internal notes.`);
   console.log(`[Fresh Data] Cleared ${deletedQuotations.deletedCount} quotations.`);
+  console.log(`[Fresh Data] Cleared ${deletedDriveDocs.deletedCount} drive documents.`);
   console.log(`[Fresh Data] Cleared ${deletedCostEntries.deletedCount} cost entries.`);
   console.log(`[Fresh Data] Cleared ${deletedPaymentRecords.deletedCount} payment records.`);
   console.log(`[Fresh Data] Cleared ${deletedFinancials.deletedCount} project financials.`);

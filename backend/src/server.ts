@@ -14,6 +14,7 @@ import publicRoutes from './routes/publicRoutes.js';
 import submissionRoutes from './routes/submissionRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import domainFinderRoutes from './routes/domainFinderRoutes.js';
+import driveRoutes from './routes/driveRoutes.js';
 import { runSeed } from './seed/seed.js';
 import { User } from './models/User.js';
 
@@ -96,6 +97,8 @@ app.use('/api/v1/admin', adminRoutes);
 app.use('/v1/admin', adminRoutes);
 app.use('/api/v1/domains', domainFinderRoutes);
 app.use('/v1/domains', domainFinderRoutes);
+app.use('/api/v1/drive', driveRoutes);
+app.use('/v1/drive', driveRoutes);
 
 // Centralized Error Handling
 app.use(errorHandler);
@@ -113,6 +116,15 @@ export async function startServer() {
   const server = app.listen(ENV.PORT, () => {
     console.log(`[Server] Digital Agency Requirement & Financial Portal running on port ${ENV.PORT}`);
     console.log(`[Server] Health Check: http://localhost:${ENV.PORT}/api/v1/health`);
+  });
+
+  server.on('error', (err: any) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`[Server Error] Port ${ENV.PORT} is already in use by another process or previous instance.`);
+      console.error(`[Server] Run: Stop-Process -Id (Get-NetTCPConnection -LocalPort ${ENV.PORT}).OwningProcess -Force`);
+    } else {
+      console.error('[Server Error]', err);
+    }
   });
 
   const shutdown = async () => {

@@ -21,6 +21,7 @@ import {
 import { publicApi, domainApi } from '../../services/api.js';
 import { PackageDTO, AddonDTO, DomainSuggestion } from '@shared/types/index.js';
 import { formatINR } from '@shared/utils/currency.js';
+import { smoothScrollTo } from '../../utils/scroll.js';
 
 interface UniversalSearchModalProps {
   isOpen: boolean;
@@ -161,8 +162,7 @@ export const UniversalSearchModal: React.FC<UniversalSearchModalProps> = ({
   const handleSelectAddon = () => {
     onClose();
     if (location.pathname === '/') {
-      const el = document.getElementById('services');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      smoothScrollTo('services');
     } else {
       navigate('/#services');
     }
@@ -174,8 +174,7 @@ export const UniversalSearchModal: React.FC<UniversalSearchModalProps> = ({
       localStorage.setItem('weblets_domain_prefill', searchDomain);
     }
     if (location.pathname === '/') {
-      const el = document.getElementById('domain-finder');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      smoothScrollTo('domain-finder');
     } else {
       navigate('/#domain-finder');
     }

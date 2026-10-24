@@ -20,5 +20,9 @@ export const ENV = {
   GODADDY_API_KEY: process.env.GODADDY_API_KEY || 'hkxkAhW8Dtzr_8FG7HRgw2jQUfhY4y4G5NH',
   GODADDY_API_SECRET: process.env.GODADDY_API_SECRET || 'YNbakyetU765nXS7UeHeyT',
   GODADDY_ENV: (process.env.GODADDY_ENV || 'production').toLowerCase() as 'production' | 'ote' | 'test',
+  // Google Drive Integration
+  GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '',
+  GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY || '',
+  GOOGLE_DRIVE_PARENT_FOLDER_ID: process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID || '',
 };
 

@@ -129,4 +129,61 @@ export class AuthController {
       user: serializeUser(req.user),
     });
   }
+
+  static async changePassword(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.user) {
+        res.status(401).json({ success: false, error: 'Unauthorized' });
+        return;
+      }
+
+      const { currentPassword, newPassword } = req.body;
+      if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 6) {
+        res.status(400).json({ success: false, error: 'New password must be at least 6 characters long.' });
+        return;
+      }
+
+      const { User } = await import('../models/User.js');
+      const user = await User.findById(req.user._id);
+      if (!user) {
+        res.status(404).json({ success: false, error: 'User not found' });
+        return;
+      }
+
+      // If user is not superadmin or provided currentPassword, verify it
+      if (req.user.role !== 'superadmin' || currentPassword) {
+        if (!currentPassword) {
+          res.status(400).json({ success: false, error: 'Current password is required.' });
+          return;
+        }
+        const bcrypt = (await import('bcryptjs')).default;
+        const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+        if (!isMatch) {
+          res.status(400).json({ success: false, error: 'Current password does not match.' });
+          return;
+        }
+      }
+
+      const bcrypt = (await import('bcryptjs')).default;
+      const salt = await bcrypt.genSalt(10);
+      user.passwordHash = await bcrypt.hash(newPassword, salt);
+      await user.save();
+
+      await logAuditEvent(req, 'USER_SELF_PASSWORD_CHANGED', 'User', user._id.toString(), {
+        email: user.email,
+        fullName: user.fullName,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Your password has been changed successfully.',
+      });
+    } catch (err: any) {
+      res.status(400).json({ success: false, error: err.message || 'Failed to change password' });
+    }
+  }
 }

@@ -14,10 +14,12 @@ import {
   Globe,
   Layers,
   Search,
+  Key,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
 import { useTheme } from '../../context/ThemeContext.js';
 import { publicApi } from '../../services/api.js';
+import { smoothScrollTo } from '../../utils/scroll.js';
 
 interface NavbarProps {
   onOpenProjectSelector: () => void;
@@ -33,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [brandName, setBrandName] = useState<string>(() => {
-    return localStorage.getItem('weblets_brand_name') || 'WEBLETS';
+    return localStorage.getItem('weblets_brand_name') || 'Esyus × Weblets';
   });
   const [scrolled, setScrolled] = useState(false);
 
@@ -44,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
         .then((res) => {
           if (res.data.success && res.data.brands.length > 0) {
             const defaultBrand = res.data.brands.find((b) => b.isDefault) || res.data.brands[0];
-            const resolved = defaultBrand.name || defaultBrand.logoText || 'WEBLETS';
+            const resolved = defaultBrand.name || defaultBrand.logoText || 'Esyus × Weblets';
             setBrandName(resolved);
             localStorage.setItem('weblets_brand_name', resolved);
           }
@@ -81,31 +83,76 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
     navigate('/');
   };
 
+  const handleNavSectionClick = (e: React.MouseEvent, sectionId: string) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    if (location.pathname === '/' || location.pathname === '/domains') {
+      smoothScrollTo(sectionId);
+    } else {
+      navigate(`/#${sectionId}`);
+    }
+  };
+
   const isCurrent = (path: string) => location.pathname === path && !location.hash;
 
+  const getBrandMonogram = () => {
+    const lower = brandName.toLowerCase();
+    if (lower.includes('esyus') || lower.includes('weblets')) {
+      return 'EW';
+    }
+    return brandName.charAt(0).toUpperCase() || 'EW';
+  };
+
+  const renderBrandContent = () => {
+    const lower = brandName.toLowerCase();
+    if (
+      (lower.includes('esyus') && lower.includes('weblets')) ||
+      lower === 'esyus' ||
+      lower === 'weblets' ||
+      lower === 'esyus × weblets'
+    ) {
+      return (
+        <span className="flex items-center gap-1 font-black text-xs xs:text-sm sm:text-base lg:text-lg tracking-tight text-slate-900 dark:text-white leading-none whitespace-nowrap">
+          <span>Esyus</span>
+          <span className="text-brand-500 font-extrabold text-[10px] sm:text-xs">×</span>
+          <span>Weblets</span>
+        </span>
+      );
+    }
+
+    return (
+      <span className="font-black text-xs xs:text-sm sm:text-base lg:text-lg tracking-tight text-slate-900 dark:text-white leading-none whitespace-nowrap">
+        {brandName}
+      </span>
+    );
+  };
+
   return (
-    <header className="sticky top-0 z-40 w-full transition-all duration-200 px-3 sm:px-6 lg:px-8 py-2.5">
+    <header className="sticky top-0 z-40 w-full transition-all duration-200 px-2 sm:px-4 lg:px-6 xl:px-8 py-2 sm:py-2.5">
       <div
         className={`max-w-7xl mx-auto rounded-2xl transition-all duration-200 ${
           scrolled
-            ? 'glass-header-pill shadow-lg dark:shadow-2xl py-2 px-3 sm:px-5'
-            : 'bg-white/85 dark:bg-charcoal-900/85 backdrop-blur-xl border border-slate-200/70 dark:border-charcoal-750/70 shadow-sm py-2 px-3 sm:px-5'
-        } flex items-center justify-between gap-2 sm:gap-4`}
+            ? 'glass-header-pill shadow-lg dark:shadow-2xl py-1.5 sm:py-2 px-2.5 sm:px-4 lg:px-5'
+            : 'bg-white/85 dark:bg-charcoal-900/85 backdrop-blur-xl border border-slate-200/70 dark:border-charcoal-750/70 shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-4 lg:px-5'
+        } flex items-center justify-between gap-2 sm:gap-3 lg:gap-4`}
       >
-        {/* Left: Clean Brand Identity (Truncates smoothly so it never overflows) */}
+        {/* Left: Clean Brand Identity (Both Esyus and Weblets always visible without cut-off) */}
         <Link
           to="/"
-          className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer app-press select-none min-w-0 shrink"
-          title={brandName}
+          onClick={() => {
+            if (location.pathname === '/' && !location.hash) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          className="flex items-center gap-1.5 sm:gap-2.5 group cursor-pointer app-press select-none shrink-0"
+          title="Esyus × Weblets"
         >
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-amber-500 flex items-center justify-center text-white font-black text-sm sm:text-base shadow-glow-sm group-hover:scale-105 transition-transform shrink-0">
-            <span>{brandName.charAt(0).toUpperCase() || 'W'}</span>
+          <div className="relative w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-amber-500 flex items-center justify-center text-white font-black text-[11px] xs:text-xs sm:text-sm shadow-glow-sm group-hover:scale-105 transition-transform shrink-0">
+            <span className="tracking-tighter">{getBrandMonogram()}</span>
             <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-charcoal-900" />
           </div>
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="font-black text-sm sm:text-base lg:text-lg tracking-tight text-slate-900 dark:text-white leading-none truncate max-w-[100px] xs:max-w-[130px] sm:max-w-[170px] md:max-w-[150px] lg:max-w-[200px] xl:max-w-[280px]">
-              {brandName}
-            </span>
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            {renderBrandContent()}
             <span className="text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-brand-500/10 text-brand-600 dark:text-brand-400 shrink-0">
               PRO
             </span>
@@ -116,7 +163,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
         <nav className="hidden md:flex items-center gap-0.5 lg:gap-1 bg-slate-100/70 dark:bg-charcoal-950/70 p-1 rounded-xl border border-slate-200/60 dark:border-charcoal-750/60 shrink-0">
           <Link
             to="/"
-            className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
+            onClick={() => {
+              if (location.pathname === '/' && !location.hash) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className={`px-2.5 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
               isCurrent('/')
                 ? 'bg-white dark:bg-charcoal-800 text-brand-500 shadow-sm'
                 : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-charcoal-850/50'
@@ -125,33 +177,49 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
             Home
           </Link>
 
-          <a
-            href="/#domain-finder"
-            className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-charcoal-850/50 transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+          <button
+            type="button"
+            onClick={(e) => handleNavSectionClick(e, 'domain-finder')}
+            className={`px-2.5 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+              location.hash === '#domain-finder' || location.pathname === '/domains'
+                ? 'bg-white dark:bg-charcoal-800 text-brand-500 shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-charcoal-850/50'
+            }`}
           >
             <Globe className="w-3.5 h-3.5 text-brand-500 shrink-0" />
             <span>Domain AI</span>
-          </a>
+          </button>
 
-          <a
-            href="/#packages"
-            className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-charcoal-850/50 transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+          <button
+            type="button"
+            onClick={(e) => handleNavSectionClick(e, 'packages')}
+            className={`px-2.5 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+              location.hash === '#packages'
+                ? 'bg-white dark:bg-charcoal-800 text-brand-500 shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-charcoal-850/50'
+            }`}
           >
             <Layers className="w-3.5 h-3.5 text-blue-500 shrink-0" />
             <span>Packages</span>
-          </a>
+          </button>
 
-          <a
-            href="/#services"
-            className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-charcoal-850/50 transition-all whitespace-nowrap cursor-pointer"
+          <button
+            type="button"
+            onClick={(e) => handleNavSectionClick(e, 'services')}
+            className={`px-2.5 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+              location.hash === '#services'
+                ? 'bg-white dark:bg-charcoal-800 text-brand-500 shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-charcoal-850/50'
+            }`}
           >
-            Addons
-          </a>
+            <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+            <span>Addons</span>
+          </button>
 
           {user && (
             <Link
               to="/portal"
-              className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
+              className={`hidden xl:flex px-2.5 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap items-center gap-1.5 cursor-pointer ${
                 location.pathname.startsWith('/portal')
                   ? 'bg-white dark:bg-charcoal-800 text-brand-500 shadow-sm'
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-charcoal-850/50'
@@ -165,7 +233,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
           {isAdmin && (
             <Link
               to="/admin"
-              className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
+              className={`hidden xl:flex px-2.5 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold transition-all whitespace-nowrap items-center gap-1.5 cursor-pointer ${
                 location.pathname.startsWith('/admin')
                   ? 'bg-amber-500 text-charcoal-950 font-bold shadow-sm'
                   : 'text-amber-600 dark:text-amber-400 hover:bg-amber-500/10'
@@ -178,19 +246,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
         </nav>
 
         {/* Right: Actions, Theme & User Management */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 shrink-0">
           {/* Universal Search Button */}
           <button
             type="button"
             onClick={onOpenSearch || onOpenProjectSelector}
             title="Universal Search (Ctrl+K)"
-            className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-colors cursor-pointer app-press border border-transparent hover:border-slate-200 dark:hover:border-charcoal-750"
+            className="hidden sm:flex items-center gap-1.5 px-2 py-1.5 xl:px-2.5 xl:py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-colors cursor-pointer app-press border border-transparent hover:border-slate-200 dark:hover:border-charcoal-750 shrink-0"
           >
-            <Search className="w-4 h-4 text-brand-500" />
-            <span className="hidden md:inline text-xs font-medium text-slate-500 dark:text-slate-400">
+            <Search className="w-4 h-4 text-brand-500 shrink-0" />
+            <span className="hidden xl:inline text-xs font-medium text-slate-500 dark:text-slate-400">
               Search
             </span>
-            <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-slate-200/60 dark:bg-charcoal-800 text-slate-500 dark:text-slate-400 border border-slate-300/60 dark:border-charcoal-700">
+            <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-slate-200/60 dark:bg-charcoal-800 text-slate-500 dark:text-slate-400 border border-slate-300/60 dark:border-charcoal-700">
               ⌘K
             </kbd>
           </button>
@@ -199,7 +267,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-colors cursor-pointer app-press border border-transparent hover:border-slate-200 dark:hover:border-charcoal-750"
+            className="p-1.5 sm:p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-colors cursor-pointer app-press border border-transparent hover:border-slate-200 dark:hover:border-charcoal-750 shrink-0"
           >
             {theme === 'dark' ? (
               <Sun className="w-4 h-4 text-amber-400 animate-in spin-in-90 duration-200" />
@@ -208,26 +276,27 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
             )}
           </button>
 
-          {/* Primary CTA: Launch Requirement Builder (Guaranteed Single Line) */}
+          {/* Primary CTA: Launch Requirement Builder */}
           <button
             onClick={onOpenProjectSelector}
-            className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-brand-500 to-orange-500 hover:from-brand-600 hover:to-orange-600 text-white shadow-glow-sm hover:shadow-glow-brand transition-all cursor-pointer app-press whitespace-nowrap shrink-0"
+            className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 xl:px-4 xl:py-2 rounded-xl text-xs xl:text-sm font-extrabold bg-gradient-to-r from-brand-500 to-orange-500 hover:from-brand-600 hover:to-orange-600 text-white shadow-glow-sm hover:shadow-glow-brand transition-all cursor-pointer app-press whitespace-nowrap shrink-0"
           >
             <Sparkles className="w-3.5 h-3.5 shrink-0" />
             <span>Start Project</span>
           </button>
 
-          {/* User Account State (Clean, Compact Avatar Pill) */}
+          {/* User Account State (Clean, Compact Avatar Pill with Progressive Disclosure) */}
           {user ? (
-            <div className="relative">
+            <div className="relative shrink-0">
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2 p-1.5 rounded-xl border border-slate-200/90 dark:border-charcoal-750/90 bg-slate-50 dark:bg-charcoal-850 hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-all cursor-pointer app-press shadow-sm"
+                className="flex items-center gap-1.5 xl:gap-2 p-1 xl:p-1.5 rounded-xl border border-slate-200/90 dark:border-charcoal-750/90 bg-slate-50 dark:bg-charcoal-850 hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-all cursor-pointer app-press shadow-sm shrink-0"
+                title={user.fullName}
               >
                 <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-500 to-amber-500 text-white font-extrabold flex items-center justify-center text-xs shadow-sm shrink-0">
                   {user.fullName.charAt(0).toUpperCase()}
                 </div>
-                <div className="hidden lg:flex flex-col text-left">
+                <div className="hidden xl:flex flex-col text-left">
                   <span className="text-xs font-bold text-slate-800 dark:text-slate-100 max-w-[85px] truncate whitespace-nowrap leading-tight">
                     {user.fullName.split(' ')[0]}
                   </span>
@@ -267,14 +336,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
                   </Link>
 
                   {isAdmin && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 rounded-xl cursor-pointer transition-colors"
-                    >
-                      <ShieldAlert className="w-4 h-4 text-amber-500" />
-                      <span>Admin Management Suite</span>
-                    </Link>
+                    <>
+                      <Link
+                        to="/admin"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 rounded-xl cursor-pointer transition-colors"
+                      >
+                        <ShieldAlert className="w-4 h-4 text-amber-500" />
+                        <span>Admin Management Suite</span>
+                      </Link>
+
+                      <Link
+                        to="/admin/users"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-purple-600 dark:text-purple-400 hover:bg-purple-500/10 rounded-xl cursor-pointer transition-colors"
+                      >
+                        <Key className="w-4 h-4 text-purple-500" />
+                        <span>User & Password Management</span>
+                      </Link>
+                    </>
                   )}
 
                   <div className="my-1 border-t border-slate-100 dark:border-charcoal-800" />
@@ -292,7 +372,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
           ) : (
             <Link
               to="/auth"
-              className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-200/90 dark:border-charcoal-750/90 bg-white/50 dark:bg-charcoal-850/50 hover:bg-slate-100 dark:hover:bg-charcoal-800 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer app-press shadow-sm whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-200/90 dark:border-charcoal-750/90 bg-white/50 dark:bg-charcoal-850/50 hover:bg-slate-100 dark:hover:bg-charcoal-800 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer app-press shadow-sm whitespace-nowrap shrink-0"
             >
               <User className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span>Sign In</span>
@@ -302,7 +382,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
           {/* Mobile Menu Hamburger Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-colors cursor-pointer app-press"
+            className="md:hidden p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-charcoal-800 transition-colors cursor-pointer app-press"
             aria-label="Toggle navigation drawer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5 text-brand-500" /> : <Menu className="w-5 h-5" />}
@@ -341,32 +421,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProjectSelector, onOpenSea
               <span>Home Hub</span>
             </Link>
 
-            <a
-              href="/#domain-finder"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100/70 dark:bg-charcoal-850/70 hover:bg-brand-500/10 hover:text-brand-500 transition-colors"
+            <button
+              type="button"
+              onClick={(e) => handleNavSectionClick(e, 'domain-finder')}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100/70 dark:bg-charcoal-850/70 hover:bg-brand-500/10 hover:text-brand-500 transition-colors text-left"
             >
-              <Globe className="w-4 h-4 text-brand-500" />
+              <Globe className="w-4 h-4 text-brand-500 shrink-0" />
               <span>Domain AI</span>
-            </a>
+            </button>
 
-            <a
-              href="/#packages"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100/70 dark:bg-charcoal-850/70 hover:bg-brand-500/10 hover:text-brand-500 transition-colors"
+            <button
+              type="button"
+              onClick={(e) => handleNavSectionClick(e, 'packages')}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100/70 dark:bg-charcoal-850/70 hover:bg-brand-500/10 hover:text-brand-500 transition-colors text-left"
             >
-              <Layers className="w-4 h-4 text-blue-500" />
+              <Layers className="w-4 h-4 text-blue-500 shrink-0" />
               <span>Packages</span>
-            </a>
+            </button>
 
-            <a
-              href="/#services"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100/70 dark:bg-charcoal-850/70 hover:bg-brand-500/10 hover:text-brand-500 transition-colors"
+            <button
+              type="button"
+              onClick={(e) => handleNavSectionClick(e, 'services')}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100/70 dark:bg-charcoal-850/70 hover:bg-brand-500/10 hover:text-brand-500 transition-colors text-left"
             >
-              <Sparkles className="w-4 h-4 text-amber-500" />
+              <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
               <span>Addons</span>
-            </a>
+            </button>
           </div>
 
           {user && (

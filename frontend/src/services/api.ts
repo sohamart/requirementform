@@ -63,6 +63,8 @@ export const authApi = {
   register: (data: any) => api.post<{ success: boolean; user: UserDTO; token: string }>('/auth/register', data),
   logout: () => api.post('/auth/logout'),
   logoutEverywhere: () => api.post('/auth/logout-all'),
+  changePassword: (data: { currentPassword?: string; newPassword: string }) =>
+    api.put<{ success: boolean; message: string }>('/auth/change-password', data),
 };
 
 export const publicApi = {
@@ -139,9 +141,12 @@ export const adminApi = {
       `/admin/financials/projects/${submissionId}`
     ),
   addCostEntry: (data: any) => api.post('/admin/financials/costs', data),
+  deleteCostEntry: (id: string) => api.delete<{ success: boolean; message: string }>(`/admin/financials/costs/${id}`),
   addPaymentRecord: (data: any) => api.post('/admin/financials/payments', data),
   updateTargetMargin: (submissionId: string, data: any) =>
     api.put(`/admin/financials/target-margin/${submissionId}`, data),
+  updateFinancialConfig: (submissionId: string, data: any) =>
+    api.put<{ success: boolean; financials: any }>(`/admin/financials/config/${submissionId}`, data),
 
   // Catalog
   getAllPackages: () => api.get<{ success: boolean; packages: PackageDTO[] }>('/admin/packages'),
@@ -159,6 +164,8 @@ export const adminApi = {
   // Users & Access
   getAllUsers: () => api.get<{ success: boolean; users: UserDTO[] }>('/admin/users'),
   updateUser: (id: string, data: any) => api.put(`/admin/users/${id}`, data),
+  changeUserPassword: (userId: string, newPassword: string) =>
+    api.put<{ success: boolean; message: string }>(`/admin/users/${userId}/password`, { newPassword }),
 
   // Audit Logs
   getAllAuditLogs: () => api.get<{ success: boolean; logs: any[] }>('/admin/audit-logs'),
@@ -181,4 +188,152 @@ export const domainApi = {
       supportedTlds: string[];
     }>('/domains/status'),
 };
+
+export interface DriveFileDTO {
+  id: string;
+  driveFileId: string;
+  fileName: string;
+  fileExtension: string;
+  fileSizeBytes: number;
+  category: string;
+  version: number;
+  webViewLink?: string;
+  uploadedBy: string;
+  uploadedAt: string;
+}
+
+export interface ProjectDriveItemDTO {
+  submissionId: string;
+  enquiryReference: string;
+  clientName: string;
+  clientEmail: string;
+  company?: string;
+  category: string;
+  createdAt: string;
+  hasRequirementPdf: boolean;
+  requirementPdf: { id: string; name: string; webViewLink?: string } | null;
+  quotations: {
+    id: string;
+    quotationNumber: string;
+    revisionNumber: number;
+    totalPaise: number;
+    status: string;
+    isSynced: boolean;
+    driveFile: { id: string; name: string; webViewLink?: string } | null;
+  }[];
+  assets: {
+    id: string;
+    fileName: string;
+    fileExtension: string;
+    fileSizeBytes: number;
+    category: string;
+    webViewLink?: string;
+    uploadedBy: string;
+    createdAt: string;
+  }[];
+  isFullySynced: boolean;
+  folderUrl?: string;
+}
+
+export interface DriveStatsDTO {
+  totalProjects: number;
+  fullySyncedProjects: number;
+  pendingSyncCount: number;
+  totalDriveFiles: number;
+}
+
+export interface DriveStatusDTO {
+  isPersonalOAuthConnected: boolean;
+  hasFolderConfigured: boolean;
+  rootFolderId?: string;
+  accountEmail?: string;
+}
+
+export const driveApi = {
+  uploadFile: (
+    submissionId: string,
+    file: File,
+    category?: string,
+    onUploadProgress?: (percent: number) => void
+  ) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (category) {
+      formData.append('category', category);
+    }
+    return api.post<{
+      success: boolean;
+      message: string;
+      file: {
+        id: string;
+        name: string;
+        size: number;
+        mimeType: string;
+        category: string;
+        webViewLink?: string;
+        uploadedAt: string;
+      };
+    }>(`/drive/upload/${submissionId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent) => {
+        if (progressEvent.total && onUploadProgress) {
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onUploadProgress(percent);
+        }
+      },
+    });
+  },
+
+  getFiles: (submissionId: string) =>
+    api.get<{ success: boolean; files: DriveFileDTO[] }>(`/drive/files/${submissionId}`),
+
+  syncQuotation: (quotationId: string) =>
+    api.post<{
+      success: boolean;
+      message: string;
+      file: { id: string; name: string; size: number; webViewLink?: string };
+    }>(`/drive/sync-quotation/${quotationId}`),
+
+  syncRequirements: (submissionId: string) =>
+    api.post<{
+      success: boolean;
+      message: string;
+      file: { id: string; name: string; size: number; webViewLink?: string };
+    }>(`/drive/sync-requirements/${submissionId}`),
+
+  getOverview: () =>
+    api.get<{
+      success: boolean;
+      projects: ProjectDriveItemDTO[];
+      stats: DriveStatsDTO;
+      driveStatus: DriveStatusDTO;
+    }>('/drive/overview'),
+
+  bulkSyncAll: () =>
+    api.post<{
+      success: boolean;
+      message: string;
+      syncedRequirements: number;
+      syncedQuotations: number;
+      errors: string[];
+    }>('/drive/bulk-sync'),
+
+  bulkSyncSubmission: (submissionId: string) =>
+    api.post<{
+      success: boolean;
+      message: string;
+      syncedRequirement: boolean;
+      syncedQuotationsCount: number;
+    }>(`/drive/bulk-sync/${submissionId}`),
+
+  getAuthStatus: () =>
+    api.get<{
+      success: boolean;
+      isPersonalOAuthConnected: boolean;
+      hasFolderConfigured: boolean;
+    }>('/drive/status'),
+};
+
 

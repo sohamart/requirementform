@@ -188,6 +188,24 @@ export function serializeProjectFinancials(
   const hasMissingCosts =
     fin.actualDirectCostPaise === 0 && fin.estimatedDirectCostPaise === 0;
 
+  const partnerSharePercent = fin.partnerSharePercent ?? 0;
+  const partnerName = fin.partnerName || 'Partner';
+  const extraInHandCostPaise = fin.extraInHandCostPaise ?? 0;
+  const customRevenuePaise = fin.customRevenuePaise ?? 0;
+
+  const effectiveRevenue =
+    customRevenuePaise > 0
+      ? customRevenuePaise
+      : fin.approvedRevenuePaise > 0
+      ? fin.approvedRevenuePaise
+      : fin.quotedRevenuePaise;
+
+  const grossProfit = fin.actualGrossProfitPaise;
+  const partnerCutPaise = Math.round(Math.max(0, grossProfit) * (partnerSharePercent / 100));
+  const inHandProfitPaise = grossProfit - partnerCutPaise - extraInHandCostPaise;
+  const inHandMarginPercent =
+    effectiveRevenue > 0 ? Math.round((inHandProfitPaise / effectiveRevenue) * 1000) / 10 : null;
+
   return {
     id: fin._id.toString(),
     submissionId: fin.submissionId.toString(),
@@ -197,6 +215,7 @@ export function serializeProjectFinancials(
     status: submission.status,
     quotedRevenuePaise: fin.quotedRevenuePaise,
     approvedRevenuePaise: fin.approvedRevenuePaise,
+    customRevenuePaise,
     collectedRevenuePaise: fin.collectedRevenuePaise,
     outstandingReceivablesPaise: Math.max(0, fin.approvedRevenuePaise - fin.collectedRevenuePaise),
     estimatedDirectCostPaise: fin.estimatedDirectCostPaise,
@@ -206,6 +225,12 @@ export function serializeProjectFinancials(
     grossMarginPercent: fin.grossMarginPercent,
     markupPercent: fin.markupPercent,
     targetMarginPercent: fin.targetMarginPercent,
+    partnerSharePercent,
+    partnerName,
+    extraInHandCostPaise,
+    partnerCutPaise,
+    inHandProfitPaise,
+    inHandMarginPercent,
     isBelowTargetMargin: isBelowTarget,
     hasMissingCosts,
     costEntries: costEntries.map(serializeCostEntry),

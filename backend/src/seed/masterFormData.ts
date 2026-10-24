@@ -854,8 +854,9 @@ export const MASTER_WEBSITE_STEPS: FormStep[] = [
       {
         id: 'reference_files',
         fieldKey: 'reference_files',
-        label: 'Reference Files / Brand Assets / RFPs',
-        helperText: 'Attach architecture diagrams, brand guidelines, or requirement docs (PDF, PNG, JPG, DOCX up to 15MB)',
+        label: 'Reference Documents & Brand Assets (Google Drive / Cloud Link)',
+        helperText: 'Upload your documents, architecture diagrams, or brand guidelines to Google Drive, Dropbox, or OneDrive and paste the shareable view link here (ensure link permissions are set to "Anyone with the link can view").',
+        placeholder: 'https://drive.google.com/drive/folders/... or Dropbox / OneDrive share link',
         type: 'file_upload',
         isRequired: false,
         isActive: true,

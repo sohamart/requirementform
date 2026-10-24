@@ -9,8 +9,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Eye,
-  X,
   FileText,
+  X,
 } from 'lucide-react';
 import { clientApi } from '../services/api.js';
 import { ClientSubmissionDTO, ClientQuotationDTO } from '@shared/types/index.js';
@@ -279,7 +279,7 @@ export const ClientPortalPage: React.FC<ClientPortalPageProps> = ({ onOpenProjec
             <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-charcoal-750 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase font-bold text-brand-500">
-                  {activeModalSub.projectCategory.toUpperCase()} REQUIREMENT SPECIFICATION
+                  {activeModalSub.projectCategory.toUpperCase()} PROJECT RECORD
                 </span>
                 <h3 className="text-lg font-black text-slate-900 dark:text-white">
                   Reference: {activeModalSub.enquiryReference}

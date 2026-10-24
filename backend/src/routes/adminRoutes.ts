@@ -113,33 +113,42 @@ router.get(
   AdminQuotationController.downloadPDF
 );
 
-// --- FINANCIALS & PROFIT MARGINS (STRICTLY GATED - SUPERADMIN ONLY) ---
+// --- FINANCIALS & PROFIT MARGINS (Gated: Superadmin or Admins with Financial Permissions) ---
 router.get(
   '/financials/dashboard',
-  requireSuperAdmin,
+  requirePermission('view_financials'),
   AdminFinancialController.getDashboard
 );
 router.get(
   '/financials/projects/:submissionId',
-  requireSuperAdmin,
+  requirePermission('view_financials'),
   AdminFinancialController.getProjectFinancials
 );
 router.post(
   '/financials/costs',
-  requireSuperAdmin,
+  requirePermission('manage_financials'),
   validateBody(CreateCostEntrySchema),
   AdminFinancialController.addCostEntry
 );
+router.delete(
+  '/financials/costs/:id',
+  requirePermission('manage_financials'),
+  AdminFinancialController.deleteCostEntry
+);
 router.post(
   '/financials/payments',
-  requireSuperAdmin,
+  requirePermission('manage_financials'),
   validateBody(CreatePaymentRecordSchema),
   AdminFinancialController.addPaymentRecord
 );
 router.put(
+  '/financials/config/:submissionId',
+  requirePermission('manage_financials'),
+  AdminFinancialController.updateFinancialConfig
+);
+router.put(
   '/financials/target-margin/:submissionId',
-  requireSuperAdmin,
-  validateBody(UpdateTargetMarginSchema),
+  requirePermission('manage_financials'),
   AdminFinancialController.updateTargetMargin
 );
 
@@ -178,6 +187,11 @@ router.put(
   requirePermission('manage_users'),
   validateBody(UpdateUserPermissionsSchema),
   AdminUserController.updateUser
+);
+router.put(
+  '/users/:id/password',
+  requireSuperAdmin,
+  AdminUserController.changeUserPassword
 );
 
 // --- AUDIT LOGS ---

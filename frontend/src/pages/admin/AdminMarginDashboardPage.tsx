@@ -14,6 +14,8 @@ import {
   Globe,
   Smartphone,
   Monitor,
+  Calculator,
+  Wallet,
 } from 'lucide-react';
 import { adminApi } from '../../services/api.js';
 import { FinancialAnalyticsDashboardDTO, ProjectFinancialsDTO } from '@shared/types/index.js';
@@ -21,17 +23,20 @@ import { formatINR, formatPercent } from '@shared/utils/currency.js';
 import { useAuth } from '../../context/AuthContext.js';
 
 export const AdminMarginDashboardPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, hasPermission } = useAuth();
   const [data, setData] = useState<FinancialAnalyticsDashboardDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const isSuperAdmin = user?.role === 'superadmin';
+  const canViewFinancials = isSuperAdmin || hasPermission('view_financials');
 
   // Filters
   const [filterType, setFilterType] = useState<'all' | 'below_target' | 'missing_costs'>('all');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (user?.role === 'superadmin') {
+    if (canViewFinancials) {
       loadDashboard();
     } else {
       setLoading(false);
@@ -48,18 +53,18 @@ export const AdminMarginDashboardPage: React.FC = () => {
         }
       })
       .catch((err) => {
-        setError(err.response?.data?.error || 'Failed to load financial dashboard. Superadmin only.');
+        setError(err.response?.data?.error || 'Failed to load financial dashboard. Superadmin or view_financials permission required.');
       })
       .finally(() => setLoading(false));
   };
 
-  if (user?.role !== 'superadmin') {
+  if (!canViewFinancials) {
     return (
       <div className="p-8 rounded-2xl glass-panel text-center max-w-lg mx-auto my-12 border border-red-500/20 shadow-xl">
         <ShieldAlert className="w-12 h-12 text-red-500 mx-auto mb-3" />
-        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Financial Access Strictly Restricted</h3>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Financial Access Restricted</h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-          Profit margins, direct costs, and financial analytics are strictly confidential and accessible exclusively by the Superadmin account.
+          Profit margins, direct costs, and financial analytics are accessible exclusively by the Superadmin and Administrators who have been granted the <code>view_financials</code> permission.
         </p>
       </div>
     );
@@ -76,13 +81,16 @@ export const AdminMarginDashboardPage: React.FC = () => {
 
   if (error || !data) {
     return (
-      <div className="p-8 rounded-2xl glass-panel text-center max-w-lg mx-auto">
+      <div className="p-8 rounded-2xl glass-panel text-center max-w-lg mx-auto border border-red-500/20 shadow-xl">
         <ShieldAlert className="w-10 h-10 text-red-500 mx-auto mb-3" />
-        <h3 className="text-base font-bold text-slate-900 dark:text-white">Financial Access Restricted</h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-4">{error}</p>
-        <p className="text-xs text-slate-400">
-          This area requires the <code>superadmin</code> administrative role.
-        </p>
+        <h3 className="text-base font-bold text-slate-900 dark:text-white">Financial Dashboard Notice</h3>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 mb-4 leading-relaxed">{error}</p>
+        <button
+          onClick={loadDashboard}
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 hover:bg-brand-600 text-white shadow-glow-sm cursor-pointer transition-colors"
+        >
+          <span>Retry Loading Dashboard</span>
+        </button>
       </div>
     );
   }
@@ -117,16 +125,26 @@ export const AdminMarginDashboardPage: React.FC = () => {
             Profit & Margin Analytics
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Real-time project gross profitability, direct cost breakdown, and markup tracking. Never exposed to clients.
+            Real-time project gross profitability, direct cost breakdown, partner splits, and in-hand net margins.
           </p>
         </div>
 
-        <button
-          onClick={loadDashboard}
-          className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-charcoal-800 hover:bg-slate-200 dark:hover:bg-charcoal-750 text-slate-800 dark:text-white transition-colors cursor-pointer self-start sm:self-auto"
-        >
-          Refresh Figures
-        </button>
+        <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
+          <Link
+            to="/admin/costs"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-glow-sm transition-all cursor-pointer"
+          >
+            <Calculator className="w-4 h-4" />
+            <span>Profit & In-Hand Calculator</span>
+          </Link>
+
+          <button
+            onClick={loadDashboard}
+            className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-charcoal-800 hover:bg-slate-200 dark:hover:bg-charcoal-750 text-slate-800 dark:text-white transition-colors cursor-pointer"
+          >
+            Refresh Figures
+          </button>
+        </div>
       </div>
 
       {/* Target Margin & Missing Cost Alerts */}
@@ -182,14 +200,14 @@ export const AdminMarginDashboardPage: React.FC = () => {
         </div>
       )}
 
-      {/* Primary KPI Grid (8 Cards) */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
+      {/* Primary KPI Grid (5 High-Level Metric Cards) */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4">
         {/* Card 1: Approved Revenue */}
-        <div className="p-5 rounded-2xl glass-card">
+        <div className="p-4 sm:p-5 rounded-2xl glass-card">
           <p className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
             Approved Revenue
           </p>
-          <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+          <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
             {formatINR(data.totalApprovedRevenuePaise)}
           </p>
           <span className="text-[10px] text-slate-500 block mt-1">
@@ -198,11 +216,11 @@ export const AdminMarginDashboardPage: React.FC = () => {
         </div>
 
         {/* Card 2: Collected Revenue */}
-        <div className="p-5 rounded-2xl glass-card">
+        <div className="p-4 sm:p-5 rounded-2xl glass-card">
           <p className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
             Collected Cash
           </p>
-          <p className="text-2xl font-black text-emerald-500 mt-1">
+          <p className="text-xl sm:text-2xl font-black text-emerald-500 mt-1">
             {formatINR(data.totalCollectedRevenuePaise)}
           </p>
           <span className="text-[10px] text-amber-500 font-semibold block mt-1">
@@ -211,11 +229,11 @@ export const AdminMarginDashboardPage: React.FC = () => {
         </div>
 
         {/* Card 3: Actual Direct Costs */}
-        <div className="p-5 rounded-2xl glass-card">
+        <div className="p-4 sm:p-5 rounded-2xl glass-card">
           <p className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
             Actual Direct Costs
           </p>
-          <p className="text-2xl font-black text-red-500 mt-1">
+          <p className="text-xl sm:text-2xl font-black text-red-500 mt-1">
             {formatINR(data.totalActualDirectCostPaise)}
           </p>
           <span className="text-[10px] text-slate-500 block mt-1">
@@ -224,15 +242,34 @@ export const AdminMarginDashboardPage: React.FC = () => {
         </div>
 
         {/* Card 4: Actual Gross Profit */}
-        <div className="p-5 rounded-2xl glass-card">
+        <div className="p-4 sm:p-5 rounded-2xl glass-card">
           <p className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
             Actual Gross Profit
           </p>
-          <p className="text-2xl font-black text-brand-500 mt-1">
+          <p className="text-xl sm:text-2xl font-black text-amber-500 mt-1">
             {formatINR(data.totalActualGrossProfitPaise)}
           </p>
-          <span className="text-[10px] text-slate-500 block mt-1">
-            Est. Profit: {formatINR(data.totalEstimatedGrossProfitPaise)}
+          <span className="text-[10px] text-slate-500 block mt-1 font-semibold">
+            Margin: {formatPercent(data.overallGrossMarginPercent)}
+          </span>
+        </div>
+
+        {/* Card 5: Total In-Hand Profit (Superadmin Net Pocket) */}
+        <div className="col-span-2 md:col-span-1 p-4 sm:p-5 rounded-2xl glass-card border-2 border-emerald-500/40 bg-emerald-500/5">
+          <span className="text-[10px] font-extrabold uppercase text-emerald-600 dark:text-emerald-400 tracking-wider flex items-center gap-1">
+            <Wallet className="w-3.5 h-3.5" />
+            <span>Total In-Hand Profit</span>
+          </span>
+          <p className="text-xl sm:text-2xl font-black text-emerald-500 mt-1">
+            {formatINR(
+              (data.projects || []).reduce(
+                (sum, p) => sum + (p.inHandProfitPaise ?? p.actualGrossProfitPaise),
+                0
+              )
+            )}
+          </p>
+          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold block mt-1">
+            After Partner & Deductions
           </span>
         </div>
       </div>
@@ -460,22 +497,26 @@ export const AdminMarginDashboardPage: React.FC = () => {
                 <tr className="border-b border-slate-100 dark:border-charcoal-750 bg-slate-50/50 dark:bg-charcoal-900/50 text-[11px] font-extrabold uppercase text-slate-400">
                   <th className="py-3 px-4">Project Ref</th>
                   <th className="py-3 px-4">Client</th>
-                  <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4 text-right">Revenue</th>
-                  <th className="py-3 px-4 text-right">Actual Direct Cost</th>
+                  <th className="py-3 px-4 text-right">Total Cost</th>
                   <th className="py-3 px-4 text-right">Gross Profit</th>
-                  <th className="py-3 px-4 text-right">Margin %</th>
-                  <th className="py-3 px-4 text-right">Target</th>
-                  <th className="py-3 px-4 text-center">Cost Action</th>
+                  <th className="py-3 px-4 text-right">Partner Cut</th>
+                  <th className="py-3 px-4 text-right">In-Hand Profit</th>
+                  <th className="py-3 px-4 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-charcoal-750 text-xs font-medium">
                 {filteredProjects.map((p) => {
                   const effectiveRevenue =
-                    p.approvedRevenuePaise > 0 ? p.approvedRevenuePaise : p.quotedRevenuePaise;
+                    p.customRevenuePaise && p.customRevenuePaise > 0
+                      ? p.customRevenuePaise
+                      : p.approvedRevenuePaise > 0
+                      ? p.approvedRevenuePaise
+                      : p.quotedRevenuePaise;
 
-                  const isMarginHealthy =
-                    p.grossMarginPercent !== null && p.grossMarginPercent >= p.targetMarginPercent;
+                  const partnerCut = p.partnerCutPaise ?? 0;
+                  const inHandProfit = p.inHandProfitPaise ?? p.actualGrossProfitPaise;
+                  const inHandMargin = p.inHandMarginPercent;
 
                   return (
                     <tr
@@ -485,16 +526,18 @@ export const AdminMarginDashboardPage: React.FC = () => {
                       <td className="py-3 px-4 font-mono font-bold text-slate-900 dark:text-white">
                         {p.enquiryReference}
                       </td>
-                      <td className="py-3 px-4 font-semibold text-slate-800 dark:text-slate-200">
-                        {p.clientName}
+                      <td className="py-3 px-4">
+                        <span className="font-semibold text-slate-800 dark:text-slate-200 block truncate max-w-[140px]">
+                          {p.clientName}
+                        </span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400">
+                          {p.projectCategory}
+                        </span>
                       </td>
-                      <td className="py-3 px-4 uppercase text-[10px] font-bold text-slate-400">
-                        {p.projectCategory}
-                      </td>
-                      <td className="py-3 px-4 text-right font-bold text-slate-900 dark:text-white">
+                      <td className="py-3 px-4 text-right font-bold text-slate-900 dark:text-white font-mono">
                         {formatINR(effectiveRevenue)}
                       </td>
-                      <td className="py-3 px-4 text-right text-red-500 font-semibold">
+                      <td className="py-3 px-4 text-right text-red-500 font-semibold font-mono">
                         {p.hasMissingCosts ? (
                           <span className="text-[10px] text-amber-500 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded">
                             Missing
@@ -503,34 +546,33 @@ export const AdminMarginDashboardPage: React.FC = () => {
                           formatINR(p.actualDirectCostPaise)
                         )}
                       </td>
-                      <td className="py-3 px-4 text-right font-extrabold text-brand-500">
+                      <td className="py-3 px-4 text-right font-bold text-amber-500 font-mono">
                         {formatINR(p.actualGrossProfitPaise)}
+                        <span className="text-[10px] text-slate-400 block font-sans">
+                          {formatPercent(p.grossMarginPercent)}
+                        </span>
                       </td>
-                      <td className="py-3 px-4 text-right">
-                        {p.grossMarginPercent !== null ? (
-                          <span
-                            className={`font-bold px-2 py-0.5 rounded-full ${
-                              isMarginHealthy
-                                ? 'bg-emerald-500/10 text-emerald-500'
-                                : 'bg-red-500/10 text-red-500'
-                            }`}
-                          >
-                            {formatPercent(p.grossMarginPercent)}
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">N/A</span>
-                        )}
+                      <td className="py-3 px-4 text-right text-purple-500 font-semibold font-mono">
+                        {formatINR(partnerCut)}
+                        <span className="text-[10px] text-slate-400 block font-sans">
+                          {p.partnerSharePercent || 0}%
+                        </span>
                       </td>
-                      <td className="py-3 px-4 text-right text-slate-400">
-                        {p.targetMarginPercent}%
+                      <td className="py-3 px-4 text-right font-mono">
+                        <span className="font-extrabold text-emerald-500 block">
+                          {formatINR(inHandProfit)}
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-sans">
+                          {formatPercent(inHandMargin)}
+                        </span>
                       </td>
                       <td className="py-3 px-4 text-center">
                         <Link
                           to={`/admin/costs?submissionId=${p.submissionId}`}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-500/10 text-brand-500 hover:bg-brand-500 hover:text-white transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-500 to-orange-500 hover:from-brand-600 hover:to-orange-600 text-white shadow-glow-sm transition-all cursor-pointer whitespace-nowrap"
                         >
-                          <Receipt className="w-3 h-3" />
-                          <span>Track Costs</span>
+                          <Calculator className="w-3.5 h-3.5" />
+                          <span>Calculate & Costs</span>
                         </Link>
                       </td>
                     </tr>

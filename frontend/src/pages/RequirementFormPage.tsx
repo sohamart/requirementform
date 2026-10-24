@@ -15,7 +15,6 @@ import {
   Check,
   FolderKanban,
   Save,
-  UploadCloud,
   FileText,
   Edit3,
   Calendar,
@@ -27,6 +26,8 @@ import {
   Lock,
   ShieldCheck,
   MessageSquare,
+  ExternalLink,
+  CheckCircle2,
 } from 'lucide-react';
 import { publicApi, clientApi } from '../services/api.js';
 import { FormDefinitionDTO, FormStep, FormQuestion, ClientSubmissionDTO } from '@shared/types/index.js';
@@ -780,34 +781,104 @@ export const RequirementFormPage: React.FC = () => {
                       </div>
                     )}
 
-                    {/* 12. File Upload Dropzone */}
+                    {/* 12. Cloud Storage / Drive Link (No native file upload - provides Google Drive / Cloud link) */}
                     {q.type === 'file_upload' && (
-                      <div className="p-6 rounded-2xl border-2 border-dashed border-slate-300 dark:border-charcoal-700 bg-slate-50/50 dark:bg-charcoal-850 text-center hover:border-brand-500 transition-colors">
-                        <UploadCloud className="w-8 h-8 text-brand-500 mx-auto mb-2" />
-                        <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                          {value ? `File Selected: ${value}` : 'Drag & drop requirement files or browse'}
-                        </p>
-                        <p className="text-[11px] text-slate-400 mt-1">
-                          PDF, DOCX, ZIP, PNG, JPG (up to 15MB)
-                        </p>
-                        <input
-                          type="file"
-                          id={`file_${q.id}`}
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              handleAnswerChange(q.id, file.name);
-                            }
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => document.getElementById(`file_${q.id}`)?.click()}
-                          className="mt-3 px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-200 dark:bg-charcoal-750 hover:bg-brand-500 hover:text-white transition-colors cursor-pointer"
-                        >
-                          Browse Device
-                        </button>
+                      <div className="p-5 sm:p-6 rounded-2xl border border-blue-500/30 bg-gradient-to-br from-blue-500/5 via-transparent to-brand-500/5 dark:bg-charcoal-850/80 space-y-4">
+                        {/* Header & Cloud Badges */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center font-bold shrink-0">
+                              <Link2 className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <h5 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                                Google Drive / Cloud Storage Share Link
+                              </h5>
+                              <p className="text-[11px] text-slate-400">
+                                Upload your files to cloud storage and share the access link
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                              Google Drive
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-charcoal-800 text-slate-600 dark:text-slate-300">
+                              Dropbox
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-charcoal-800 text-slate-600 dark:text-slate-300">
+                              OneDrive
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Notice & Instructions */}
+                        <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-400 text-xs flex items-start gap-2.5">
+                          <Info className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
+                          <div className="leading-relaxed">
+                            <strong>How to provide your files:</strong> Upload your documents, architecture diagrams, brand guidelines, or requirement files to <strong>Google Drive</strong> (or Dropbox / OneDrive), set link permission to <span className="underline font-bold">"Anyone with the link can view"</span>, and paste the shareable link below.
+                          </div>
+                        </div>
+
+                        {/* URL Input Box */}
+                        <div className="relative">
+                          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                            <Globe className="w-4 h-4 text-brand-500" />
+                          </div>
+                          <input
+                            type="url"
+                            value={value || ''}
+                            onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                            placeholder="https://drive.google.com/drive/folders/... or shared cloud link"
+                            className="w-full pl-10 pr-20 py-3 rounded-xl border border-slate-200 dark:border-charcoal-750 bg-white dark:bg-charcoal-900 text-slate-900 dark:text-white placeholder:text-slate-400 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-sm"
+                          />
+                          {value && (
+                            <button
+                              type="button"
+                              onClick={() => handleAnswerChange(q.id, '')}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-white px-2 py-1 rounded bg-slate-100 dark:bg-charcoal-800 cursor-pointer"
+                            >
+                              Clear
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Action feedback & Test link button */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
+                          {value && (value.startsWith('http://') || value.startsWith('https://')) ? (
+                            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                              <span>Link attached successfully</span>
+                            </div>
+                          ) : (
+                            <span className="text-slate-400 text-[11px]">
+                              Supports Google Drive folders, PDFs, Figma links, or WeTransfer URLs
+                            </span>
+                          )}
+
+                          <div className="flex items-center gap-2.5">
+                            {value && (value.startsWith('http://') || value.startsWith('https://')) && (
+                              <a
+                                href={value}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500 hover:text-white transition-colors cursor-pointer"
+                              >
+                                <span>Verify Link</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                            <a
+                              href="https://drive.google.com"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[11px] font-semibold text-slate-400 hover:text-brand-500 underline cursor-pointer"
+                            >
+                              Open Google Drive ↗
+                            </a>
+                          </div>
+                        </div>
                       </div>
                     )}
 

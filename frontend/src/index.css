@@ -8,7 +8,8 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth !important;
+    scroll-padding-top: 5.5rem;
     -webkit-overflow-scrolling: touch;
     text-rendering: optimizeLegibility;
     /* Completely remove native visible scrollbars across all modern browsers */
